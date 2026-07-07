@@ -102,7 +102,30 @@
       .device{min-height:470px} .screen{min-height:462px;padding:19px} .route-card h3{font-size:21px}
       .card{padding:23px;border-radius:24px} .quote{font-size:31px} .line-item{grid-template-columns:44px 1fr} .num{width:40px;height:40px;border-radius:13px}
     }
-  .mobile.open{display:flex!important;flex-direction:column;gap:14px;padding:0 22px 18px;background:rgba(5,6,8,.95);color:white}.mobile.open:before{content:"Problema  •  Solução  •  Método ROTA  •  Tecnologia";font-weight:700;color:rgba(255,255,255,.78)}
+  .mobile.open{display:flex!important;flex-direction:column;gap:14px;padding:0 22px 18px;background:rgba(5,6,8,.95);color:white}.mobile.open:before{content:"Problema  •  Solução  •  Método ROTA  •  Tecnologia";font-weight:700;color:rgba(255,255,255,.78)
+.about-reroute{
+  max-width:1180px;
+  margin:0 auto;
+  padding:90px 24px;
+}
+.section-title{text-align:center;margin-bottom:44px}
+.section-title small{color:#38bdf8;letter-spacing:.18em;font-weight:800;font-size:12px}
+.section-title h2{margin:12px 0 0;font-size:clamp(34px,5vw,58px);line-height:1}
+.about-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:center}
+.about-text{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);border-radius:28px;padding:36px}
+.about-text h3{font-size:28px;margin:0 0 18px}
+.about-text p{color:rgba(255,255,255,.78);font-size:18px;line-height:1.7;margin:0 0 18px}
+.about-quote{margin-top:28px;padding:22px;border-radius:22px;background:linear-gradient(135deg,rgba(34,211,238,.16),rgba(132,204,22,.14));border:1px solid rgba(132,204,22,.35);font-size:24px;font-weight:900;line-height:1.25}
+.route-visual{min-height:420px;display:flex;align-items:center;justify-content:center;border-radius:32px;background:radial-gradient(circle at 50% 20%, rgba(34,211,238,.22), transparent 38%),linear-gradient(145deg, rgba(2,6,23,.95), rgba(8,13,26,.92));border:1px solid rgba(255,255,255,.10)}
+.route-card{width:min(360px,90%);padding:30px;border-radius:28px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);display:grid;gap:18px;text-align:center;font-weight:800}
+.route-line{height:80px;border-left:3px dashed rgba(56,189,248,.8);margin:0 auto}
+.off-route{color:#f87171}
+.reroute-badge{padding:16px 18px;border-radius:999px;background:linear-gradient(90deg,#0ea5e9,#84cc16);color:#020617;font-weight:900}
+@media(max-width:900px){
+  .about-grid{grid-template-columns:1fr}
+  .about-reroute{padding:64px 18px}
+  .about-text{padding:26px}
+}
   </style>
 </head>
 <body>
@@ -156,7 +179,79 @@
           </div>
         </div>
       </div>
-    </main>
+    </main><section id="oque" class="about-reroute reveal">
+
+    <div class="section-title">
+        <small>ENTENDA O CONCEITO</small>
+        <h2>O que é o REROUTE?</h2>
+    </div>
+
+    <div class="about-grid">
+
+        <div class="about-text">
+
+           <h3>Todo mundo sabe usar um GPS.</h3>
+
+<p>
+Quando você erra uma saída, o GPS não critica você.
+Ele simplesmente recalcula a rota.
+</p>
+
+<p>
+Então por que sua vida deveria funcionar diferente?
+</p>
+
+<h3>O REROUTE é um GPS para seus objetivos.</h3>
+
+<p>
+Ele entende onde você quer chegar,
+identifica por que você saiu da rota
+e mostra exatamente qual é o próximo passo.
+</p>
+
+            <div class="about-quote">
+
+                Você não falhou.<br>
+
+                Estamos recalculando a rota.
+
+            </div>
+
+        </div>
+
+        <div class="route-visual">
+
+            <div class="route-card">
+
+                <div>🎯 Objetivo</div>
+
+                <div class="route-line"></div>
+
+                <div class="off-route">
+
+                    ❌ Saiu da rota
+
+                </div>
+
+                <div class="reroute-badge">
+
+                    ↻ REROUTE recalcula
+
+                </div>
+
+                <div>
+
+                    ✅ Continue avançando
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
   </div>
 
   <section id="problema">
