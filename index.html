@@ -20,16 +20,28 @@
     .nav-wrap{position:sticky;top:0;z-index:40;background:rgba(5,6,8,.78);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.08)}
     .nav{max-width:var(--max);margin:0 auto;padding:20px 30px;display:flex;align-items:center;justify-content:space-between;gap:18px}
    .logo{
-    height:64px;
-    width:auto;
     display:block;
+    width:auto;
+    height:80px;
     transition:all .3s ease;
 }
 
 .logo:hover{
     transform:scale(1.03);
 }
-    .menu{display:flex;gap:28px;align-items:center;color:rgba(255,255,255,.76);font-size:14px;font-weight:600}
+.logo-link{
+    display:flex;
+    align-items:center;
+    flex:0 0 260px;
+}
+    .menu{
+    display:flex;
+    align-items:center;
+    gap:22px;
+    color:rgba(255,255,255,.82);
+    font-size:16px;
+    font-weight:600;
+}
     .menu a:hover{color:#fff}
     .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:999px;padding:13px 20px;font-weight:800;letter-spacing:-.01em;cursor:pointer;transition:.25s ease;white-space:nowrap}
     .btn-primary{color:white;background:linear-gradient(135deg,var(--blue),var(--green));box-shadow:0 12px 40px rgba(22,119,255,.32)}
@@ -168,23 +180,24 @@
 #tecnologia .card p{
     color:rgba(255,255,255,.70);
 }
-
-/* Hero */
-
-.logo{
-    display:block;
-    height:250px;
-    width:auto;
-}
 .nav{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+    max-width:1180px;
+    margin:0 auto;
     height:90px;
+    padding:0 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
 }
 
 .logo:hover{
     transform:scale(1.03);
+}
+
+.logo-link{
+    display:flex;
+    align-items:center;
+    flex:0 0 260px;
 }
 
 .hero h1{
@@ -209,8 +222,8 @@
   <div class="top" id="inicio">
     <div class="nav-wrap">
       <nav class="nav">
-        <a href="#inicio">
-  <img class="logo" src="logo-hns.png" alt="REROUTE">
+        <a href="#inicio" class="logo-link">
+    <img class="logo" src="logo-hns.png" alt="REROUTE">
 </a>
     <div class="menu">
           <a href="#problema">Problema</a><a href="#solucao">Solução</a><a href="#metodo">Método ROTA</a><a href="#tecnologia">Tecnologia</a>
