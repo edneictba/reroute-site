@@ -210,7 +210,27 @@
     max-width:520px !important;
     margin:0 auto !important;
   }
-} </style>
+} @media (max-width: 1050px){
+  .hero{
+    grid-template-columns:1fr !important;
+    padding:72px 28px 90px !important;
+    gap:40px !important;
+  }
+
+  .hero h1{
+    max-width:760px !important;
+    font-size:clamp(48px, 8vw, 78px) !important;
+  }
+
+  .hero p{
+    max-width:720px !important;
+  }
+
+  .device{
+    max-width:520px !important;
+    margin:0 auto !important;
+  }
+}</style>
 </head>
 <body>
   <div class="top" id="inicio">
