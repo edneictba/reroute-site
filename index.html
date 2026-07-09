@@ -139,158 +139,153 @@
     .footer img{height:34px}
     .reveal{opacity:0;transform:translateY(20px);animation:rise .7s ease forwards}
     @keyframes rise{to{opacity:1;transform:none}}
-/* ===== CORREÇÃO DEFINITIVA RESPONSIVO ===== */
+@media (max-width: 1100px){
+    .nav{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:0 28px;
+    }
 
-html, body{
-  overflow-x:hidden !important;
-  max-width:100% !important;
+    .menu{
+        display:none;
+    }
+
+    .nav .btn-primary{
+        display:flex;
+    }
+
+    .hamb{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+
+    .logo{
+        height:90px;
+    }
 }
 
-@media (max-width:1250px){
+@media (max-width: 620px){
+    .nav-wrap{
+        height:82px;
+    }
 
-  .hero{
-    display:grid !important;
-    grid-template-columns:1fr !important;
-    max-width:760px !important;
-    margin:0 auto !important;
-    padding:72px 24px 90px !important;
-    gap:44px !important;
-  }
+    .logo{
+        height:62px;
+    }
 
-  .hero h1{
-    font-size:clamp(46px, 8vw, 72px) !important;
-    line-height:.95 !important;
-    max-width:100% !important;
-  }
+    .nav .btn-primary{
+        display:none;
+    }
 
-  .hero p{
-    max-width:100% !important;
-  }
+    .hamb{
+        display:flex;
+    }
+}
+@media (max-width: 520px){
+    .nav-wrap{
+        height:76px;
+    }
 
-  .device{
-    width:100% !important;
-    max-width:430px !important;
-    margin:30px auto 0 !important;
-  }
+    .logo{
+        height:62px;
+    }
 
-  .phone{
-    width:100% !important;
-    max-width:390px !important;
-    margin:0 auto !important;
-  }
+    .hero{
+        padding-top:58px;
+    }
+}
+    @media (max-width: 520px){
+      .top{min-height:auto;background:radial-gradient(circle at 70% 0%,rgba(22,119,255,.34),transparent 40%),linear-gradient(180deg,#020304 0%,#080b10 82%,#fff 100%)}
+      h1{font-size:45px;letter-spacing:-.055em} h2{font-size:36px} .hero p,.lead{font-size:17px}
+      .hero-actions .btn{width:100%} .trust{display:grid;gap:8px}
+      .device{min-height:470px} .screen{min-height:462px;padding:19px} .route-card h3{font-size:21px}
+      .card{padding:23px;border-radius:24px} .quote{font-size:31px} .line-item{grid-template-columns:44px 1fr} .num{width:40px;height:40px;border-radius:13px}
+    }
+  .mobile.open{display:flex!important;flex-direction:column;gap:14px;padding:0 22px 18px;background:rgba(5,6,8,.95);color:white}.mobile.open:before{content:"Problema  •  Solução  •  Método ROTA  •  Tecnologia";font-weight:700;color:rgba(255,255,255,.78)
+.about-reroute{
+  max-width:1180px;
+  margin:0 auto;
+  padding:90px 24px;
+}
+.section-title{text-align:center;margin-bottom:44px}
+.section-title small{color:#38bdf8;letter-spacing:.18em;font-weight:800;font-size:12px}
+.section-title h2{margin:12px 0 0;font-size:clamp(34px,5vw,58px);line-height:1}
+.about-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:center}
+.about-text{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);border-radius:28px;padding:36px}
+.about-text h3{font-size:28px;margin:0 0 18px}
+.about-text p{color:rgba(255,255,255,.78);font-size:18px;line-height:1.7;margin:0 0 18px}
+.about-quote{margin-top:28px;padding:22px;border-radius:22px;background:linear-gradient(135deg,rgba(34,211,238,.16),rgba(132,204,22,.14));border:1px solid rgba(132,204,22,.35);font-size:24px;font-weight:900;line-height:1.25}
+.route-visual{min-height:420px;display:flex;align-items:center;justify-content:center;border-radius:32px;background:radial-gradient(circle at 50% 20%, rgba(34,211,238,.22), transparent 38%),linear-gradient(145deg, rgba(2,6,23,.95), rgba(8,13,26,.92));border:1px solid rgba(255,255,255,.10)}
+.route-card{width:min(360px,90%);padding:30px;border-radius:28px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);display:grid;gap:18px;text-align:center;font-weight:800}
+.route-line{height:80px;border-left:3px dashed rgba(56,189,248,.8);margin:0 auto}
+.off-route{color:#f87171}
+.reroute-badge{padding:16px 18px;border-radius:999px;background:linear-gradient(90deg,#0ea5e9,#84cc16);color:#020617;font-weight:900}
+@media(max-width:900px){
+  .about-grid{grid-template-columns:1fr}
+  .about-reroute{padding:64px 18px}
+  .about-text{padding:26px}
+}
+/* ===========================
+   AJUSTES FINAIS DA LANDING
+=========================== */
+
+#tecnologia{
+    background:#07111f !important;
+    color:#fff;
 }
 
-@media (max-width:768px){
-
-  .nav-wrap{
-    height:74px !important;
-  }
-
-  .nav{
-    display:flex !important;
-    justify-content:space-between !important;
-    align-items:center !important;
-    padding:0 16px !important;
-  }
-
-  .logo{
-    height:42px !important;
-  }
-
-  .menu{
-    display:none !important;
-  }
-
-  .nav .btn-primary{
-    display:none !important;
-  }
-
-  .hamb{
-    display:flex !important;
-    width:52px !important;
-    height:46px !important;
-  }
-
-  .hero{
-    max-width:100% !important;
-    padding:48px 22px 70px !important;
-  }
-
-  .hero h1{
-    font-size:clamp(40px, 12vw, 52px) !important;
-  }
-
-  .grid-3,
-  .split,
-  .about-grid{
-    grid-template-columns:1fr !important;
-  }
-
-  .card,
-  .panel,
-  .about-text{
-    width:100% !important;
-    max-width:100% !important;
-  }
+#tecnologia h2{
+    color:#fff;
 }
-</style>
-<style>
-@media (max-width: 900px){
-  .nav-wrap{height:76px!important}
 
-  .nav{
-    display:grid!important;
-    grid-template-columns:auto 1fr auto!important;
-    align-items:center!important;
-    gap:8px!important;
-    padding:0 10px!important;
-  }
-  .logo{height:36px!important}
-  .menu{display:none!important}
-  .nav .btn-primary{
-    display:flex!important;
-    justify-self:end!important;
-    padding:9px 12px!important;
-    font-size:12px!important;
-    white-space:nowrap!important;
-  }
-  .hamb{
-    display:flex!important;
-    width:42px!important;
-    height:40px!important;
-  }
-  .hero{
-    display:block!important;
-    padding:42px 20px 64px!important;
-    max-width:100%!important;
-    overflow:hidden!important;
-  }
-  .hero h1{
-    font-size:42px!important;
-    line-height:.94!important;
-    max-width:100%!important;
-  }
-  .hero p{
-    font-size:17px!important;
-    max-width:100%!important;
-  }
-  .hero-actions{
-    display:grid!important;
-    gap:12px!important;
-  }
-  .hero-actions .btn{
-    width:100%!important;
-    pointer-events:auto!important;
-  }
-  .device{
-    width:100%!important;
-    max-width:340px!important;
-    margin:42px auto 0!important;
-  }
-  .phone{
-    width:100%!important;
-    max-width:320px!important;
-  }
+#tecnologia .lead{
+    color:rgba(255,255,255,.75);
+}
+
+#tecnologia .label{
+    color:#38bdf8;
+}
+
+#tecnologia .card{
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.10);
+}
+
+#tecnologia .card h3{
+    color:#fff;
+}
+
+#tecnologia .card p{
+    color:rgba(255,255,255,.70);
+}
+
+.logo:hover{
+    transform:scale(1.03);
+}
+
+.logo-link{
+    display:flex;
+    align-items:center;
+    flex:0 0 260px;
+}
+
+.hero h1{
+    max-width:680px;
+}
+
+/* Problema */
+
+#problema h2{
+    max-width:850px;
+    margin:auto;
+}
+
+#problema .lead{
+    max-width:720px;
+    margin:22px auto 50px;
+    color:rgba(255,255,255,.72);
 }
 </head>
 <body>
