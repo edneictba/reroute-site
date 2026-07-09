@@ -1,0 +1,10 @@
+{
+  "name": "reroute-hns-landing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Landing page estatica do REROUTE HNS.",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "dev": "python -m http.server 4174"
+  }
+}
