@@ -329,6 +329,99 @@ html, body{
   .hero h1{
     font-size:39px !important;
   }
+}/* ===== CORREÇÃO DEFINITIVA RESPONSIVO ===== */
+
+html, body{
+  overflow-x:hidden !important;
+  max-width:100% !important;
+}
+
+@media (max-width:1250px){
+
+  .hero{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    max-width:760px !important;
+    margin:0 auto !important;
+    padding:72px 24px 90px !important;
+    gap:44px !important;
+  }
+
+  .hero h1{
+    font-size:clamp(46px, 8vw, 72px) !important;
+    line-height:.95 !important;
+    max-width:100% !important;
+  }
+
+  .hero p{
+    max-width:100% !important;
+  }
+
+  .device{
+    width:100% !important;
+    max-width:430px !important;
+    margin:30px auto 0 !important;
+  }
+
+  .phone{
+    width:100% !important;
+    max-width:390px !important;
+    margin:0 auto !important;
+  }
+}
+
+@media (max-width:768px){
+
+  .nav-wrap{
+    height:74px !important;
+  }
+
+  .nav{
+    display:flex !important;
+    justify-content:space-between !important;
+    align-items:center !important;
+    padding:0 16px !important;
+  }
+
+  .logo{
+    height:42px !important;
+  }
+
+  .menu{
+    display:none !important;
+  }
+
+  .nav .btn-primary{
+    display:none !important;
+  }
+
+  .hamb{
+    display:flex !important;
+    width:52px !important;
+    height:46px !important;
+  }
+
+  .hero{
+    max-width:100% !important;
+    padding:48px 22px 70px !important;
+  }
+
+  .hero h1{
+    font-size:clamp(40px, 12vw, 52px) !important;
+  }
+
+  .grid-3,
+  .split,
+  .about-grid{
+    grid-template-columns:1fr !important;
+  }
+
+  .card,
+  .panel,
+  .about-text{
+    width:100% !important;
+    max-width:100% !important;
+  }
 }
 </style>
 </head>
