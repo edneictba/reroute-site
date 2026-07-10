@@ -5,6 +5,7 @@
   "description": "Landing page estatica do REROUTE HNS.",
   "scripts": {
     "build": "node scripts/build.js",
+    "lint": "node scripts/lint.js",
     "dev": "python -m http.server 4174"
   }
 }

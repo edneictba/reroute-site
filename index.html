@@ -1,4 +1,21 @@
 <!DOCTYPE html>
+<!--
+
+REROUTE™
+
+The First Human Navigation System™
+
+Copyright © 2026
+
+REROUTE - Tecnologia de Navegação Humana Ltda.
+
+CNPJ: 67.892.806/0001-02
+
+Todos os direitos reservados.
+
+A reprodução deste código, identidade visual, metodologia, arquitetura ou conteúdo sem autorização é proibida.
+
+-->
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -6,9 +23,10 @@
   <title>REROUTE | The First Human Navigation System</title>
   <meta name="description" content="REROUTE é o primeiro Human Navigation System: uma tecnologia criada para ajudar pessoas a recuperar direção, adaptar-se às mudanças e descobrir o próximo passo quando a vida sai da rota." />
   <meta name="keywords" content="REROUTE, Human Navigation System, HNS, inteligência artificial, IA pessoal, metas, hábitos, clareza, propósito, produtividade humana, navegação humana" />
-  <meta name="author" content="REROUTE" />
+  <meta name="author" content="REROUTE - Tecnologia de Navegação Humana Ltda." />
   <meta name="creator" content="REROUTE" />
-  <meta name="publisher" content="REROUTE" />
+  <meta name="publisher" content="REROUTE - Tecnologia de Navegação Humana Ltda." />
+  <meta name="copyright" content="Copyright © 2026 REROUTE - Tecnologia de Navegação Humana Ltda. Todos os direitos reservados." />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="application-name" content="REROUTE" />
@@ -44,7 +62,7 @@
   <meta name="twitter:image" content="https://reroutehns.com.br/assets/images/og-reroute-hns.png" />
   <meta name="twitter:image:alt" content="Símbolo do REROUTE em azul e verde sobre fundo escuro" />
   <link rel="preload" as="image" href="assets/images/logo-reroute-hns-640.webp" type="image/webp" />
-  <link rel="stylesheet" href="src/styles/style.css?v=20260709-logo-clean" />
+  <link rel="stylesheet" href="src/styles/style.css?v=20260710-hns-art-final" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -261,7 +279,11 @@
 
       <section class="section positioning" id="visao">
         <div class="container positioning-grid">
-          <div class="big-mark reveal">HNS</div>
+          <picture class="hns-art reveal">
+            <source type="image/webp" srcset="assets/images/hns-world-map-640.webp 640w, assets/images/hns-world-map-960.webp 960w, assets/images/hns-world-map-1280.webp 1280w" sizes="(max-width: 1100px) 92vw, 520px" />
+            <source type="image/jpeg" srcset="assets/images/hns-world-map-640.jpg 640w, assets/images/hns-world-map-960.jpg 960w, assets/images/hns-world-map-1280.jpg 1280w" sizes="(max-width: 1100px) 92vw, 520px" />
+            <img src="assets/images/hns-world-map-960.jpg" width="960" height="640" alt="Human Navigation System com mapa global e rotas digitais" loading="lazy" decoding="async" />
+          </picture>
           <div class="section-heading left reveal delay-1">
             <span>A promessa</span>
             <h2>O REROUTE não promete mudar sua vida de uma vez.</h2>
@@ -297,14 +319,45 @@
     </main>
 
     <footer class="footer">
-      <div class="container footer-inner">
-        <picture>
-          <source type="image/webp" srcset="assets/images/logo-reroute-hns-320.webp 320w, assets/images/logo-reroute-hns-640.webp 640w" sizes="(max-width: 860px) 210px, 190px" />
-          <source type="image/png" srcset="assets/images/logo-reroute-hns-320.png 320w, assets/images/logo-reroute-hns-640.png 640w" sizes="(max-width: 860px) 210px, 190px" />
-          <img src="assets/images/logo-reroute-hns-320.png" width="190" height="127" alt="REROUTE" loading="lazy" decoding="async" />
-        </picture>
-        <p>REROUTE — The First Human Navigation System.</p>
-        <span>Sua próxima decisão pode mudar a rota.</span>
+      <div class="container footer-grid">
+        <div class="footer-brand">
+          <img
+            src="assets/images/logo-reroute-redonda.png"
+            alt="REROUTE — The First Human Navigation System"
+            class="footer-logo-round"
+            width="600"
+            height="600"
+            loading="lazy"
+            decoding="async"
+          />
+          <p>CNPJ nº 67.892.806/0001-02</p>
+          <p>Fundada em 2026</p>
+          <span class="footer-location">Curitiba • Paraná • Brasil</span>
+          <span class="footer-stamp">Construído no Brasil.<br />Projetado para o mundo.</span>
+          <p>Criadores do primeiro Human Navigation System (HNS) do mundo.</p>
+          <p>© 2026 REROUTE - Tecnologia de Navegação Humana Ltda.<br />Todos os direitos reservados.</p>
+        </div>
+
+        <div class="footer-legal">
+          <h2>Propriedade intelectual</h2>
+          <p>Todo o conteúdo deste site, incluindo metodologia, identidade visual, arquitetura conceitual, software, textos, logotipos, imagens e demais materiais constitui propriedade intelectual da REROUTE – Tecnologia de Navegação Humana Ltda.</p>
+          <p>É proibida sua reprodução, adaptação ou distribuição sem autorização prévia por escrito.</p>
+        </div>
+
+        <div class="footer-links" aria-label="Informações jurídicas">
+          <h2>Marcas</h2>
+          <ul>
+            <li>REROUTE™</li>
+            <li>Human Navigation System™</li>
+            <li>HNS™</li>
+            <li>Método ROTA™</li>
+          </ul>
+          <nav class="legal-links" aria-label="Links jurídicos">
+            <a href="politica-de-privacidade.html">Política de Privacidade</a>
+            <a href="termos-de-uso.html">Termos de Uso</a>
+            <a href="aviso-legal.html">Aviso Legal</a>
+          </nav>
+        </div>
       </div>
     </footer>
   </div>

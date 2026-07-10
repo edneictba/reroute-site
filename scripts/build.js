@@ -6,6 +6,9 @@ const distDir = path.join(rootDir, 'dist');
 
 const entries = [
   'index.html',
+  'politica-de-privacidade.html',
+  'termos-de-uso.html',
+  'aviso-legal.html',
   'assets',
   'src',
   'robots.txt',
