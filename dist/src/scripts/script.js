@@ -32,6 +32,8 @@ document.addEventListener('keydown', (event) => {
 });
 
 const revealElements = document.querySelectorAll('.reveal');
+const audienceCards = document.querySelectorAll('[data-audience-card]');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 if ('IntersectionObserver' in window) {
   const observer = new IntersectionObserver((entries) => {
@@ -46,6 +48,26 @@ if ('IntersectionObserver' in window) {
   revealElements.forEach(el => observer.observe(el));
 } else {
   revealElements.forEach(el => el.classList.add('visible'));
+}
+
+if (reduceMotion) {
+  audienceCards.forEach(card => card.classList.add('visible'));
+} else if ('IntersectionObserver' in window) {
+  const audienceObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const index = Array.from(audienceCards).indexOf(entry.target);
+        window.setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, Math.max(index, 0) * 140);
+        audienceObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.22, rootMargin: '0px 0px -12% 0px' });
+
+  audienceCards.forEach(card => audienceObserver.observe(card));
+} else {
+  audienceCards.forEach(card => card.classList.add('visible'));
 }
 
 const form = document.getElementById('waitlistForm');
