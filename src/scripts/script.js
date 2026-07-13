@@ -76,6 +76,8 @@ const message = document.getElementById('formMessage');
 const SUPABASE_URL = 'https://lfubkmzwahfuvngegdhg.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_o5-WlqjAkGLQJiyMjWJ8hA_eazYqsHS';
 const LEADS_ENDPOINT = `${SUPABASE_URL}/rest/v1/leads`;
+const WELCOME_EMAIL_ENDPOINT = '/api/send-welcome-email';
+let submissionInProgress = false;
 
 const setFormMessage = (text) => {
   if (message) {
@@ -93,8 +95,24 @@ const parseSupabaseError = async (response) => {
   }
 };
 
+const sendWelcomeEmail = async ({ name, email }) => {
+  const response = await fetch(WELCOME_EMAIL_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ name, email })
+  });
+
+  return response.ok;
+};
+
 form?.addEventListener('submit', async (event) => {
   event.preventDefault();
+
+  if (submissionInProgress) {
+    return;
+  }
 
   const submitButton = form.querySelector('button');
   const originalButtonText = submitButton?.textContent || 'Cadastrar';
@@ -115,6 +133,7 @@ form?.addEventListener('submit', async (event) => {
 
   setFormMessage('Enviando cadastro...');
   form.setAttribute('aria-busy', 'true');
+  submissionInProgress = true;
 
   if (submitButton) {
     submitButton.disabled = true;
@@ -145,12 +164,23 @@ form?.addEventListener('submit', async (event) => {
       throw new Error(errorData.message || 'Erro ao enviar cadastro.');
     }
 
+    let welcomeEmailSent = false;
+
+    try {
+      welcomeEmailSent = await sendWelcomeEmail({ name, email });
+    } catch (emailError) {
+      console.warn('Cadastro confirmado, mas o e-mail de boas-vindas nao foi enviado.');
+    }
+
     form.reset();
-    setFormMessage('Cadastro recebido com sucesso. Em breve voce recebera novidades do REROUTE.');
+    setFormMessage(welcomeEmailSent
+      ? 'Cadastro recebido com sucesso. Enviamos uma confirmacao para o seu e-mail.'
+      : 'Cadastro recebido com sucesso. Em breve voce recebera novidades do REROUTE.');
   } catch (error) {
     setFormMessage('Nao foi possivel enviar seu cadastro agora. Tente novamente em instantes.');
   } finally {
     form.removeAttribute('aria-busy');
+    submissionInProgress = false;
 
     if (submitButton) {
       submitButton.disabled = false;
