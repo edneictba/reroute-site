@@ -95,6 +95,16 @@ const parseSupabaseError = async (response) => {
   }
 };
 
+const parseApiResponse = async (response) => {
+  const text = await response.text();
+
+  try {
+    return text ? JSON.parse(text) : null;
+  } catch {
+    return { message: text };
+  }
+};
+
 const sendWelcomeEmail = async ({ name, email }) => {
   const response = await fetch(WELCOME_EMAIL_ENDPOINT, {
     method: 'POST',
@@ -104,7 +114,17 @@ const sendWelcomeEmail = async ({ name, email }) => {
     body: JSON.stringify({ name, email })
   });
 
-  return response.ok;
+  const responseData = await parseApiResponse(response);
+
+  if (!response.ok || responseData?.success === false) {
+    console.error('Erro ao enviar e-mail:', {
+      status: response.status,
+      response: responseData
+    });
+    return false;
+  }
+
+  return true;
 };
 
 form?.addEventListener('submit', async (event) => {
@@ -169,7 +189,7 @@ form?.addEventListener('submit', async (event) => {
     try {
       welcomeEmailSent = await sendWelcomeEmail({ name, email });
     } catch (emailError) {
-      console.warn('Cadastro confirmado, mas o e-mail de boas-vindas nao foi enviado.');
+      console.error('Erro ao enviar e-mail:', emailError);
     }
 
     form.reset();

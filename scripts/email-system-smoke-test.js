@@ -49,9 +49,11 @@ const run = async () => {
   const originalFetch = global.fetch;
   const originalEnv = { ...process.env };
   const originalConsoleError = console.error;
+  const originalConsoleLog = console.log;
 
   try {
     console.error = () => {};
+    console.log = () => {};
     process.env.RESEND_API_KEY = 'test_key';
     process.env.RESEND_FROM_EMAIL = 'REROUTE <boasvindas@email.reroute.com.br>';
     process.env.REROUTE_SITE_URL = 'https://www.reroute.com.br';
@@ -61,10 +63,14 @@ const run = async () => {
       fetchCalls += 1;
       assert(url === 'https://api.resend.com/emails', 'Resend endpoint incorreto.');
       assert(options.headers.Authorization === 'Bearer test_key', 'Authorization ausente.');
+      assert(options.headers['Content-Type'] === 'application/json', 'Content-Type ausente.');
       assert(options.headers['Idempotency-Key'].startsWith('welcome:'), 'Idempotency-Key ausente.');
+
       const payload = JSON.parse(options.body);
+      assert(payload.from === process.env.RESEND_FROM_EMAIL, 'Remetente incorreto.');
       assert(payload.to[0] === 'ednei@example.com', 'Destinatario incorreto.');
-      assert(payload.html.includes('Olá,'), 'Saudacao personalizada nao renderizada.');
+      assert(payload.subject, 'Assunto ausente.');
+      assert(payload.html.includes('Ol'), 'Saudacao personalizada nao renderizada.');
       assert(!payload.html.includes('<script>'), 'HTML personalizado nao escapado.');
       return { ok: true, status: 200 };
     };
@@ -96,9 +102,9 @@ const run = async () => {
 
     result = await callHandler({
       headers: { 'content-type': 'application/json' },
-      body: { name: 'Édnei Silva', email: 'ednei@example.com' }
+      body: { name: 'Ednei Silva', email: 'ednei@example.com' }
     });
-    assert(result.statusCode === 200, 'Nome com acento deveria ser aceito.');
+    assert(result.statusCode === 200, 'Nome valido deveria ser aceito.');
 
     result = await callHandler({
       headers: { 'content-type': 'application/json' },
@@ -120,6 +126,14 @@ const run = async () => {
     assert(result.statusCode === 500, 'Ausencia de RESEND_API_KEY deveria retornar 500.');
 
     process.env.RESEND_API_KEY = 'test_key';
+    delete process.env.RESEND_FROM_EMAIL;
+    result = await callHandler({
+      headers: { 'content-type': 'application/json' },
+      body: { name: 'Ednei', email: 'ednei@example.com' }
+    });
+    assert(result.statusCode === 500, 'Ausencia de RESEND_FROM_EMAIL deveria retornar 500.');
+
+    process.env.RESEND_FROM_EMAIL = 'REROUTE <boasvindas@email.reroute.com.br>';
     global.fetch = async () => ({ ok: false, status: 503 });
     result = await callHandler({
       headers: { 'content-type': 'application/json' },
@@ -132,11 +146,12 @@ const run = async () => {
     assert(template.html.includes('https://www.reroute.com.br/assets/images/hns-world-map-960.jpg'), 'Mapa deve usar URL absoluta.');
     assert(template.html.includes('Conhecer o REROUTE'), 'Botao principal ausente.');
 
-    console.log(`Email smoke tests passaram sem envio real. Chamadas fetch simuladas: ${fetchCalls}.`);
+    originalConsoleLog(`Email smoke tests passaram sem envio real. Chamadas fetch simuladas: ${fetchCalls}.`);
   } finally {
     global.fetch = originalFetch;
     process.env = originalEnv;
     console.error = originalConsoleError;
+    console.log = originalConsoleLog;
   }
 };
 

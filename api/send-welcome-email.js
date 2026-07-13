@@ -13,6 +13,12 @@ const json = (res, statusCode, payload) => {
   res.end(JSON.stringify(payload));
 };
 
+const failure = (statusCode, error) => ({
+  success: false,
+  statusCode,
+  error
+});
+
 const getSiteUrl = () => String(process.env.REROUTE_SITE_URL || DEFAULT_SITE_URL).replace(/\/+$/, '');
 
 const isAllowedOrigin = (origin) => {
@@ -28,17 +34,19 @@ const readJsonBody = async (req) => {
   const contentLength = Number(req.headers['content-length'] || 0);
 
   if (contentLength > MAX_BODY_BYTES) {
-    const error = new Error('Payload muito grande.');
-    error.statusCode = 400;
-    throw error;
+    return failure(400, 'Payload muito grande.');
   }
 
   if (req.body && typeof req.body === 'object') {
-    return req.body;
+    return { success: true, payload: req.body };
   }
 
   if (typeof req.body === 'string') {
-    return JSON.parse(req.body);
+    try {
+      return { success: true, payload: JSON.parse(req.body) };
+    } catch (error) {
+      return failure(400, 'Dados invalidos.');
+    }
   }
 
   const chunks = [];
@@ -48,16 +56,19 @@ const readJsonBody = async (req) => {
     size += chunk.length;
 
     if (size > MAX_BODY_BYTES) {
-      const error = new Error('Payload muito grande.');
-      error.statusCode = 400;
-      throw error;
+      return failure(400, 'Payload muito grande.');
     }
 
     chunks.push(chunk);
   }
 
   const rawBody = Buffer.concat(chunks).toString('utf8');
-  return rawBody ? JSON.parse(rawBody) : {};
+
+  try {
+    return { success: true, payload: rawBody ? JSON.parse(rawBody) : {} };
+  } catch (error) {
+    return failure(400, 'Dados invalidos.');
+  }
 };
 
 const createIdempotencyKey = (email) => {
@@ -68,34 +79,35 @@ const createIdempotencyKey = (email) => {
   return `welcome:${hash.slice(0, 48)}`;
 };
 
-const sendWithResend = async ({ name, email, firstName }) => {
-  const apiKey = process.env.RESEND_API_KEY;
-  console.log("RESEND_API_KEY existe?", !!process.env.RESEND_API_KEY);
-console.log("FROM:", process.env.RESEND_FROM_EMAIL);
-console.log("SITE:", process.env.REROUTE_SITE_URL);
-  const from = process.env.RESEND_FROM_EMAIL || 'REROUTE <boasvindas@email.reroute.com.br>';
-  const siteUrl = getSiteUrl();
+const sendWithResend = async ({ email, firstName }) => {
+  console.log("RESEND_API_KEY:", !!process.env.RESEND_API_KEY);
+  console.log("FROM:", process.env.RESEND_FROM_EMAIL);
+  console.log("SITE:", process.env.REROUTE_SITE_URL);
 
-  if (!apiKey) {
-    throw new Error('RESEND_API_KEY ausente.');
+  if (!process.env.RESEND_API_KEY) {
+    return failure(500, 'RESEND_API_KEY ausente.');
   }
 
-  const emailContent = renderWelcomeEmail({ firstName, siteUrl });
+  if (!process.env.RESEND_FROM_EMAIL) {
+    return failure(500, 'RESEND_FROM_EMAIL ausente.');
+  }
 
+  const siteUrl = getSiteUrl();
+  const { subject, html, text } = renderWelcomeEmail({ firstName, siteUrl });
   const response = await fetch(RESEND_ENDPOINT, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      "Content-Type": "application/json",
       'Idempotency-Key': createIdempotencyKey(email)
     },
     body: JSON.stringify({
-      from,
+      from: process.env.RESEND_FROM_EMAIL,
       to: [email],
       reply_to: REPLY_TO,
-      subject: emailContent.subject,
-      html: emailContent.html,
-      text: emailContent.text,
+      subject,
+      html,
+      text,
       tags: [
         { name: 'type', value: 'transactional' },
         { name: 'event', value: 'welcome_waitlist' }
@@ -104,45 +116,65 @@ console.log("SITE:", process.env.REROUTE_SITE_URL);
   });
 
   if (!response.ok) {
-    throw new Error(`Resend respondeu com status ${response.status}.`);
+    return failure(500, `Resend respondeu com status ${response.status}.`);
   }
+
+  return { success: true };
 };
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
-    return json(res, 405, { success: false, error: 'Método não permitido.' });
+    return json(res, 405, { success: false, error: 'Metodo nao permitido.' });
   }
 
   const contentType = String(req.headers['content-type'] || '');
 
   if (!contentType.toLowerCase().includes('application/json')) {
-    return json(res, 400, { success: false, error: 'Dados inválidos.' });
+    return json(res, 400, { success: false, error: 'Dados invalidos.' });
   }
 
   if (!isAllowedOrigin(req.headers.origin)) {
-    return json(res, 400, { success: false, error: 'Dados inválidos.' });
+    return json(res, 400, { success: false, error: 'Dados invalidos.' });
   }
 
   try {
-    const payload = await readJsonBody(req);
-    const validation = validateLeadPayload(payload);
+    const bodyResult = await readJsonBody(req);
+
+    if (!bodyResult.success) {
+      return json(res, bodyResult.statusCode, {
+        success: false,
+        error: bodyResult.error
+      });
+    }
+
+    const validation = validateLeadPayload(bodyResult.payload);
 
     if (!validation.valid) {
-      return json(res, 400, { success: false, error: 'Dados inválidos.' });
+      return json(res, 400, { success: false, error: 'Dados invalidos.' });
     }
 
-    await sendWithResend(validation.data);
+    const resendResult = await sendWithResend(validation.data);
+
+    if (!resendResult.success) {
+      console.error('Falha ao enviar e-mail transacional de boas-vindas.', {
+        message: resendResult.error
+      });
+      return json(res, resendResult.statusCode, {
+        success: false,
+        error: resendResult.error
+      });
+    }
+
     return json(res, 200, { success: true });
   } catch (error) {
-    if (error.statusCode === 400 || error instanceof SyntaxError) {
-      return json(res, 400, { success: false, error: 'Dados inválidos.' });
-    }
-
     console.error('Falha ao enviar e-mail transacional de boas-vindas.', {
       message: error.message
     });
-    return json(res, 500, { success: false, error: 'Não foi possível enviar o e-mail.' });
+    return json(res, 500, {
+      success: false,
+      error: error.message
+    });
   }
 };
 
