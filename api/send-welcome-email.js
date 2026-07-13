@@ -70,6 +70,9 @@ const createIdempotencyKey = (email) => {
 
 const sendWithResend = async ({ name, email, firstName }) => {
   const apiKey = process.env.RESEND_API_KEY;
+  console.log("RESEND_API_KEY existe?", !!process.env.RESEND_API_KEY);
+console.log("FROM:", process.env.RESEND_FROM_EMAIL);
+console.log("SITE:", process.env.REROUTE_SITE_URL);
   const from = process.env.RESEND_FROM_EMAIL || 'REROUTE <boasvindas@email.reroute.com.br>';
   const siteUrl = getSiteUrl();
 
