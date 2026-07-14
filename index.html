@@ -366,6 +366,37 @@ A reprodução deste código, identidade visual, metodologia, arquitetura ou con
       </section>
     </main>
 
+    <div class="success-modal" id="successModal" hidden>
+      <div class="success-modal__backdrop" data-modal-close></div>
+      <section
+        class="success-modal__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="successModalTitle"
+        tabindex="-1"
+      >
+        <button class="success-modal__close" type="button" aria-label="Fechar confirmação" data-modal-close>
+          <span aria-hidden="true">×</span>
+        </button>
+        <span class="success-modal__kicker">Cadastro confirmado</span>
+        <h2 id="successModalTitle">Bem-vindo ao REROUTE.</h2>
+        <p>Seu cadastro foi realizado com sucesso.</p>
+        <p>Acabamos de enviar um e-mail de confirmação para você.</p>
+        <div class="success-modal__highlight">
+          <strong>IMPORTANTE</strong>
+          <p>Alguns provedores podem direcionar nossa mensagem para as pastas Spam, Lixo Eletrônico ou Promoções.</p>
+          <p>Assim que encontrar o e-mail, marque-o como “Não é spam” ou “Confiável”.</p>
+        </div>
+        <p>Isso garante que você receba:</p>
+        <ul>
+          <li>Atualizações do REROUTE</li>
+          <li>Convites para testes antecipados</li>
+          <li>Novidades sobre o Human Navigation System</li>
+        </ul>
+        <button class="btn btn-primary success-modal__action" type="button" data-modal-close>Entendi</button>
+      </section>
+    </div>
+
     <footer class="footer">
       <div class="container footer-grid">
         <div class="footer-brand">

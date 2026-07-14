@@ -72,18 +72,81 @@ if (reduceMotion) {
 
 const form = document.getElementById('waitlistForm');
 const message = document.getElementById('formMessage');
+const successModal = document.getElementById('successModal');
+const successModalDialog = successModal?.querySelector('.success-modal__dialog');
+const successMessage = 'Cadastro realizado com sucesso! Verifique seu e-mail. Caso a mensagem esteja em Spam, Lixo Eletrônico ou Promoções, marque-a como confiável para continuar recebendo as comunicações do REROUTE.';
 
 const SUPABASE_URL = 'https://lfubkmzwahfuvngegdhg.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_o5-WlqjAkGLQJiyMjWJ8hA_eazYqsHS';
 const LEADS_ENDPOINT = `${SUPABASE_URL}/rest/v1/leads`;
 const WELCOME_EMAIL_ENDPOINT = '/api/send-welcome-email';
 let submissionInProgress = false;
+let modalReturnFocus = null;
 
 const setFormMessage = (text) => {
   if (message) {
     message.textContent = text;
   }
 };
+
+const openSuccessModal = () => {
+  if (!successModal || !successModalDialog) {
+    setFormMessage(successMessage);
+    return;
+  }
+
+  modalReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  successModal.hidden = false;
+  document.body.classList.add('modal-open');
+  successModalDialog.focus({ preventScroll: true });
+};
+
+const closeSuccessModal = () => {
+  if (!successModal) {
+    return;
+  }
+
+  successModal.hidden = true;
+  document.body.classList.remove('modal-open');
+  setFormMessage(successMessage);
+
+  if (modalReturnFocus && document.contains(modalReturnFocus)) {
+    modalReturnFocus.focus({ preventScroll: true });
+  }
+
+  modalReturnFocus = null;
+};
+
+successModal?.addEventListener('click', (event) => {
+  if (event.target instanceof Element && event.target.closest('[data-modal-close]')) {
+    closeSuccessModal();
+  }
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && successModal && !successModal.hidden) {
+    closeSuccessModal();
+    return;
+  }
+
+  if (event.key === 'Tab' && successModal && !successModal.hidden && successModalDialog) {
+    const focusableElements = successModalDialog.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (!firstElement || !lastElement) {
+      return;
+    }
+
+    if (event.shiftKey && document.activeElement === firstElement) {
+      event.preventDefault();
+      lastElement.focus();
+    } else if (!event.shiftKey && document.activeElement === lastElement) {
+      event.preventDefault();
+      firstElement.focus();
+    }
+  }
+});
 
 const parseSupabaseError = async (response) => {
   const text = await response.text();
@@ -184,18 +247,14 @@ form?.addEventListener('submit', async (event) => {
       throw new Error(errorData.message || 'Erro ao enviar cadastro.');
     }
 
-    let welcomeEmailSent = false;
-
     try {
-      welcomeEmailSent = await sendWelcomeEmail({ name, email });
+      await sendWelcomeEmail({ name, email });
     } catch (emailError) {
       console.error('Erro ao enviar e-mail:', emailError);
     }
 
     form.reset();
-    setFormMessage(welcomeEmailSent
-      ? 'Cadastro recebido com sucesso. Enviamos uma confirmacao para o seu e-mail.'
-      : 'Cadastro recebido com sucesso. Em breve voce recebera novidades do REROUTE.');
+    openSuccessModal();
   } catch (error) {
     setFormMessage('Nao foi possivel enviar seu cadastro agora. Tente novamente em instantes.');
   } finally {
