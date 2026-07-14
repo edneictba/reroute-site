@@ -378,22 +378,31 @@ A reprodução deste código, identidade visual, metodologia, arquitetura ou con
         <button class="success-modal__close" type="button" aria-label="Fechar confirmação" data-modal-close>
           <span aria-hidden="true">×</span>
         </button>
-        <span class="success-modal__kicker">Cadastro confirmado</span>
+        <span class="success-modal__kicker">Próximo passo</span>
         <h2 id="successModalTitle">Bem-vindo ao REROUTE.</h2>
-        <p>Seu cadastro foi realizado com sucesso.</p>
+        <p>Seu acesso à lista de espera foi confirmado.</p>
         <p>Acabamos de enviar um e-mail de confirmação para você.</p>
         <div class="success-modal__highlight">
-          <strong>IMPORTANTE</strong>
+          <div class="success-modal__highlight-title">
+            <span class="success-modal__highlight-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M4 7.5h16v9H4z" />
+                <path d="m4 8 8 5.5L20 8" />
+              </svg>
+            </span>
+            <strong>IMPORTANTE</strong>
+          </div>
           <p>Alguns provedores podem direcionar nossa mensagem para as pastas Spam, Lixo Eletrônico ou Promoções.</p>
-          <p>Assim que encontrar o e-mail, marque-o como “Não é spam” ou “Confiável”.</p>
+          <p>Assim que localizar o e-mail, marque-o como "Não é spam" ou "Confiável".</p>
         </div>
+        <p class="success-modal__sender"><span>Remetente:</span> contato@reroute.com.br</p>
         <p>Isso garante que você receba:</p>
         <ul>
           <li>Atualizações do REROUTE</li>
           <li>Convites para testes antecipados</li>
           <li>Novidades sobre o Human Navigation System</li>
         </ul>
-        <button class="btn btn-primary success-modal__action" type="button" data-modal-close>Entendi</button>
+        <button class="btn btn-primary success-modal__action" type="button" data-modal-close>Perfeito, vou verificar meu e-mail</button>
       </section>
     </div>
 
