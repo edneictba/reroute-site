@@ -352,13 +352,22 @@ A reprodução deste código, identidade visual, metodologia, arquitetura ou con
             <h2>Talvez tudo o que você precise agora seja descobrir qual é o próximo passo.</h2>
             <p>Se o REROUTE puder ajudar você a encontrar essa resposta com mais clareza, por que não experimentar gratuitamente?</p>
           </div>
-          <form class="waitlist-form" id="waitlistForm" aria-describedby="formMessage">
-            <label class="sr-only" for="nome">Seu nome</label>
-            <input type="text" id="nome" name="nome" placeholder="Seu nome" autocomplete="name" required />
-            <label class="sr-only" for="email">Seu e-mail</label>
-            <input type="email" id="email" name="email" placeholder="Seu e-mail" autocomplete="email" required />
-            <label class="sr-only" for="whatsapp">WhatsApp</label>
-            <input type="tel" id="whatsapp" name="whatsapp" placeholder="WhatsApp" autocomplete="tel" inputmode="tel" />
+          <form class="waitlist-form" id="waitlistForm" aria-describedby="formMessage" novalidate>
+            <div class="form-field">
+              <label class="sr-only" for="nome">Como você gostaria de ser chamado?</label>
+              <input type="text" id="nome" name="nome" placeholder="Como você gostaria de ser chamado?" autocomplete="name" required aria-describedby="nomeError" />
+              <p class="field-error" id="nomeError" aria-live="polite"></p>
+            </div>
+            <div class="form-field">
+              <label class="sr-only" for="email">Seu melhor e-mail</label>
+              <input type="email" id="email" name="email" placeholder="Seu melhor e-mail" autocomplete="email" required aria-describedby="emailError" />
+              <p class="field-error" id="emailError" aria-live="polite"></p>
+            </div>
+            <div class="form-field form-field-full">
+              <label class="sr-only" for="whatsapp">WhatsApp com DDD</label>
+              <input type="tel" id="whatsapp" name="whatsapp" placeholder="WhatsApp com DDD" autocomplete="tel" inputmode="tel" required maxlength="15" aria-describedby="whatsappError" />
+              <p class="field-error" id="whatsappError" aria-live="polite"></p>
+            </div>
             <button class="btn btn-primary" type="submit">Quero experimentar gratuitamente</button>
             <p class="form-message" id="formMessage" role="status" aria-live="polite" aria-atomic="true"></p>
           </form>

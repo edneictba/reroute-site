@@ -72,8 +72,27 @@ if (reduceMotion) {
 
 const form = document.getElementById('waitlistForm');
 const message = document.getElementById('formMessage');
+const nameInput = document.getElementById('nome');
+const emailInput = document.getElementById('email');
+const whatsappInput = document.getElementById('whatsapp');
 const successModal = document.getElementById('successModal');
 const successModalDialog = successModal?.querySelector('.success-modal__dialog');
+const fieldErrors = {
+  nome: document.getElementById('nomeError'),
+  email: document.getElementById('emailError'),
+  whatsapp: document.getElementById('whatsappError')
+};
+const validBrazilianAreaCodes = new Set([
+  '11', '12', '13', '14', '15', '16', '17', '18', '19',
+  '21', '22', '24', '27', '28',
+  '31', '32', '33', '34', '35', '37', '38',
+  '41', '42', '43', '44', '45', '46', '47', '48', '49',
+  '51', '53', '54', '55',
+  '61', '62', '63', '64', '65', '66', '67', '68', '69',
+  '71', '73', '74', '75', '77', '79',
+  '81', '82', '83', '84', '85', '86', '87', '88', '89',
+  '91', '92', '93', '94', '95', '96', '97', '98', '99'
+]);
 const successMessage = 'Cadastro realizado com sucesso! Verifique seu e-mail. Caso a mensagem esteja em Spam, Lixo Eletrônico ou Promoções, marque-a como confiável para continuar recebendo as comunicações do REROUTE.';
 
 const SUPABASE_URL = 'https://lfubkmzwahfuvngegdhg.supabase.co';
@@ -88,6 +107,122 @@ const setFormMessage = (text) => {
     message.textContent = text;
   }
 };
+
+const normalizeName = (value) => value.trim().replace(/\s+/g, ' ');
+
+const normalizeEmail = (value) => value.trim().toLowerCase();
+
+const getDigits = (value) => value.replace(/\D/g, '');
+
+const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
+
+const hasInvalidRepeatedDigits = (digits) => /^(\d)\1+$/.test(digits);
+
+const isValidBrazilianPhone = (digits) => {
+  if (!/^\d{10,11}$/.test(digits) || hasInvalidRepeatedDigits(digits)) {
+    return false;
+  }
+
+  const areaCode = digits.slice(0, 2);
+  if (!validBrazilianAreaCodes.has(areaCode)) {
+    return false;
+  }
+
+  return digits !== '123456789' && digits !== '1234567890' && digits !== '12345678901';
+};
+
+const formatBrazilianPhone = (value) => {
+  const digits = getDigits(value).slice(0, 11);
+  const areaCode = digits.slice(0, 2);
+  const number = digits.slice(2);
+
+  if (digits.length <= 2) {
+    return areaCode ? `(${areaCode}` : '';
+  }
+
+  if (digits.length <= 6) {
+    return `(${areaCode}) ${number}`;
+  }
+
+  if (digits.length <= 10) {
+    return `(${areaCode}) ${number.slice(0, 4)}-${number.slice(4)}`;
+  }
+
+  return `(${areaCode}) ${number.slice(0, 5)}-${number.slice(5)}`;
+};
+
+const setFieldError = (input, errorElement, messageText) => {
+  if (!input || !errorElement) {
+    return;
+  }
+
+  const hasError = Boolean(messageText);
+  input.setAttribute('aria-invalid', String(hasError));
+  errorElement.textContent = messageText;
+};
+
+const validateLeadForm = () => {
+  const name = normalizeName(nameInput?.value || '');
+  const email = normalizeEmail(emailInput?.value || '');
+  const whatsapp = getDigits(whatsappInput?.value || '');
+  const invalidFields = [];
+
+  if (name.length < 2) {
+    setFieldError(nameInput, fieldErrors.nome, 'Informe o nome pelo qual você gostaria de ser chamado.');
+    invalidFields.push(nameInput);
+  } else {
+    setFieldError(nameInput, fieldErrors.nome, '');
+  }
+
+  if (!isValidEmail(email)) {
+    setFieldError(emailInput, fieldErrors.email, 'Informe um e-mail válido.');
+    invalidFields.push(emailInput);
+  } else {
+    setFieldError(emailInput, fieldErrors.email, '');
+  }
+
+  if (!isValidBrazilianPhone(whatsapp)) {
+    setFieldError(whatsappInput, fieldErrors.whatsapp, 'Informe um número de WhatsApp válido com DDD.');
+    invalidFields.push(whatsappInput);
+  } else {
+    setFieldError(whatsappInput, fieldErrors.whatsapp, '');
+  }
+
+  return {
+    valid: invalidFields.length === 0,
+    firstInvalidField: invalidFields[0],
+    data: {
+      name,
+      email,
+      whatsapp
+    }
+  };
+};
+
+const clearFieldErrorOnInput = (input, errorElement, validator) => {
+  input?.addEventListener('input', () => {
+    if (input.getAttribute('aria-invalid') !== 'true') {
+      return;
+    }
+
+    if (validator()) {
+      setFieldError(input, errorElement, '');
+    }
+  });
+};
+
+whatsappInput?.addEventListener('input', () => {
+  const cursorAtEnd = whatsappInput.selectionStart === whatsappInput.value.length;
+  whatsappInput.value = formatBrazilianPhone(whatsappInput.value);
+
+  if (cursorAtEnd) {
+    whatsappInput.setSelectionRange(whatsappInput.value.length, whatsappInput.value.length);
+  }
+});
+
+clearFieldErrorOnInput(nameInput, fieldErrors.nome, () => normalizeName(nameInput?.value || '').length >= 2);
+clearFieldErrorOnInput(emailInput, fieldErrors.email, () => isValidEmail(normalizeEmail(emailInput?.value || '')));
+clearFieldErrorOnInput(whatsappInput, fieldErrors.whatsapp, () => isValidBrazilianPhone(getDigits(whatsappInput?.value || '')));
 
 const openSuccessModal = () => {
   if (!successModal || !successModalDialog) {
@@ -199,13 +334,26 @@ form?.addEventListener('submit', async (event) => {
 
   const submitButton = form.querySelector('button');
   const originalButtonText = submitButton?.textContent || 'Cadastrar';
-  const name = document.getElementById('nome')?.value.trim();
-  const email = document.getElementById('email')?.value.trim().toLowerCase();
-  const whatsapp = document.getElementById('whatsapp')?.value.trim();
+  const validation = validateLeadForm();
 
-  if (!name || !email) {
-    setFormMessage('Preencha seu nome e e-mail para continuar.');
+  if (!validation.valid) {
+    setFormMessage('');
+    validation.firstInvalidField?.focus();
     return;
+  }
+
+  const { name, email, whatsapp } = validation.data;
+
+  if (nameInput) {
+    nameInput.value = name;
+  }
+
+  if (emailInput) {
+    emailInput.value = email;
+  }
+
+  if (whatsappInput) {
+    whatsappInput.value = formatBrazilianPhone(whatsapp);
   }
 
   const payload = {
