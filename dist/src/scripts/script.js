@@ -70,6 +70,141 @@ if (reduceMotion) {
   audienceCards.forEach(card => card.classList.add('visible'));
 }
 
+const productTour = document.querySelector('[data-product-tour]');
+
+if (productTour) {
+  const viewport = productTour.querySelector('[data-product-tour-viewport]');
+  const track = productTour.querySelector('[data-product-tour-track]');
+  const slides = [...productTour.querySelectorAll('[data-product-tour-slide]')];
+  const dots = [...productTour.querySelectorAll('[data-product-tour-dot]')];
+  const previousButton = productTour.querySelector('[data-product-tour-previous]');
+  const nextButton = productTour.querySelector('[data-product-tour-next]');
+  const autoplayDelay = 6500;
+  let activeIndex = 0;
+  let autoplayTimer = null;
+  let pointerStartX = null;
+  let isVisible = !('IntersectionObserver' in window);
+  let isPaused = false;
+
+  const renderProductTour = (nextIndex) => {
+    activeIndex = (nextIndex + slides.length) % slides.length;
+    track.style.transform = `translate3d(-${activeIndex * 100}%, 0, 0)`;
+
+    slides.forEach((slide, index) => {
+      const isActive = index === activeIndex;
+      slide.classList.toggle('is-active', isActive);
+      slide.setAttribute('aria-hidden', String(!isActive));
+    });
+
+    dots.forEach((dot, index) => {
+      const isActive = index === activeIndex;
+      dot.classList.toggle('is-active', isActive);
+      dot.setAttribute('aria-selected', String(isActive));
+      dot.tabIndex = isActive ? 0 : -1;
+    });
+  };
+
+  const stopAutoplay = () => {
+    window.clearInterval(autoplayTimer);
+    autoplayTimer = null;
+  };
+
+  const startAutoplay = () => {
+    stopAutoplay();
+
+    if (!reduceMotion && isVisible && !isPaused && !document.hidden) {
+      autoplayTimer = window.setInterval(() => {
+        renderProductTour(activeIndex + 1);
+      }, autoplayDelay);
+    }
+  };
+
+  const navigateProductTour = (nextIndex) => {
+    renderProductTour(nextIndex);
+    startAutoplay();
+  };
+
+  previousButton?.addEventListener('click', () => navigateProductTour(activeIndex - 1));
+  nextButton?.addEventListener('click', () => navigateProductTour(activeIndex + 1));
+
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => navigateProductTour(index));
+    dot.addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') {
+        return;
+      }
+
+      event.preventDefault();
+      const direction = event.key === 'ArrowRight' ? 1 : -1;
+      const nextIndex = (activeIndex + direction + slides.length) % slides.length;
+      navigateProductTour(nextIndex);
+      dots[nextIndex]?.focus();
+    });
+  });
+
+  viewport?.addEventListener('pointerdown', (event) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) {
+      return;
+    }
+
+    pointerStartX = event.clientX;
+  });
+
+  viewport?.addEventListener('pointerup', (event) => {
+    if (pointerStartX === null) {
+      return;
+    }
+
+    const distance = event.clientX - pointerStartX;
+    pointerStartX = null;
+
+    if (Math.abs(distance) >= 48) {
+      navigateProductTour(activeIndex + (distance < 0 ? 1 : -1));
+    }
+  });
+
+  viewport?.addEventListener('pointercancel', () => {
+    pointerStartX = null;
+  });
+
+  productTour.addEventListener('mouseenter', () => {
+    isPaused = true;
+    stopAutoplay();
+  });
+
+  productTour.addEventListener('mouseleave', () => {
+    isPaused = false;
+    startAutoplay();
+  });
+
+  productTour.addEventListener('focusin', () => {
+    isPaused = true;
+    stopAutoplay();
+  });
+
+  productTour.addEventListener('focusout', (event) => {
+    if (!productTour.contains(event.relatedTarget)) {
+      isPaused = false;
+      startAutoplay();
+    }
+  });
+
+  document.addEventListener('visibilitychange', startAutoplay);
+
+  if ('IntersectionObserver' in window) {
+    const productTourObserver = new IntersectionObserver((entries) => {
+      isVisible = entries[0]?.isIntersecting ?? false;
+      startAutoplay();
+    }, { threshold: 0.25 });
+
+    productTourObserver.observe(productTour);
+  } else {
+    startAutoplay();
+  }
+
+  renderProductTour(0);
+}
+
 const form = document.getElementById('waitlistForm');
 const message = document.getElementById('formMessage');
 const nameInput = document.getElementById('nome');
