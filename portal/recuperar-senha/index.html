@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Recuperar senha | REROUTE Portal</title>
+  <link rel="icon" href="/assets/icons/favicon.ico" sizes="any" />
+  <link rel="stylesheet" href="/src/portal/styles/portal.css" />
+  <script src="/src/portal/core/runtime-config.js"></script>
+  <script type="module" src="/src/portal/core/portal.js"></script>
+</head>
+<body data-portal-page="recover-password">
+  <div class="portal-shell portal-public">
+    <header class="portal-public-header">
+      <a class="portal-mark compact" href="/portal/" aria-label="REROUTE Portal">
+        <img src="/assets/images/logo-reroute-hns-640.png" alt="REROUTE - The First Human Navigation System" width="142" height="95" />
+      </a>
+      <a class="portal-button ghost" href="/portal/login/">Voltar ao login</a>
+    </header>
+
+    <main class="portal-public-main">
+      <div class="portal-container portal-hero-grid">
+        <section>
+          <span class="portal-kicker">Recuperação segura</span>
+          <h1 class="portal-title">Redefina seu acesso</h1>
+          <p class="portal-subtitle">Informe o e-mail autorizado para receber as instruções de redefinição de senha.</p>
+          <p class="portal-note">Por segurança, não confirmamos se o e-mail existe.</p>
+        </section>
+
+        <section class="portal-card portal-login-card glow" aria-labelledby="recoveryTitle">
+          <h2 id="recoveryTitle">Recuperar senha</h2>
+          <form class="portal-form" data-recovery-form data-message-target="portalRecoveryMessage" novalidate>
+            <div class="portal-field">
+              <label class="portal-label" for="portalRecoveryEmail">E-mail</label>
+              <input class="portal-input" id="portalRecoveryEmail" name="email" type="email" autocomplete="email" placeholder="seu@email.com" aria-describedby="portalRecoveryMessage portalRecoveryEmailError" required />
+              <p class="portal-field-error" id="portalRecoveryEmailError" hidden></p>
+            </div>
+            <button class="portal-button primary" type="submit">Enviar instruções</button>
+            <p class="portal-message" id="portalRecoveryMessage" aria-live="polite"></p>
+          </form>
+          <p class="portal-page-copy"><a href="/portal/login/">Voltar ao login</a></p>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
