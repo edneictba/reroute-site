@@ -1,12 +1,13 @@
 const navShell = document.querySelector('[data-nav]');
 const toggle = document.querySelector('[data-menu-toggle]');
 const links = document.querySelector('[data-nav-links]');
+const getTranslation = (key, fallback = '') => window.rerouteI18n?.t(key) || fallback;
 
 const setMenuState = (open) => {
   links?.classList.toggle('open', open);
   toggle?.classList.toggle('active', open);
   toggle?.setAttribute('aria-expanded', String(open));
-  toggle?.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+  toggle?.setAttribute('aria-label', open ? getTranslation('nav.close', 'Fechar menu') : getTranslation('nav.open', 'Abrir menu'));
 };
 
 window.addEventListener('scroll', () => {
@@ -218,8 +219,6 @@ const fieldErrors = {
   email: document.getElementById('emailError'),
   whatsapp: document.getElementById('whatsappError')
 };
-const successMessage = 'Cadastro realizado com sucesso! Verifique seu e-mail. Caso a mensagem esteja em Spam, Lixo Eletrônico ou Promoções, marque-a como confiável para continuar recebendo as comunicações do REROUTE.';
-
 const SUPABASE_URL = 'https://lfubkmzwahfuvngegdhg.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_o5-WlqjAkGLQJiyMjWJ8hA_eazYqsHS';
 const LEADS_ENDPOINT = `${SUPABASE_URL}/rest/v1/leads`;
@@ -239,26 +238,46 @@ const normalizeEmail = (value) => value.trim().toLowerCase();
 
 const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
 
-const internationalPhoneInput = whatsappInput && window.intlTelInput
-  ? window.intlTelInput(whatsappInput, {
+const getPhoneOptions = () => ({
       initialCountry: 'br',
       separateDialCode: true,
       countrySearch: true,
       countryOrder: ['br', 'pe', 'ca', 'us', 'pt'],
-      countryNameLocale: 'pt-BR',
+      countryNameLocale: window.rerouteI18n?.getCountryLocale() || 'pt-BR',
       strictMode: true,
       formatAsYouType: true,
-      i18n: {
-        selectedCountryAriaLabel: 'Alterar país para o número de telefone, selecionado ${countryName} (${dialCode})',
-        noCountrySelected: 'Selecionar país para o número de telefone',
-        countryListAriaLabel: 'Lista de países',
-        searchPlaceholder: 'Pesquisar país',
-        clearSearchAriaLabel: 'Limpar pesquisa',
-        searchEmptyState: 'Nenhum país encontrado',
-        searchSummaryAria: (count) => `${count} ${count === 1 ? 'país encontrado' : 'países encontrados'}`
+      uiTranslations: {
+        selectedCountryAriaLabel: getTranslation('phone.selected', 'Alterar país para o número de telefone, selecionado ${countryName} (${dialCode})'),
+        noCountrySelected: getTranslation('phone.none', 'Selecionar país para o número de telefone'),
+        countryListAriaLabel: getTranslation('phone.list', 'Lista de países'),
+        searchPlaceholder: getTranslation('phone.search', 'Pesquisar país'),
+        clearSearchAriaLabel: getTranslation('phone.clear', 'Limpar pesquisa'),
+        searchEmptyState: getTranslation('phone.empty', 'Nenhum país encontrado'),
+        searchSummaryAria: (count) => `${count} ${getTranslation('phone.list', 'países')}`
       }
-    })
+    });
+
+let internationalPhoneInput = whatsappInput && window.intlTelInput
+  ? window.intlTelInput(whatsappInput, getPhoneOptions())
   : null;
+
+window.addEventListener('reroute:languagechange', () => {
+  if (!whatsappInput || !window.intlTelInput) {
+    return;
+  }
+
+  const selectedCountry = internationalPhoneInput?.getSelectedCountry()?.iso2 || 'br';
+  const currentNumber = internationalPhoneInput?.getNumber() || whatsappInput.value;
+  internationalPhoneInput?.destroy();
+  internationalPhoneInput = window.intlTelInput(whatsappInput, {
+    ...getPhoneOptions(),
+    initialCountry: selectedCountry
+  });
+
+  if (currentNumber) {
+    internationalPhoneInput.setNumber(currentNumber);
+  }
+});
 
 const getInternationalPhone = () => {
   if (!internationalPhoneInput || !internationalPhoneInput.isValidNumber()) {
@@ -286,21 +305,21 @@ const validateLeadForm = () => {
   const invalidFields = [];
 
   if (name.length < 2) {
-    setFieldError(nameInput, fieldErrors.nome, 'Informe o nome pelo qual você gostaria de ser chamado.');
+    setFieldError(nameInput, fieldErrors.nome, getTranslation('form.nameInvalid', 'Informe o nome pelo qual você gostaria de ser chamado.'));
     invalidFields.push(nameInput);
   } else {
     setFieldError(nameInput, fieldErrors.nome, '');
   }
 
   if (!isValidEmail(email)) {
-    setFieldError(emailInput, fieldErrors.email, 'Informe um e-mail válido.');
+    setFieldError(emailInput, fieldErrors.email, getTranslation('form.emailInvalid', 'Informe um e-mail válido.'));
     invalidFields.push(emailInput);
   } else {
     setFieldError(emailInput, fieldErrors.email, '');
   }
 
   if (!whatsapp) {
-    setFieldError(whatsappInput, fieldErrors.whatsapp, 'Informe um WhatsApp válido para o país selecionado.');
+    setFieldError(whatsappInput, fieldErrors.whatsapp, getTranslation('form.phoneInvalid', 'Informe um WhatsApp válido para o país selecionado.'));
     invalidFields.push(whatsappInput);
   } else {
     setFieldError(whatsappInput, fieldErrors.whatsapp, '');
@@ -345,7 +364,7 @@ whatsappInput?.addEventListener('countrychange', () => {
 
 const openSuccessModal = () => {
   if (!successModal || !successModalDialog) {
-    setFormMessage(successMessage);
+    setFormMessage(getTranslation('form.success'));
     return;
   }
 
@@ -362,7 +381,7 @@ const closeSuccessModal = () => {
 
   successModal.hidden = true;
   document.body.classList.remove('modal-open');
-  setFormMessage(successMessage);
+  setFormMessage(getTranslation('form.success'));
 
   if (modalReturnFocus && document.contains(modalReturnFocus)) {
     modalReturnFocus.focus({ preventScroll: true });
@@ -451,8 +470,8 @@ form?.addEventListener('submit', async (event) => {
     return;
   }
 
-  const submitButton = form.querySelector('button');
-  const originalButtonText = submitButton?.textContent || 'Cadastrar';
+  const submitButton = form.querySelector('button[type="submit"]');
+  const originalButtonText = submitButton?.textContent || getTranslation('form.submit', 'Cadastrar');
   const validation = validateLeadForm();
 
   if (!validation.valid) {
@@ -481,13 +500,13 @@ form?.addEventListener('submit', async (event) => {
     whatsapp
   };
 
-  setFormMessage('Enviando cadastro...');
+  setFormMessage(getTranslation('form.sending', 'Enviando cadastro...'));
   form.setAttribute('aria-busy', 'true');
   submissionInProgress = true;
 
   if (submitButton) {
     submitButton.disabled = true;
-    submitButton.textContent = 'Enviando...';
+    submitButton.textContent = getTranslation('form.sendingButton', 'Enviando...');
   }
 
   try {
@@ -506,7 +525,7 @@ form?.addEventListener('submit', async (event) => {
       const errorData = await parseSupabaseError(response);
 
       if (response.status === 409 || errorData.code === '23505') {
-        setFormMessage('Este e-mail ja esta cadastrado. Obrigado pelo interesse no REROUTE.');
+        setFormMessage(getTranslation('form.duplicate', 'Este e-mail já está cadastrado. Obrigado pelo interesse no REROUTE.'));
         return;
       }
 
@@ -529,7 +548,7 @@ form?.addEventListener('submit', async (event) => {
 
     openSuccessModal();
   } catch (error) {
-    setFormMessage('Nao foi possivel enviar seu cadastro agora. Tente novamente em instantes.');
+    setFormMessage(getTranslation('form.failure', 'Não foi possível enviar seu cadastro agora. Tente novamente em instantes.'));
   } finally {
     form.removeAttribute('aria-busy');
     submissionInProgress = false;
