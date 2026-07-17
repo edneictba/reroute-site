@@ -267,6 +267,14 @@ const initInteractiveDemo = () => {
       descriptionKey: 'demo.description5',
       title: 'Seu primeiro passo começa agora',
       description: 'A rota começa com uma ação possível para hoje, acompanhada de check-ins e ajustes ao longo da jornada.'
+    },
+    {
+      image: 'assets/images/reroute-em-acao/06-1.png',
+      altKey: 'tour.alt6',
+      titleKey: 'demo.title6',
+      descriptionKey: 'demo.description6',
+      title: 'Seu painel inteligente',
+      description: 'Acompanhe sua rota, seus próximos passos, seus check-ins e sua evolução em um único painel.'
     }
   ];
 
