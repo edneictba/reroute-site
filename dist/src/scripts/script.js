@@ -89,6 +89,7 @@ if (productTour) {
 
   const renderProductTour = (nextIndex) => {
     activeIndex = (nextIndex + slides.length) % slides.length;
+    productTour.dataset.activeIndex = String(activeIndex);
     track.style.transform = `translate3d(-${activeIndex * 100}%, 0, 0)`;
 
     slides.forEach((slide, index) => {
@@ -205,6 +206,296 @@ if (productTour) {
 
   renderProductTour(0);
 }
+
+const initInteractiveDemo = () => {
+  const modal = document.getElementById('interactiveDemoModal');
+  const dialog = modal?.querySelector('.demo-modal__dialog');
+  const openTrigger = document.querySelector('[data-demo-open]');
+  const siteShell = document.querySelector('.site-shell');
+  const image = document.getElementById('interactiveDemoImage');
+  const imageError = modal?.querySelector('.demo-modal__image-error');
+  const stepLabel = document.getElementById('interactiveDemoStep');
+  const title = document.getElementById('interactiveDemoTitle');
+  const description = document.getElementById('interactiveDemoDescription');
+  const previousButton = modal?.querySelector('[data-demo-previous]');
+  const nextButton = modal?.querySelector('[data-demo-next]');
+  const ctaButton = modal?.querySelector('[data-demo-cta]');
+  const dots = [...(modal?.querySelectorAll('[data-demo-dot]') || [])];
+  const swipeHint = modal?.querySelector('[data-demo-swipe-hint]');
+
+  if (!modal || !dialog || !openTrigger || !image || !stepLabel || !title || !description) {
+    return;
+  }
+
+  const demoSteps = [
+    {
+      image: 'assets/images/reroute-em-acao/01.png',
+      altKey: 'tour.alt1',
+      titleKey: 'demo.title1',
+      descriptionKey: 'demo.description1',
+      title: 'Qual é o seu destino?',
+      description: 'Tudo começa entendendo onde você quer chegar. O REROUTE transforma seu objetivo em um destino claro.'
+    },
+    {
+      image: 'assets/images/reroute-em-acao/02.png',
+      altKey: 'tour.alt2',
+      titleKey: 'demo.title2',
+      descriptionKey: 'demo.description2',
+      title: 'Conte um pouco sobre o seu momento',
+      description: 'Sua rotina, seu tempo e sua realidade ajudam o REROUTE a entender de onde você está partindo.'
+    },
+    {
+      image: 'assets/images/reroute-em-acao/03.png',
+      altKey: 'tour.alt3',
+      titleKey: 'demo.title3',
+      descriptionKey: 'demo.description3',
+      title: 'Entendemos seu contexto',
+      description: 'O REROUTE identifica padrões, pontos fortes e obstáculos que podem influenciar sua jornada.'
+    },
+    {
+      image: 'assets/images/reroute-em-acao/04.png',
+      altKey: 'tour.alt4',
+      titleKey: 'demo.title4',
+      descriptionKey: 'demo.description4',
+      title: 'Sua rota é adaptativa',
+      description: 'Quando a vida muda, o REROUTE recalcula o próximo passo para manter você avançando.'
+    },
+    {
+      image: 'assets/images/reroute-em-acao/05.png',
+      altKey: 'tour.alt5',
+      titleKey: 'demo.title5',
+      descriptionKey: 'demo.description5',
+      title: 'Seu primeiro passo começa agora',
+      description: 'A rota começa com uma ação possível para hoje, acompanhada de check-ins e ajustes ao longo da jornada.'
+    }
+  ];
+
+  let activeDemoIndex = 0;
+  let modalReturnFocus = null;
+  let pointerStartX = null;
+  let suppressOpenClick = false;
+  let bodyPaddingRight = '';
+  let swipeHintDismissed = false;
+
+  const demoText = (key, fallback) => getTranslation(key, fallback);
+
+  const updateDemoUI = () => {
+    const step = demoSteps[activeDemoIndex];
+    const isFirst = activeDemoIndex === 0;
+    const isLast = activeDemoIndex === demoSteps.length - 1;
+    const stepNumber = activeDemoIndex + 1;
+
+    imageError.hidden = true;
+    image.hidden = false;
+    image.src = step.image;
+    image.alt = demoText(step.altKey, step.title);
+    stepLabel.textContent = demoText('demo.step', `PASSO ${stepNumber} DE ${demoSteps.length}`)
+      .replace('{current}', String(stepNumber))
+      .replace('{total}', String(demoSteps.length));
+    title.textContent = demoText(step.titleKey, step.title);
+    description.textContent = demoText(step.descriptionKey, step.description);
+
+    previousButton.disabled = isFirst;
+    nextButton.hidden = isLast;
+    ctaButton.hidden = !isLast;
+
+    dots.forEach((dot, index) => {
+      const isActive = index === activeDemoIndex;
+      dot.classList.toggle('is-active', isActive);
+      dot.setAttribute('aria-selected', String(isActive));
+      dot.setAttribute('aria-label', demoText('demo.goto', `Ir para o passo ${index + 1}`).replace('{step}', String(index + 1)));
+      dot.tabIndex = isActive ? 0 : -1;
+    });
+
+    dialog.dataset.demoStep = String(stepNumber);
+  };
+
+  const goToDemoSlide = (nextIndex) => {
+    const boundedIndex = Math.max(0, Math.min(nextIndex, demoSteps.length - 1));
+    if (boundedIndex === activeDemoIndex) {
+      return;
+    }
+
+    activeDemoIndex = boundedIndex;
+    swipeHintDismissed = true;
+    swipeHint.hidden = true;
+    updateDemoUI();
+  };
+
+  const setBackgroundInert = (inert) => {
+    if (siteShell) {
+      siteShell.inert = inert;
+    }
+  };
+
+  const openDemoModal = () => {
+    const carouselIndex = Number(productTour?.dataset.activeIndex || 0);
+    activeDemoIndex = carouselIndex >= 0 && carouselIndex < demoSteps.length ? carouselIndex : 0;
+    modalReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : openTrigger;
+    bodyPaddingRight = document.body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    updateDemoUI();
+    swipeHint.hidden = swipeHintDismissed;
+    modal.hidden = false;
+    document.body.classList.add('demo-modal-open');
+    setBackgroundInert(true);
+    productTour?.classList.add('has-opened-demo');
+    dialog.querySelector('[data-demo-close]')?.focus({ preventScroll: true });
+  };
+
+  const closeDemoModal = ({ returnFocus = true } = {}) => {
+    if (modal.hidden) {
+      return;
+    }
+
+    modal.hidden = true;
+    document.body.classList.remove('demo-modal-open');
+    document.body.style.paddingRight = bodyPaddingRight;
+    setBackgroundInert(false);
+
+    if (returnFocus && modalReturnFocus && document.contains(modalReturnFocus)) {
+      modalReturnFocus.focus({ preventScroll: true });
+    }
+
+    modalReturnFocus = null;
+  };
+
+  const trapDemoFocus = (event) => {
+    const focusable = [...dialog.querySelectorAll('button:not([disabled]):not([hidden]), [href], [tabindex]:not([tabindex="-1"])')]
+      .filter((element) => !element.hidden);
+
+    if (!focusable.length) {
+      return;
+    }
+
+    const firstElement = focusable[0];
+    const lastElement = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === firstElement) {
+      event.preventDefault();
+      lastElement.focus();
+    } else if (!event.shiftKey && document.activeElement === lastElement) {
+      event.preventDefault();
+      firstElement.focus();
+    }
+  };
+
+  const handleDemoSwipe = (distance) => {
+    if (Math.abs(distance) < 48) {
+      return;
+    }
+
+    goToDemoSlide(activeDemoIndex + (distance < 0 ? 1 : -1));
+  };
+
+  openTrigger.addEventListener('pointerdown', (event) => {
+    pointerStartX = event.clientX;
+  });
+
+  openTrigger.addEventListener('pointerup', (event) => {
+    if (pointerStartX === null) {
+      return;
+    }
+
+    suppressOpenClick = Math.abs(event.clientX - pointerStartX) > 12;
+    pointerStartX = null;
+
+    if (suppressOpenClick) {
+      window.requestAnimationFrame(() => {
+        suppressOpenClick = false;
+      });
+    }
+  });
+
+  openTrigger.addEventListener('click', () => {
+    if (!suppressOpenClick) {
+      openDemoModal();
+    }
+  });
+
+  openTrigger.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openDemoModal();
+    }
+  });
+
+  modal.addEventListener('click', (event) => {
+    if (event.target instanceof Element && event.target.closest('[data-demo-close]')) {
+      closeDemoModal();
+    }
+  });
+
+  previousButton?.addEventListener('click', () => goToDemoSlide(activeDemoIndex - 1));
+  nextButton?.addEventListener('click', () => goToDemoSlide(activeDemoIndex + 1));
+  dots.forEach((dot, index) => dot.addEventListener('click', () => goToDemoSlide(index)));
+
+  dialog.addEventListener('pointerdown', (event) => {
+    if (event.target instanceof Element && event.target.closest('button')) {
+      return;
+    }
+    pointerStartX = event.clientX;
+  });
+
+  dialog.addEventListener('pointerup', (event) => {
+    if (pointerStartX === null) {
+      return;
+    }
+    handleDemoSwipe(event.clientX - pointerStartX);
+    pointerStartX = null;
+  });
+
+  dialog.addEventListener('pointercancel', () => {
+    pointerStartX = null;
+  });
+
+  image.addEventListener('error', () => {
+    image.hidden = true;
+    imageError.hidden = false;
+  });
+
+  image.addEventListener('load', () => {
+    image.hidden = false;
+    imageError.hidden = true;
+  });
+
+  ctaButton?.addEventListener('click', () => {
+    const formSection = document.getElementById('comecar');
+    const firstField = document.getElementById('nome');
+    closeDemoModal({ returnFocus: false });
+    formSection?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    window.requestAnimationFrame(() => firstField?.focus({ preventScroll: true }));
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (modal.hidden) {
+      return;
+    }
+
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeDemoModal();
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      goToDemoSlide(activeDemoIndex - 1);
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      goToDemoSlide(activeDemoIndex + 1);
+    } else if (event.key === 'Tab') {
+      trapDemoFocus(event);
+    }
+  });
+
+  window.addEventListener('reroute:languagechange', updateDemoUI);
+  updateDemoUI();
+};
+
+initInteractiveDemo();
 
 const form = document.getElementById('waitlistForm');
 const message = document.getElementById('formMessage');

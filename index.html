@@ -215,7 +215,14 @@ A reprodução deste código, identidade visual, metodologia, arquitetura ou con
           </header>
 
           <div class="product-tour-carousel reveal" role="region" aria-roledescription="carrossel" aria-label="Jornada pelo aplicativo REROUTE" aria-live="off">
-            <div class="product-tour-viewport" data-product-tour-viewport>
+            <div
+              class="product-tour-viewport"
+              role="button"
+              tabindex="0"
+              aria-label="Explorar demonstração interativa do REROUTE"
+              data-product-tour-viewport
+              data-demo-open
+            >
               <div class="product-tour-track" data-product-tour-track>
                 <figure class="product-tour-slide is-active" data-product-tour-slide aria-label="1 de 6">
                   <div class="product-tour-media product-tour-media-portrait">
@@ -254,6 +261,11 @@ A reprodução deste código, identidade visual, metodologia, arquitetura ou con
                   <figcaption><span>06</span>Seu painel inteligente</figcaption>
                 </figure>
               </div>
+              <span class="product-tour-explore-hint" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg>
+                <span class="product-tour-explore-desktop">Clique para explorar</span>
+                <span class="product-tour-explore-touch">Toque para explorar</span>
+              </span>
             </div>
 
             <button class="product-tour-arrow product-tour-arrow-previous" type="button" aria-label="Ver tela anterior" data-product-tour-previous><span aria-hidden="true">←</span></button>
@@ -530,6 +542,61 @@ A reprodução deste código, identidade visual, metodologia, arquitetura ou con
       </div>
     </footer>
   </div>
+
+  <div class="demo-modal" id="interactiveDemoModal" hidden>
+    <div class="demo-modal__backdrop" data-demo-close></div>
+    <section
+      class="demo-modal__dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="interactiveDemoTitle"
+      aria-describedby="interactiveDemoDescription"
+      tabindex="-1"
+    >
+      <button class="demo-modal__close" type="button" aria-label="Fechar demonstração" data-demo-close>
+        <span aria-hidden="true">×</span>
+      </button>
+
+      <div class="demo-modal__visual">
+        <div class="demo-modal__phone">
+          <img
+            id="interactiveDemoImage"
+            src="assets/images/reroute-em-acao/01.png"
+            width="941"
+            height="1672"
+            alt="Tela do REROUTE para escolher o destino da jornada"
+            decoding="async"
+          />
+          <p class="demo-modal__image-error" role="status" hidden>Não foi possível carregar esta tela.</p>
+        </div>
+      </div>
+
+      <div class="demo-modal__content">
+        <span class="demo-modal__step" id="interactiveDemoStep">PASSO 1 DE 5</span>
+        <h2 id="interactiveDemoTitle">Qual é o seu destino?</h2>
+        <p id="interactiveDemoDescription">Tudo começa entendendo onde você quer chegar. O REROUTE transforma seu objetivo em um destino claro.</p>
+
+        <div class="demo-modal__dots" role="tablist" aria-label="Selecionar passo da demonstração">
+          <button class="is-active" type="button" role="tab" aria-label="Ir para o passo 1" aria-selected="true" data-demo-dot="0"></button>
+          <button type="button" role="tab" aria-label="Ir para o passo 2" aria-selected="false" data-demo-dot="1"></button>
+          <button type="button" role="tab" aria-label="Ir para o passo 3" aria-selected="false" data-demo-dot="2"></button>
+          <button type="button" role="tab" aria-label="Ir para o passo 4" aria-selected="false" data-demo-dot="3"></button>
+          <button type="button" role="tab" aria-label="Ir para o passo 5" aria-selected="false" data-demo-dot="4"></button>
+        </div>
+
+        <p class="demo-modal__keyboard-hint">Use as setas do teclado para navegar.</p>
+        <p class="demo-modal__swipe-hint" data-demo-swipe-hint>Deslize para continuar</p>
+
+        <div class="demo-modal__actions">
+          <button class="btn btn-secondary" type="button" data-demo-previous disabled>Anterior</button>
+          <button class="btn btn-primary" type="button" data-demo-next>Próximo</button>
+        </div>
+
+        <button class="btn btn-primary demo-modal__cta" type="button" data-demo-cta hidden>Começar minha rota</button>
+      </div>
+    </section>
+  </div>
+
   <script src="src/scripts/i18n.js?v=20260717-i18n" defer></script>
   <script src="assets/vendor/intl-tel-input/js/intlTelInputWithUtils.min.js?v=29.1.2" defer></script>
   <script src="src/scripts/script.js?v=20260717-i18n" defer></script>
