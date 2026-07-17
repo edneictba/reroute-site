@@ -63,6 +63,7 @@ A reprodução deste código, identidade visual, metodologia, arquitetura ou con
   <meta name="twitter:image:alt" content="REROUTE — The First Human Navigation System" />
   <link rel="preload" as="image" href="assets/images/logo-reroute-hns-640.webp" type="image/webp" />
   <link rel="preload" as="image" href="assets/images/reroute-em-acao/01.png" type="image/png" />
+  <link rel="stylesheet" href="assets/vendor/intl-tel-input/css/intlTelInput.min.css?v=29.1.2" />
   <link rel="stylesheet" href="src/styles/style.css?v=20260710-hns-art-final" />
   <script type="application/ld+json">
     {
@@ -432,8 +433,9 @@ A reprodução deste código, identidade visual, metodologia, arquitetura ou con
               <p class="field-error" id="emailError" aria-live="polite"></p>
             </div>
             <div class="form-field form-field-full">
-              <label class="sr-only" for="whatsapp">WhatsApp com DDD</label>
-              <input type="tel" id="whatsapp" name="whatsapp" placeholder="WhatsApp com DDD" autocomplete="tel" inputmode="tel" required maxlength="15" aria-describedby="whatsappError" />
+              <label class="sr-only" for="whatsapp">Número do WhatsApp</label>
+              <input type="tel" id="whatsapp" name="whatsapp_local" placeholder="Número do WhatsApp" autocomplete="tel" inputmode="tel" required aria-describedby="whatsappError" />
+              <input type="hidden" id="whatsappE164" name="whatsapp" />
               <p class="field-error" id="whatsappError" aria-live="polite"></p>
             </div>
             <button class="btn btn-primary" type="submit">Quero experimentar gratuitamente</button>
@@ -526,6 +528,7 @@ A reprodução deste código, identidade visual, metodologia, arquitetura ou con
       </div>
     </footer>
   </div>
+  <script src="assets/vendor/intl-tel-input/js/intlTelInputWithUtils.min.js?v=29.1.2" defer></script>
   <script src="src/scripts/script.js?v=20260709-supabase" defer></script>
 </body>
 </html>

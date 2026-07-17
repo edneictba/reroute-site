@@ -210,6 +210,7 @@ const message = document.getElementById('formMessage');
 const nameInput = document.getElementById('nome');
 const emailInput = document.getElementById('email');
 const whatsappInput = document.getElementById('whatsapp');
+const whatsappE164Input = document.getElementById('whatsappE164');
 const successModal = document.getElementById('successModal');
 const successModalDialog = successModal?.querySelector('.success-modal__dialog');
 const fieldErrors = {
@@ -217,17 +218,6 @@ const fieldErrors = {
   email: document.getElementById('emailError'),
   whatsapp: document.getElementById('whatsappError')
 };
-const validBrazilianAreaCodes = new Set([
-  '11', '12', '13', '14', '15', '16', '17', '18', '19',
-  '21', '22', '24', '27', '28',
-  '31', '32', '33', '34', '35', '37', '38',
-  '41', '42', '43', '44', '45', '46', '47', '48', '49',
-  '51', '53', '54', '55',
-  '61', '62', '63', '64', '65', '66', '67', '68', '69',
-  '71', '73', '74', '75', '77', '79',
-  '81', '82', '83', '84', '85', '86', '87', '88', '89',
-  '91', '92', '93', '94', '95', '96', '97', '98', '99'
-]);
 const successMessage = 'Cadastro realizado com sucesso! Verifique seu e-mail. Caso a mensagem esteja em Spam, Lixo Eletrônico ou Promoções, marque-a como confiável para continuar recebendo as comunicações do REROUTE.';
 
 const SUPABASE_URL = 'https://lfubkmzwahfuvngegdhg.supabase.co';
@@ -247,43 +237,36 @@ const normalizeName = (value) => value.trim().replace(/\s+/g, ' ');
 
 const normalizeEmail = (value) => value.trim().toLowerCase();
 
-const getDigits = (value) => value.replace(/\D/g, '');
-
 const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
 
-const hasInvalidRepeatedDigits = (digits) => /^(\d)\1+$/.test(digits);
+const internationalPhoneInput = whatsappInput && window.intlTelInput
+  ? window.intlTelInput(whatsappInput, {
+      initialCountry: 'br',
+      separateDialCode: true,
+      countrySearch: true,
+      countryOrder: ['br', 'pe', 'ca', 'us', 'pt'],
+      countryNameLocale: 'pt-BR',
+      strictMode: true,
+      formatAsYouType: true,
+      i18n: {
+        selectedCountryAriaLabel: 'Alterar país para o número de telefone, selecionado ${countryName} (${dialCode})',
+        noCountrySelected: 'Selecionar país para o número de telefone',
+        countryListAriaLabel: 'Lista de países',
+        searchPlaceholder: 'Pesquisar país',
+        clearSearchAriaLabel: 'Limpar pesquisa',
+        searchEmptyState: 'Nenhum país encontrado',
+        searchSummaryAria: (count) => `${count} ${count === 1 ? 'país encontrado' : 'países encontrados'}`
+      }
+    })
+  : null;
 
-const isValidBrazilianPhone = (digits) => {
-  if (!/^\d{10,11}$/.test(digits) || hasInvalidRepeatedDigits(digits)) {
-    return false;
+const getInternationalPhone = () => {
+  if (!internationalPhoneInput || !internationalPhoneInput.isValidNumber()) {
+    return '';
   }
 
-  const areaCode = digits.slice(0, 2);
-  if (!validBrazilianAreaCodes.has(areaCode)) {
-    return false;
-  }
-
-  return digits !== '123456789' && digits !== '1234567890' && digits !== '12345678901';
-};
-
-const formatBrazilianPhone = (value) => {
-  const digits = getDigits(value).slice(0, 11);
-  const areaCode = digits.slice(0, 2);
-  const number = digits.slice(2);
-
-  if (digits.length <= 2) {
-    return areaCode ? `(${areaCode}` : '';
-  }
-
-  if (digits.length <= 6) {
-    return `(${areaCode}) ${number}`;
-  }
-
-  if (digits.length <= 10) {
-    return `(${areaCode}) ${number.slice(0, 4)}-${number.slice(4)}`;
-  }
-
-  return `(${areaCode}) ${number.slice(0, 5)}-${number.slice(5)}`;
+  const e164 = internationalPhoneInput.getNumber();
+  return /^\+[1-9]\d{7,14}$/.test(e164) ? e164 : '';
 };
 
 const setFieldError = (input, errorElement, messageText) => {
@@ -299,7 +282,7 @@ const setFieldError = (input, errorElement, messageText) => {
 const validateLeadForm = () => {
   const name = normalizeName(nameInput?.value || '');
   const email = normalizeEmail(emailInput?.value || '');
-  const whatsapp = getDigits(whatsappInput?.value || '');
+  const whatsapp = getInternationalPhone();
   const invalidFields = [];
 
   if (name.length < 2) {
@@ -316,8 +299,8 @@ const validateLeadForm = () => {
     setFieldError(emailInput, fieldErrors.email, '');
   }
 
-  if (!isValidBrazilianPhone(whatsapp)) {
-    setFieldError(whatsappInput, fieldErrors.whatsapp, 'Informe um número de WhatsApp válido com DDD.');
+  if (!whatsapp) {
+    setFieldError(whatsappInput, fieldErrors.whatsapp, 'Informe um WhatsApp válido para o país selecionado.');
     invalidFields.push(whatsappInput);
   } else {
     setFieldError(whatsappInput, fieldErrors.whatsapp, '');
@@ -346,18 +329,19 @@ const clearFieldErrorOnInput = (input, errorElement, validator) => {
   });
 };
 
-whatsappInput?.addEventListener('input', () => {
-  const cursorAtEnd = whatsappInput.selectionStart === whatsappInput.value.length;
-  whatsappInput.value = formatBrazilianPhone(whatsappInput.value);
-
-  if (cursorAtEnd) {
-    whatsappInput.setSelectionRange(whatsappInput.value.length, whatsappInput.value.length);
-  }
-});
-
 clearFieldErrorOnInput(nameInput, fieldErrors.nome, () => normalizeName(nameInput?.value || '').length >= 2);
 clearFieldErrorOnInput(emailInput, fieldErrors.email, () => isValidEmail(normalizeEmail(emailInput?.value || '')));
-clearFieldErrorOnInput(whatsappInput, fieldErrors.whatsapp, () => isValidBrazilianPhone(getDigits(whatsappInput?.value || '')));
+clearFieldErrorOnInput(whatsappInput, fieldErrors.whatsapp, () => Boolean(getInternationalPhone()));
+
+whatsappInput?.addEventListener('countrychange', () => {
+  if (whatsappE164Input) {
+    whatsappE164Input.value = '';
+  }
+
+  if (whatsappInput.getAttribute('aria-invalid') === 'true' && getInternationalPhone()) {
+    setFieldError(whatsappInput, fieldErrors.whatsapp, '');
+  }
+});
 
 const openSuccessModal = () => {
   if (!successModal || !successModalDialog) {
@@ -487,8 +471,8 @@ form?.addEventListener('submit', async (event) => {
     emailInput.value = email;
   }
 
-  if (whatsappInput) {
-    whatsappInput.value = formatBrazilianPhone(whatsapp);
+  if (whatsappE164Input) {
+    whatsappE164Input.value = whatsapp;
   }
 
   const payload = {
@@ -537,6 +521,12 @@ form?.addEventListener('submit', async (event) => {
     }
 
     form.reset();
+    internationalPhoneInput?.setSelectedCountry('br');
+
+    if (whatsappE164Input) {
+      whatsappE164Input.value = '';
+    }
+
     openSuccessModal();
   } catch (error) {
     setFormMessage('Nao foi possivel enviar seu cadastro agora. Tente novamente em instantes.');
