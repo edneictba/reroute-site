@@ -373,17 +373,29 @@ const languageFlags = {
   en: '<svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" rx="2" fill="#fff"/><path d="M0 0h24v2H0Zm0 4h24v2H0Zm0 4h24v2H0Zm0 4h24v2H0Z" fill="#b22234"/><path d="M0 0h10v8H0Z" fill="#3c3b6e"/><g fill="#fff"><circle cx="2" cy="2" r=".55"/><circle cx="5" cy="2" r=".55"/><circle cx="8" cy="2" r=".55"/><circle cx="3.5" cy="4" r=".55"/><circle cx="6.5" cy="4" r=".55"/><circle cx="2" cy="6" r=".55"/><circle cx="5" cy="6" r=".55"/><circle cx="8" cy="6" r=".55"/></g></svg>'
 };
 
+const LANGUAGE_STORAGE_KEY = 'reroute-language';
+const DEFAULT_LANGUAGE = 'pt';
+
 const getStoredLanguage = () => {
   try {
-    const stored = localStorage.getItem('reroute-language');
-    return languageOptions[stored] ? stored : 'pt';
+    const stored = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    return languageOptions[stored] ? stored : null;
   } catch {
-    return 'pt';
+    return null;
   }
 };
 
-let currentLanguage = getStoredLanguage();
+const savedLanguage = getStoredLanguage();
+let currentLanguage = savedLanguage || DEFAULT_LANGUAGE;
 const translate = (key) => translations[currentLanguage]?.[key] ?? translations.pt[key] ?? key;
+
+const persistLanguage = (language) => {
+  try {
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+  } catch {
+    // The selected language remains active for the current session when storage is unavailable.
+  }
+};
 
 const renderLanguageSwitcher = (container) => {
   const active = languageOptions[currentLanguage];
@@ -412,7 +424,13 @@ const updateTourAccessibility = () => {
 };
 
 const applyLanguage = (language, { persist = true } = {}) => {
-  currentLanguage = languageOptions[language] ? language : 'pt';
+  const nextLanguage = languageOptions[language] ? language : currentLanguage;
+  currentLanguage = nextLanguage;
+
+  if (persist) {
+    persistLanguage(currentLanguage);
+  }
+
   document.documentElement.lang = languageOptions[currentLanguage].lang;
   document.title = translate('meta.title');
   document.querySelector('meta[name="description"]')?.setAttribute('content', translate('meta.description'));
@@ -434,14 +452,6 @@ const applyLanguage = (language, { persist = true } = {}) => {
   document.querySelectorAll('[data-language-switcher]').forEach(renderLanguageSwitcher);
   document.querySelector('[data-menu-toggle]')?.setAttribute('aria-label', translate('nav.open'));
 
-  if (persist) {
-    try {
-      localStorage.setItem('reroute-language', currentLanguage);
-    } catch {
-      // The page remains usable when storage is unavailable.
-    }
-  }
-
   window.dispatchEvent(new CustomEvent('reroute:languagechange', { detail: { language: currentLanguage } }));
 };
 
@@ -462,6 +472,7 @@ document.addEventListener('click', (event) => {
   }
 
   if (option) {
+    event.preventDefault();
     applyLanguage(option.dataset.language);
     return;
   }
