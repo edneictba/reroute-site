@@ -518,12 +518,13 @@ const fieldErrors = {
   email: document.getElementById('emailError'),
   whatsapp: document.getElementById('whatsappError')
 };
-const SUPABASE_URL = 'https://lfubkmzwahfuvngegdhg.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_o5-WlqjAkGLQJiyMjWJ8hA_eazYqsHS';
-const LEADS_ENDPOINT = `${SUPABASE_URL}/rest/v1/leads`;
-const WELCOME_EMAIL_ENDPOINT = '/api/send-welcome-email';
+const turnstileContainer = document.getElementById('turnstileWidget');
+const turnstileSiteKey = String(window.REROUTE_PUBLIC_ENV?.turnstileSiteKey || '');
+const REGISTRATION_ENDPOINT = '/api/register-lead';
 let submissionInProgress = false;
 let modalReturnFocus = null;
+let turnstileWidgetId = null;
+let pendingTurnstile = null;
 
 const setFormMessage = (text) => {
   if (message) {
@@ -720,16 +721,6 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
-const parseSupabaseError = async (response) => {
-  const text = await response.text();
-
-  try {
-    return JSON.parse(text);
-  } catch {
-    return { message: text };
-  }
-};
-
 const parseApiResponse = async (response) => {
   const text = await response.text();
 
@@ -740,26 +731,58 @@ const parseApiResponse = async (response) => {
   }
 };
 
-const sendWelcomeEmail = async ({ name, email }) => {
-  const response = await fetch(WELCOME_EMAIL_ENDPOINT, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ name, email })
-  });
-
-  const responseData = await parseApiResponse(response);
-
-  if (!response.ok || responseData?.success === false) {
-    console.error('Erro ao enviar e-mail:', {
-      status: response.status,
-      response: responseData
-    });
-    return false;
+const settleTurnstile = (method, value) => {
+  if (!pendingTurnstile) {
+    return;
   }
 
-  return true;
+  const pending = pendingTurnstile;
+  pendingTurnstile = null;
+  clearTimeout(pending.timeout);
+  pending[method](value);
+};
+
+const initializeTurnstile = () => {
+  if (!turnstileContainer || !turnstileSiteKey || !window.turnstile || turnstileWidgetId !== null) {
+    return turnstileWidgetId;
+  }
+
+  turnstileWidgetId = window.turnstile.render(turnstileContainer, {
+    sitekey: turnstileSiteKey,
+    theme: 'dark',
+    execution: 'execute',
+    appearance: 'interaction-only',
+    action: 'waitlist_registration',
+    callback: (token) => settleTurnstile('resolve', token),
+    'error-callback': () => settleTurnstile('reject', new Error('turnstile_error')),
+    'expired-callback': () => settleTurnstile('reject', new Error('turnstile_expired')),
+    'timeout-callback': () => settleTurnstile('reject', new Error('turnstile_timeout'))
+  });
+
+  return turnstileWidgetId;
+};
+
+const requestTurnstileToken = () => new Promise((resolve, reject) => {
+  const widgetId = initializeTurnstile();
+
+  if (widgetId === null || pendingTurnstile) {
+    reject(new Error('turnstile_unavailable'));
+    return;
+  }
+
+  pendingTurnstile = {
+    resolve,
+    reject,
+    timeout: setTimeout(() => settleTurnstile('reject', new Error('turnstile_timeout')), 15000)
+  };
+
+  window.turnstile.execute(widgetId);
+});
+
+const resetTurnstile = () => {
+  if (turnstileWidgetId !== null && window.turnstile) {
+    window.turnstile.reset(turnstileWidgetId);
+  }
 };
 
 form?.addEventListener('submit', async (event) => {
@@ -793,12 +816,6 @@ form?.addEventListener('submit', async (event) => {
     whatsappE164Input.value = whatsapp;
   }
 
-  const payload = {
-    name,
-    email,
-    whatsapp
-  };
-
   setFormMessage(getTranslation('form.sending', 'Enviando cadastro...'));
   form.setAttribute('aria-busy', 'true');
   submissionInProgress = true;
@@ -809,33 +826,18 @@ form?.addEventListener('submit', async (event) => {
   }
 
   try {
-    const response = await fetch(LEADS_ENDPOINT, {
+    const turnstileToken = await requestTurnstileToken();
+    const response = await fetch(REGISTRATION_ENDPOINT, {
       method: 'POST',
       headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify({ name, email, whatsapp, turnstileToken })
     });
+    const responseData = await parseApiResponse(response);
 
-    if (!response.ok) {
-      const errorData = await parseSupabaseError(response);
-
-      if (response.status === 409 || errorData.code === '23505') {
-        setFormMessage(getTranslation('form.duplicate', 'Este e-mail já está cadastrado. Obrigado pelo interesse no REROUTE.'));
-        return;
-      }
-
-      console.error('Erro Supabase:', response.status, errorData);
-      throw new Error(errorData.message || 'Erro ao enviar cadastro.');
-    }
-
-    try {
-      await sendWelcomeEmail({ name, email });
-    } catch (emailError) {
-      console.error('Erro ao enviar e-mail:', emailError);
+    if (!response.ok || responseData?.success !== true) {
+      throw new Error('registration_failed');
     }
 
     form.reset();
@@ -849,6 +851,7 @@ form?.addEventListener('submit', async (event) => {
   } catch (error) {
     setFormMessage(getTranslation('form.failure', 'Não foi possível enviar seu cadastro agora. Tente novamente em instantes.'));
   } finally {
+    resetTurnstile();
     form.removeAttribute('aria-busy');
     submissionInProgress = false;
 

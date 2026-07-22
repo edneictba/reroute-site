@@ -1,5 +1,12 @@
 .agents
+.codex
 .git
+.env
+.env.*
 dist
+docs
+investidor
+portal
+src/portal
 supabase
 README.md

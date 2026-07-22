@@ -6,6 +6,7 @@
   "scripts": {
     "build": "node scripts/build.js",
     "lint": "node scripts/lint.js",
+    "test:production": "node scripts/email-system-smoke-test.js && node scripts/production-readiness-test.js",
     "dev": "python -m http.server 4174"
   }
 }

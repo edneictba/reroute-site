@@ -64,7 +64,7 @@ A reprodução deste código, identidade visual, metodologia, arquitetura ou con
   <link rel="preload" as="image" href="assets/images/logo-reroute-hns-640.webp" type="image/webp" />
   <link rel="preload" as="image" href="assets/images/reroute-em-acao/01.png" type="image/png" />
   <link rel="stylesheet" href="assets/vendor/intl-tel-input/css/intlTelInput.min.css?v=29.1.2" />
-  <link rel="stylesheet" href="src/styles/style.css?v=20260717-product-tour-mobile" />
+  <link rel="stylesheet" href="src/styles/style.css?v=20260721-secure-registration" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -452,6 +452,7 @@ A reprodução deste código, identidade visual, metodologia, arquitetura ou con
               <input type="hidden" id="whatsappE164" name="whatsapp" />
               <p class="field-error" id="whatsappError" aria-live="polite"></p>
             </div>
+            <div id="turnstileWidget" aria-live="polite"></div>
             <button class="btn btn-primary" type="submit">Quero experimentar gratuitamente</button>
             <p class="form-message" id="formMessage" role="status" aria-live="polite" aria-atomic="true"></p>
           </form>
@@ -598,8 +599,10 @@ A reprodução deste código, identidade visual, metodologia, arquitetura ou con
     </section>
   </div>
 
+  <script src="src/scripts/runtime-config.js?v=20260722-production" defer></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async></script>
   <script src="src/scripts/i18n.js?v=20260719-language-persistence" defer></script>
   <script src="assets/vendor/intl-tel-input/js/intlTelInputWithUtils.min.js?v=29.1.2" defer></script>
-  <script src="src/scripts/script.js?v=20260717-interactive-demo6" defer></script>
+  <script src="src/scripts/script.js?v=20260721-secure-registration" defer></script>
 </body>
 </html>

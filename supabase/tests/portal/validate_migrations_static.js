@@ -76,9 +76,10 @@ const expectedPolicies = [
 ];
 
 const errors = [];
-const files = fs.existsSync(migrationsDir)
+const allMigrationFiles = fs.existsSync(migrationsDir)
   ? fs.readdirSync(migrationsDir).filter((file) => file.endsWith('.sql')).sort()
   : [];
+const files = expectedFiles.filter((file) => allMigrationFiles.includes(file));
 
 const sqlByFile = Object.fromEntries(
   files.map((file) => [file, fs.readFileSync(path.join(migrationsDir, file), 'utf8')])

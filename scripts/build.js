@@ -40,13 +40,16 @@ const entries = [
   'politica-de-privacidade.html',
   'termos-de-uso.html',
   'aviso-legal.html',
-  'portal',
-  'investidor',
   'assets',
-  'src',
   'robots.txt',
   'sitemap.xml',
   'site.webmanifest'
+];
+
+const publicSourceEntries = [
+  'src/scripts/i18n.js',
+  'src/scripts/script.js',
+  'src/styles/style.css'
 ];
 
 fs.rmSync(distDir, { recursive: true, force: true });
@@ -63,14 +66,20 @@ for (const entry of entries) {
   fs.cpSync(source, target, { recursive: true });
 }
 
-const portalConfigDir = path.join(distDir, 'src', 'portal', 'core');
-fs.mkdirSync(portalConfigDir, { recursive: true });
+for (const entry of publicSourceEntries) {
+  const source = path.join(rootDir, entry);
+  const target = path.join(distDir, entry);
+
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.copyFileSync(source, target);
+}
+
+const publicRuntimeConfigPath = path.join(distDir, 'src', 'scripts', 'runtime-config.js');
+fs.mkdirSync(path.dirname(publicRuntimeConfigPath), { recursive: true });
 fs.writeFileSync(
-  path.join(portalConfigDir, 'runtime-config.js'),
-  `window.REROUTE_PORTAL_ENV = ${JSON.stringify({
-    supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '',
-    supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '',
-    environment: process.env.NODE_ENV || 'development'
+  publicRuntimeConfigPath,
+  `window.REROUTE_PUBLIC_ENV = ${JSON.stringify({
+    turnstileSiteKey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''
   }, null, 2)};\n`,
   'utf8'
 );

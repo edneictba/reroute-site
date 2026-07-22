@@ -2,10 +2,17 @@ create extension if not exists pgcrypto;
 
 create table if not exists public.leads (
   id uuid primary key default gen_random_uuid(),
-  name text,
-  email text unique,
-  whatsapp text,
-  created_at timestamptz default now()
+  name text not null check (char_length(btrim(name)) between 2 and 80 and name !~ '[<>]'),
+  email text not null unique check (
+    char_length(email) <= 254
+    and email = lower(email)
+    and email ~* '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]{2,}$'
+  ),
+  whatsapp text not null check (
+    char_length(whatsapp) between 9 and 16
+    and whatsapp ~ '^\+[1-9][0-9]{7,14}$'
+  ),
+  created_at timestamptz not null default now()
 );
 
 do $$
@@ -19,15 +26,6 @@ end $$;
 alter table public.leads enable row level security;
 
 drop policy if exists "Allow public lead inserts" on public.leads;
+revoke all on public.leads from public, anon, authenticated;
 
-create policy "Allow public lead inserts"
-on public.leads
-for insert
-to anon
-with check (true);
-
-grant usage on schema public to anon;
-grant insert on public.leads to anon;
-revoke select, update, delete on public.leads from anon;
-
--- Keep public reads disabled by not creating any SELECT policy for anon.
+-- Public registration is accepted only by the server-side register_public_lead RPC.
