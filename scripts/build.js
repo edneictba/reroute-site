@@ -3,6 +3,7 @@ const path = require('node:path');
 
 const rootDir = path.resolve(__dirname, '..');
 const distDir = path.join(rootDir, 'dist');
+const localPortalEnabled = process.argv.includes('--local-portal');
 
 const loadLocalEnv = () => {
   const envPath = path.join(rootDir, '.env');
@@ -77,6 +78,32 @@ for (const entry of publicSourceEntries) {
   fs.copyFileSync(source, target);
 }
 
+if (localPortalEnabled) {
+  const localPortalEntries = [
+    ['portal/login', 'portal/login'],
+    ['portal/dashboard', 'portal/dashboard'],
+    ['src/portal', 'src/portal']
+  ];
+
+  for (const [sourceEntry, targetEntry] of localPortalEntries) {
+    const source = path.join(rootDir, sourceEntry);
+    const target = path.join(distDir, targetEntry);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.cpSync(source, target, { recursive: true });
+  }
+
+  const portalRuntimeConfigPath = path.join(distDir, 'src', 'portal', 'core', 'runtime-config.js');
+  fs.writeFileSync(
+    portalRuntimeConfigPath,
+    `window.REROUTE_PORTAL_ENV = ${JSON.stringify({
+      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '',
+      supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '',
+      environment: 'development'
+    }, null, 2)};\n`,
+    'utf8'
+  );
+}
+
 const publicRuntimeConfigPath = path.join(distDir, 'src', 'scripts', 'runtime-config.js');
 fs.mkdirSync(path.dirname(publicRuntimeConfigPath), { recursive: true });
 fs.writeFileSync(
@@ -87,4 +114,4 @@ fs.writeFileSync(
   'utf8'
 );
 
-console.log('Build concluido em dist/.');
+console.log(`Build concluido em dist/.${localPortalEnabled ? ' Portal local habilitado.' : ''}`);

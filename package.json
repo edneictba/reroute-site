@@ -8,7 +8,7 @@
     "lint": "node scripts/lint.js",
     "test:production": "node scripts/email-system-smoke-test.js && node scripts/admin-system-smoke-test.js && node scripts/production-readiness-test.js",
     "dev:vercel": "npm run dev",
-    "dev": "npm run build && node scripts/dev-static.js"
+    "dev": "node scripts/build.js --local-portal && node scripts/dev-static.js"
   },
   "dependencies": {
     "write-excel-file": "^4.1.1"
