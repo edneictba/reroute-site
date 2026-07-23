@@ -5,7 +5,9 @@
   "description": "Landing page estatica do REROUTE HNS.",
   "scripts": {
     "build": "node scripts/build.js",
+    "build:portal": "node scripts/build-portal.js",
     "lint": "node scripts/lint.js",
+    "test:portal-production": "node scripts/portal-production-readiness-test.js",
     "test:production": "node scripts/email-system-smoke-test.js && node scripts/admin-system-smoke-test.js && node scripts/production-readiness-test.js",
     "dev:vercel": "npm run dev",
     "dev": "node scripts/build.js --local-portal && node scripts/dev-static.js"
