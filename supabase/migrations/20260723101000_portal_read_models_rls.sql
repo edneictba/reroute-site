@@ -90,8 +90,14 @@ using (
     or (
       profile_id is null
       and (
-        public.has_capability('investor.view_general')
-        or public.has_capability('investor.manage')
+        public.has_capability(
+          'investor.view_general',
+          (select w.slug from public.workspaces w where w.id = portal_investors.workspace_id)
+        )
+        or public.has_capability(
+          'investor.manage',
+          (select w.slug from public.workspaces w where w.id = portal_investors.workspace_id)
+        )
       )
     )
   )

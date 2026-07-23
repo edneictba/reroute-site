@@ -1,2 +1,4 @@
-import { readPortalModule } from './portal-module-service.js';
-export const getUpdatesModule = (context) => readPortalModule('portal_updates', context);
+import { updatesRepository } from '../repositories/updates-repository.js';
+import { readPortalRepository } from './portal-module-service.js';
+
+export const getUpdatesModule = (context) => readPortalRepository(updatesRepository, context);

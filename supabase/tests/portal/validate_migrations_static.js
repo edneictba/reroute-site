@@ -14,7 +14,9 @@ const expectedFiles = [
   '20260715100000_portal_seed.sql',
   '20260715110000_portal_finance_schema.sql',
   '20260715111000_portal_finance_rls.sql',
-  '20260715112000_portal_finance_seed.sql'
+  '20260715112000_portal_finance_seed.sql',
+  '20260723100000_portal_read_models.sql',
+  '20260723101000_portal_read_models_rls.sql'
 ];
 
 const expectedTables = [
@@ -31,7 +33,12 @@ const expectedTables = [
   'financial_summaries',
   'financial_transactions',
   'financial_budgets',
-  'financial_cash_flows'
+  'financial_cash_flows',
+  'portal_projects',
+  'portal_updates',
+  'portal_documents',
+  'portal_roadmap',
+  'portal_investors'
 ];
 
 const expectedFunctions = [
@@ -46,7 +53,8 @@ const expectedFunctions = [
   'has_role',
   'has_capability',
   'enforce_profile_update_scope',
-  'can_read_finance_workspace'
+  'can_read_finance_workspace',
+  'can_read_portal_workspace'
 ];
 
 const expectedPolicies = [
@@ -72,7 +80,12 @@ const expectedPolicies = [
   'financial_summaries_select_authorized',
   'financial_transactions_select_authorized',
   'financial_budgets_select_authorized',
-  'financial_cash_flows_select_authorized'
+  'financial_cash_flows_select_authorized',
+  'portal_projects_select_authorized',
+  'portal_updates_select_authorized',
+  'portal_documents_select_authorized',
+  'portal_roadmap_select_authorized',
+  'portal_investors_select_authorized'
 ];
 
 const errors = [];
@@ -123,6 +136,10 @@ expect(/'finance\.read'/i.test(allSql), 'finance.read capability missing.');
 expect(/'finance\.manage'/i.test(allSql), 'finance.manage capability missing.');
 expect(/grant select on public\.financial_summaries to authenticated/i.test(allSql), 'Finance read grant missing.');
 expect(!/grant (insert|update|delete).*public\.financial_/i.test(allSql), 'Finance write grant found in read-only sprint.');
+expect(!/grant (insert|update|delete).*public\.portal_(projects|updates|documents|roadmap|investors)/i.test(allSql), 'Portal read-model write grant found.');
+expect((allSql.match(/jsonb_typeof\(payload\) = 'object'/gi) || []).length >= 5, 'Read-model JSON object constraints missing.');
+expect((allSql.match(/publication_status = 'published'/gi) || []).length >= 5, 'Published-only RLS missing.');
+expect(/profile_id = auth\.uid\(\)/i.test(allSql), 'Investor own-profile RLS missing.');
 
 if (errors.length) {
   console.error(errors.join('\n'));
