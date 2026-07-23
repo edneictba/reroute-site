@@ -1,5 +1,5 @@
 const { authenticateAdmin } = require('../../server/admin/admin-auth');
-const { createCsv, getExportRows } = require('../../server/admin/admin-data');
+const { createXlsx, getExportRows } = require('../../server/admin/admin-data');
 const { applyPrivateHeaders, genericError, json } = require('../../server/admin/admin-response');
 
 module.exports = async function handler(req, res) {
@@ -18,9 +18,11 @@ module.exports = async function handler(req, res) {
   }
 
   const date = new Date().toISOString().slice(0, 10);
+  const workbook = await createXlsx(rows);
   applyPrivateHeaders(res);
   res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/csv; charset=utf-8');
-  res.setHeader('Content-Disposition', `attachment; filename="reroute-leads-${date}.csv"`);
-  res.end(createCsv(rows));
+  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+  res.setHeader('Content-Disposition', `attachment; filename="reroute-leads-${date}.xlsx"`);
+  res.setHeader('Content-Length', workbook.length);
+  res.end(workbook);
 };

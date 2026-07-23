@@ -171,9 +171,10 @@ const run = async () => {
     assert(dashboardRequest.p_search === 'Maria' && dashboardRequest.p_page === 2 && dashboardRequest.p_page_size === 10, 'Busca ou paginacao nao foram normalizadas.');
 
     res = await call(exportHandler, { cookie });
-    assert(res.statusCode === 200 && res.body.startsWith('\uFEFF'), 'CSV nao esta em UTF-8 com BOM.');
-    assert(res.body.includes("'=HYPERLINK"), 'CSV Injection nao foi neutralizada.');
-    assert(/attachment/.test(res.headers['content-disposition']), 'CSV nao foi entregue como download.');
+    assert(res.statusCode === 200 && Buffer.isBuffer(res.body), 'Exportacao XLSX nao retornou um arquivo binario.');
+    assert(res.body.subarray(0, 2).toString() === 'PK', 'Exportacao nao gerou um container XLSX valido.');
+    assert(/\.xlsx"$/.test(res.headers['content-disposition']), 'Arquivo nao foi entregue com extensao XLSX.');
+    assert(res.headers['content-type'] === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'Content-Type XLSX incorreto.');
 
     accessTokenValid = false;
     res = await call(sessionHandler, { cookie });
@@ -201,7 +202,7 @@ const run = async () => {
     assert(/revoke all[\s\S]*from public, anon, authenticated/gi.test(migration), 'Permissoes publicas administrativas nao foram revogadas.');
     assert(/to service_role/gi.test(migration), 'Funcoes administrativas nao estao restritas a service_role.');
 
-    console.log('Admin security tests passed: auth, session, API, search, pagination, CSV and audit.');
+    console.log('Admin security tests passed: auth, session, API, search, pagination, XLSX and audit.');
   } finally {
     global.fetch = originalFetch;
     process.env = originalEnv;

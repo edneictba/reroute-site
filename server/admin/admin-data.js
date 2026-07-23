@@ -1,4 +1,5 @@
 const { serviceRoleRequest } = require('./admin-auth');
+const writeXlsxFile = require('write-excel-file/node');
 
 const getDashboardData = async ({ search = '', page = 1, pageSize = 25 }, fetchImpl = fetch) => {
   const normalizedSearch = String(search).trim().slice(0, 100);
@@ -39,23 +40,54 @@ const getExportRows = async (fetchImpl = fetch) => {
   }
 };
 
-const protectCsvCell = (value) => {
-  let normalized = String(value ?? '').replace(/\r?\n/g, ' ').trim();
-  if (/^[=+\-@\t\r]/.test(normalized)) {
-    normalized = `'${normalized}`;
-  }
-  return `"${normalized.replaceAll('"', '""')}"`;
+const normalizeSpreadsheetText = (value) => String(value ?? '').replace(/\r?\n/g, ' ').trim();
+
+const getColumnWidth = (header, values, { min = 12, max = 48 } = {}) => {
+  const longest = Math.max(header.length, ...values.map((value) => normalizeSpreadsheetText(value).length));
+  return Math.min(Math.max(longest + 2, min), max);
 };
 
-const createCsv = (rows) => {
-  const header = ['Nome', 'E-mail', 'WhatsApp', 'Data de cadastro'];
-  const lines = [header, ...rows.map((row) => [
-    row.name,
-    row.email,
-    row.whatsapp,
-    new Date(row.created_at).toISOString()
-  ])];
-  return `\uFEFF${lines.map((line) => line.map(protectCsvCell).join(',')).join('\r\n')}\r\n`;
+const createXlsx = async (rows) => {
+  const headers = ['Nome', 'E-mail', 'WhatsApp', 'Data de cadastro'];
+  const headerStyle = {
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    backgroundColor: '#0B6E99',
+    align: 'center',
+    height: 24
+  };
+  const textCell = (value) => ({
+    value: normalizeSpreadsheetText(value),
+    type: String,
+    format: '@',
+    wrap: false
+  });
+  const sheetData = [
+    headers.map((value) => ({ value, type: String, ...headerStyle })),
+    ...rows.map((row) => [
+      textCell(row.name),
+      textCell(row.email),
+      textCell(row.whatsapp),
+      {
+        value: new Date(row.created_at),
+        type: Date,
+        format: 'dd/mm/yyyy hh:mm',
+        align: 'center'
+      }
+    ])
+  ];
+  const columns = [
+    { width: getColumnWidth(headers[0], rows.map((row) => row.name), { min: 18 }) },
+    { width: getColumnWidth(headers[1], rows.map((row) => row.email), { min: 24 }) },
+    { width: getColumnWidth(headers[2], rows.map((row) => row.whatsapp), { min: 18 }) },
+    { width: 22 }
+  ];
+
+  return writeXlsxFile(sheetData, {
+    columns,
+    sheet: 'Leads',
+    stickyRowsCount: 1
+  }).toBuffer();
 };
 
-module.exports = { createCsv, getDashboardData, getExportRows, protectCsvCell };
+module.exports = { createXlsx, getDashboardData, getExportRows };
