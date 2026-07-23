@@ -6,7 +6,8 @@ const htmlFiles = [
   'index.html',
   'politica-de-privacidade.html',
   'termos-de-uso.html',
-  'aviso-legal.html'
+  'aviso-legal.html',
+  'admin/login/index.html'
 ];
 
 const requiredIndexSnippets = [

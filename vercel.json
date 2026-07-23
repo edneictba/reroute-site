@@ -1,10 +1,23 @@
 {
   "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
   "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/admin",
+      "destination": "/api/admin-page"
+    }
+  ],
   "functions": {
     "api/register-lead.js": {
+      "maxDuration": 30
+    },
+    "api/admin-page.js": {
+      "maxDuration": 30
+    },
+    "api/admin/*.js": {
       "maxDuration": 30
     }
   },
@@ -15,6 +28,28 @@
         {
           "key": "Cache-Control",
           "value": "no-store"
+        }
+      ]
+    },
+    {
+      "source": "/admin(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache, must-revalidate, private"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        }
+      ]
+    },
+    {
+      "source": "/api/admin(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache, must-revalidate, private"
         }
       ]
     },

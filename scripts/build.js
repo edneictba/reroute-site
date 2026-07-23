@@ -40,6 +40,7 @@ const entries = [
   'politica-de-privacidade.html',
   'termos-de-uso.html',
   'aviso-legal.html',
+  'admin/login',
   'assets',
   'robots.txt',
   'sitemap.xml',
@@ -57,7 +58,9 @@ fs.mkdirSync(distDir, { recursive: true });
 
 for (const entry of entries) {
   const source = path.join(rootDir, entry);
-  const target = path.join(distDir, entry);
+  const target = entry === 'admin/login'
+    ? path.join(distDir, 'admin/login')
+    : path.join(distDir, entry);
 
   if (!fs.existsSync(source)) {
     continue;

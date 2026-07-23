@@ -55,6 +55,15 @@ if (fs.existsSync(distDir)) {
   for (const name of forbiddenRuntimeNames) {
     assert(!runtime.includes(name), `Variavel sensivel ou desnecessaria exposta no runtime config: ${name}`);
   }
+
+  assert(!publicFiles.includes('admin/index.html'), 'Dashboard administrativo foi publicado como HTML estatico.');
+  assert(publicFiles.includes('admin/login/index.html'), 'Login administrativo nao foi publicado.');
+  const publicAdminFiles = publicFiles.filter((file) => file.startsWith('assets/admin/'));
+  const publicAdminSource = publicAdminFiles
+    .filter((file) => file.endsWith('.js'))
+    .map((file) => fs.readFileSync(path.join(distDir, file), 'utf8'))
+    .join('\n');
+  assert(!/(service_role|SUPABASE_|RESEND_|ADMIN_AUDIT_SECRET)/i.test(publicAdminSource), 'Frontend administrativo contem segredo ou acesso direto a servico privado.');
 }
 
 const vercelConfig = JSON.parse(fs.readFileSync(path.join(rootDir, 'vercel.json'), 'utf8'));

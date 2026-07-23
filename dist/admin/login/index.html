@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="copyright" content="Copyright © 2026 REROUTE - Tecnologia de Navegação Humana Ltda. Todos os direitos reservados.">
+  <title>Acesso administrativo | REROUTE</title>
+  <link rel="icon" href="/assets/icons/favicon.ico" sizes="any">
+  <link rel="stylesheet" href="/assets/admin/admin.css?v=20260722-admin1">
+</head>
+<body class="admin-body admin-login-body">
+  <main class="login-shell">
+    <section class="login-card" aria-labelledby="loginTitle">
+      <a class="login-logo" href="/" aria-label="Voltar à Landing Page do REROUTE">
+        <img src="/assets/images/logo-reroute-hns-320.webp" width="190" height="127" alt="REROUTE">
+      </a>
+      <span class="admin-kicker">ACESSO RESTRITO</span>
+      <h1 id="loginTitle">Admin de Leads</h1>
+      <p>Entre com a conta administrativa autorizada.</p>
+      <form id="adminLoginForm" novalidate>
+        <label>E-mail
+          <input id="adminEmailInput" name="email" type="email" maxlength="254" autocomplete="username" required>
+        </label>
+        <label>Senha
+          <input id="adminPasswordInput" name="password" type="password" maxlength="256" autocomplete="current-password" required>
+        </label>
+        <button class="admin-button admin-button-primary" type="submit">Entrar com segurança</button>
+        <p class="login-message" id="loginMessage" role="status" aria-live="polite"></p>
+      </form>
+      <a class="back-link" href="/">← Voltar para a Landing</a>
+    </section>
+  </main>
+  <script src="/assets/admin/admin-login.js?v=20260722-admin1" defer></script>
+</body>
+</html>

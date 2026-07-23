@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const http = require('node:http');
 const path = require('node:path');
+const { renderAdminDashboard } = require('../server/admin/dashboard-template');
 
 const rootDir = path.resolve(__dirname, '..');
 const distDir = path.join(rootDir, 'dist');
@@ -28,6 +29,37 @@ const server = http.createServer((req, res) => {
 
   for (const [key, value] of Object.entries(securityHeaders)) {
     res.setHeader(key, value);
+  }
+
+  if (pathname === '/dashboard-preview') {
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.end(renderAdminDashboard());
+    return;
+  }
+  if (pathname === '/login-preview') {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    fs.createReadStream(path.join(distDir, 'admin/login/index.html')).pipe(res);
+    return;
+  }
+  if (pathname === '/api/admin/session') {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.end(JSON.stringify({ success: true, user: { email: 'admin@reroute.com.br' } }));
+    return;
+  }
+  if (pathname === '/api/admin/leads') {
+    const leads = [
+      { id: '1', name: 'Maria Silva', email: 'maria@example.com', whatsapp: '+5511999999999', created_at: '2026-07-22T12:00:00Z' },
+      { id: '2', name: 'João Santos', email: 'joao@example.com', whatsapp: '+51999999999', created_at: '2026-07-21T17:30:00Z' }
+    ];
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.end(JSON.stringify({ success: true, data: {
+      metrics: { total: 128, today: 7, last7Days: 34, currentMonth: 82 },
+      daily: Array.from({ length: 30 }, (_, index) => ({ date: `2026-07-${String(index + 1).padStart(2, '0')}`, count: (index * 3) % 11 })),
+      leads,
+      pagination: { page: 1, pageSize: 25, total: 2, totalPages: 1 }
+    } }));
+    return;
   }
 
   if (!requestedPath.startsWith(`${distDir}${path.sep}`) || !fs.existsSync(requestedPath) || fs.statSync(requestedPath).isDirectory()) {
