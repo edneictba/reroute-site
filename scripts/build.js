@@ -82,6 +82,9 @@ if (localPortalEnabled) {
   const localPortalEntries = [
     ['portal/login', 'portal/login'],
     ['portal/dashboard', 'portal/dashboard'],
+    ['portal/recuperar-senha', 'portal/recuperar-senha'],
+    ['portal/redefinir-senha', 'portal/redefinir-senha'],
+    ['portal/acesso-negado', 'portal/acesso-negado'],
     ['src/portal', 'src/portal']
   ];
 

@@ -9,6 +9,7 @@ import { getFinanceData } from '../providers/finance-provider.js';
 import { getInvestorsData, loadInvestorsData } from '../providers/investors-provider.js';
 import { getInvestorWorkspaceData, investorWorkspaceNav } from '../providers/demo-investor-workspace.js';
 import { getAdminData, loadAdminData } from '../providers/admin-provider.js';
+import { getExecutiveDashboardData } from '../providers/executive-dashboard-provider.js';
 import { setActiveWorkspace, subscribeUserContext } from '../auth/user-context.js';
 import { requestPasswordReset, updatePassword } from '../services/auth-service.js';
 import { bindLogout, getSafeReturnPath, protectPrivatePage, redirectAuthenticatedUser } from '../guards/route-guard.js';
@@ -3309,25 +3310,162 @@ const renderAdminCenter = () => {
   setText('[data-dashboard-environment]', dashboardData.header.environmentLabel.replace('Ambiente autenticado', 'Admin Center'));
 };
 
+const appendExecutiveEmptyState = (container, message) => {
+  const empty = document.createElement('div');
+  empty.className = 'portal-empty-state';
+  empty.textContent = message;
+  container.appendChild(empty);
+};
+
+const renderExecutiveHeading = (container, titleText) => {
+  const heading = document.createElement('div');
+  heading.className = 'portal-section-heading';
+  const title = document.createElement('h2');
+  title.textContent = titleText;
+  heading.appendChild(title);
+  container.appendChild(heading);
+};
+
+const renderExecutiveDashboard = (context) => {
+  const data = getExecutiveDashboardData(context);
+  const hero = document.querySelector('[data-executive-hero]');
+  const metrics = document.querySelector('[data-executive-metrics]');
+
+  if (hero) {
+    hero.innerHTML = '';
+    const content = document.createElement('div');
+    content.className = 'portal-investor-hero-content';
+    const eyebrow = document.createElement('span');
+    eyebrow.className = 'portal-kicker';
+    eyebrow.textContent = 'Portal do Investidor';
+    const title = document.createElement('h2');
+    title.textContent = 'Visão executiva';
+    const description = document.createElement('p');
+    description.className = 'portal-page-copy';
+    description.textContent = 'Indicadores publicados para sua organização e seu workspace.';
+    content.append(eyebrow, title, description);
+    hero.appendChild(content);
+  }
+
+  if (metrics) {
+    metrics.innerHTML = '';
+    [
+      ['Valor total captado', data.metrics.totalCaptured, 'currency'],
+      ['Meta total de captação', data.metrics.fundraisingTarget, 'currency'],
+      ['Meta atingida', data.metrics.targetPercentage, 'percentage'],
+      ['Seu valor investido', data.metrics.investedAmount, 'currency'],
+      ['Sua participação', data.metrics.participationPercentage, 'percentage']
+    ].forEach(([labelText, value, format]) => {
+      const card = document.createElement('article');
+      card.className = 'portal-card portal-metric portal-status-card progress';
+      const label = document.createElement('span');
+      label.textContent = labelText;
+      const strong = document.createElement('strong');
+      strong.textContent = value === null
+        ? 'Sem dados'
+        : format === 'currency'
+          ? formatCurrency(value)
+          : `${value.toLocaleString('pt-BR', { maximumFractionDigits: 2 })}%`;
+      card.append(label, strong);
+      metrics.appendChild(card);
+    });
+  }
+
+  const milestone = document.querySelector('[data-executive-milestone]');
+  if (milestone) {
+    milestone.innerHTML = '';
+    renderExecutiveHeading(milestone, 'Próximo marco do projeto');
+    if (!data.nextMilestone) {
+      appendExecutiveEmptyState(milestone, 'Nenhum próximo marco foi publicado.');
+    } else {
+      const title = document.createElement('h3');
+      title.textContent = data.nextMilestone.title;
+      const copy = document.createElement('p');
+      copy.className = 'portal-page-copy';
+      copy.textContent = data.nextMilestone.description || data.nextMilestone.date || 'Marco publicado.';
+      milestone.append(title, copy);
+    }
+  }
+
+  const mvp = document.querySelector('[data-executive-mvp]');
+  if (mvp) {
+    mvp.innerHTML = '';
+    renderExecutiveHeading(mvp, 'Progresso atual do MVP');
+    if (data.mvpProgress === null) {
+      appendExecutiveEmptyState(mvp, 'Nenhum progresso do MVP foi publicado.');
+    } else {
+      const value = document.createElement('strong');
+      value.className = 'portal-page-title';
+      value.textContent = `${data.mvpProgress.toLocaleString('pt-BR', { maximumFractionDigits: 2 })}%`;
+      mvp.appendChild(value);
+    }
+  }
+
+  const update = document.querySelector('[data-executive-update]');
+  if (update) {
+    update.innerHTML = '';
+    renderExecutiveHeading(update, 'Última atualização publicada');
+    if (!data.latestUpdate) {
+      appendExecutiveEmptyState(update, 'Nenhuma atualização foi publicada.');
+    } else {
+      const title = document.createElement('h3');
+      title.textContent = data.latestUpdate.title;
+      const copy = document.createElement('p');
+      copy.className = 'portal-page-copy';
+      copy.textContent = data.latestUpdate.description || (data.latestUpdate.date ? formatPortalDate(data.latestUpdate.date) : '');
+      update.append(title, copy);
+    }
+  }
+
+  const documents = document.querySelector('[data-executive-documents]');
+  if (documents) {
+    documents.innerHTML = '';
+    renderExecutiveHeading(documents, 'Documentos recentes');
+    if (!data.recentDocuments.length) {
+      appendExecutiveEmptyState(documents, 'Nenhum documento foi publicado.');
+    } else {
+      const list = document.createElement('ul');
+      list.className = 'portal-list';
+      data.recentDocuments.forEach((item) => {
+        const row = document.createElement('li');
+        const title = document.createElement('strong');
+        title.textContent = item.title;
+        const meta = document.createElement('span');
+        meta.textContent = [item.category, item.date ? formatPortalDate(item.date) : ''].filter(Boolean).join(' • ');
+        row.append(title, meta);
+        list.appendChild(row);
+      });
+      documents.appendChild(list);
+    }
+  }
+
+  const releases = document.querySelector('[data-executive-releases]');
+  if (releases) {
+    releases.innerHTML = '';
+    renderExecutiveHeading(releases, 'Próximos releases e etapas');
+    if (!data.upcomingReleases.length) {
+      appendExecutiveEmptyState(releases, 'Nenhum release ou etapa futura foi publicado.');
+    } else {
+      const list = document.createElement('ul');
+      list.className = 'portal-list';
+      data.upcomingReleases.forEach((item) => {
+        const row = document.createElement('li');
+        row.textContent = typeof item === 'string' ? item : (item.title || item.name || item.label || '');
+        list.appendChild(row);
+      });
+      releases.appendChild(list);
+    }
+  }
+};
+
 const renderInvestorDashboard = (context) => {
   if (!document.body.matches('[data-portal-page="dashboard"]')) {
     return;
   }
 
-  const data = getDashboardData();
-  setText('[data-dashboard-environment]', data.header.environmentLabel);
-  setText('[data-dashboard-footer]', data.header.footerNote);
-  renderInvestorHero(data);
-  renderProjectStatus(data);
-  renderRoadmap(data);
-  renderProjectEvolutionChart(data);
-  renderUpdates();
-  renderNextSteps(data);
-  renderDashboardDocuments();
-  renderDashboardRoadmapSummary();
-  renderDashboardProjects();
-  void renderDashboardFinance(context);
-  renderDashboardInvestors(context);
+  setText('[data-dashboard-environment]', 'Workspace autenticado');
+  setText('[data-dashboard-footer]', 'Dados reais protegidos por contexto autorizado e RLS.');
+  renderExecutiveDashboard(context);
 };
 
 const renderContext = async (context) => {

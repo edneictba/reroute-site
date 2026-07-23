@@ -37,7 +37,7 @@
           <img src="/assets/images/logo-reroute-hns-640.png" alt="REROUTE - The First Human Navigation System" width="142" height="95" />
         </a>
         <nav class="portal-nav" aria-label="Navegação do Portal" data-portal-nav></nav>
-        <footer class="portal-footer" data-dashboard-footer>Ambiente autenticado com dados demonstrativos. RLS permanece como barreira principal.</footer>
+        <footer class="portal-footer" data-dashboard-footer>Dados reais protegidos por contexto autorizado e RLS.</footer>
       </div>
     </aside>
 
@@ -46,7 +46,7 @@
         <button class="portal-mobile-toggle" type="button" aria-label="Abrir menu do portal" aria-expanded="false" data-sidebar-toggle>
           <span></span><span></span><span></span>
         </button>
-        <span class="portal-badge demo" data-dashboard-environment>Ambiente autenticado - dados demonstrativos</span>
+        <span class="portal-badge" data-dashboard-environment>Workspace autenticado</span>
         <div class="portal-workspace-switcher" data-workspace-switcher hidden></div>
         <div class="portal-user-menu" aria-label="Usuário autenticado">
           <span data-user-name>Usuário autenticado</span>
@@ -60,7 +60,7 @@
           <div>
             <div class="portal-breadcrumb"><span>Portal</span><span>/</span><span>Dashboard do Investidor</span></div>
             <h1 class="portal-page-title" data-context-greeting>Olá, usuário autorizado.</h1>
-            <p class="portal-page-copy">Dashboard contextual protegido por autenticação, profile, workspace e capabilities. Os dados de negócio permanecem demonstrativos nesta fase.</p>
+            <p class="portal-page-copy">Visão executiva protegida por autenticação, profile, workspace, capabilities e RLS.</p>
           </div>
           <span class="portal-badge">Último acesso: <span data-context-updated>carregando</span></span>
         </section>
@@ -88,33 +88,21 @@
           </article>
         </section>
 
-        <section class="portal-card padded portal-investor-hero" data-dashboard-hero aria-label="Boas-vindas ao Portal do Investidor"></section>
+        <section class="portal-card padded portal-investor-hero" data-executive-hero aria-label="Visão executiva do investimento"></section>
 
-        <section class="portal-grid metrics portal-dashboard-status" data-dashboard-status aria-label="Status geral do projeto"></section>
+        <section class="portal-grid metrics portal-dashboard-status" data-executive-metrics aria-label="Indicadores executivos"></section>
 
         <section class="portal-grid two portal-dashboard-columns">
-          <article class="portal-card padded portal-roadmap-card" id="roadmap" data-dashboard-roadmap></article>
-          <article class="portal-card padded portal-chart-card" data-dashboard-chart></article>
+          <article class="portal-card padded" data-executive-milestone></article>
+          <article class="portal-card padded" data-executive-mvp></article>
         </section>
 
         <section class="portal-grid two portal-dashboard-columns" id="atualizacoes">
-          <article class="portal-card padded" data-dashboard-updates></article>
-          <article class="portal-card padded" data-dashboard-next-steps></article>
+          <article class="portal-card padded" data-executive-update></article>
+          <article class="portal-card padded" data-executive-documents></article>
         </section>
 
-        <section class="portal-grid two portal-dashboard-columns">
-          <article class="portal-card padded" data-dashboard-documents></article>
-          <article class="portal-card padded" data-dashboard-roadmap-summary></article>
-        </section>
-
-        <section class="portal-grid two portal-dashboard-columns">
-          <article class="portal-card padded" data-dashboard-projects></article>
-          <article class="portal-card padded" data-dashboard-finance></article>
-        </section>
-
-        <section class="portal-grid two portal-dashboard-columns">
-          <article class="portal-card padded" data-dashboard-investors hidden></article>
-        </section>
+        <section class="portal-card padded" data-executive-releases></section>
       </div>
     </main>
   </div>
