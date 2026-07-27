@@ -35,21 +35,29 @@ process.env.REROUTE_SITE_URL ||= `http://localhost:${port}`;
 process.env.SUPABASE_URL ||= process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.VITE_SUPABASE_URL || '';
 process.env.SUPABASE_ANON_KEY ||= process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || '';
 
+const adminAuthHandler = require('../api/admin-auth');
+const adminDataHandler = require('../api/admin-data');
+const adminPagesHandler = require('../api/admin-pages');
+const withRouteParameter = (handler, key, value) => (req, res) => {
+  req.query = { ...(req.query || {}), [key]: value };
+  return handler(req, res);
+};
+
 const apiRoutes = new Map([
-  ['/api/admin/login', require('../api/admin/login')],
-  ['/api/admin/logout', require('../api/admin/logout')],
-  ['/api/admin/session', require('../api/admin/session')],
-  ['/api/admin/dashboard', require('../api/admin/dashboard')],
-  ['/api/admin/leads', require('../api/admin/leads')],
-  ['/api/admin/analytics', require('../api/admin/analytics')],
-  ['/api/admin/export', require('../api/admin/export')],
+  ['/api/admin/login', withRouteParameter(adminAuthHandler, 'action', 'login')],
+  ['/api/admin/logout', withRouteParameter(adminAuthHandler, 'action', 'logout')],
+  ['/api/admin/session', withRouteParameter(adminAuthHandler, 'action', 'session')],
+  ['/api/admin/dashboard', withRouteParameter(adminDataHandler, 'action', 'dashboard')],
+  ['/api/admin/leads', withRouteParameter(adminDataHandler, 'action', 'leads')],
+  ['/api/admin/analytics', withRouteParameter(adminDataHandler, 'action', 'analytics')],
+  ['/api/admin/export', withRouteParameter(adminDataHandler, 'action', 'export')],
   ['/api/analytics', require('../api/analytics')],
   ['/api/register-lead', require('../api/register-lead')]
 ]);
-const adminPageHandler = require('../api/admin-page');
-const adminLeadsPageHandler = require('../api/admin-leads-page');
-const adminAnalyticsPageHandler = require('../api/admin-analytics-page');
-const adminSettingsPageHandler = require('../api/admin-settings-page');
+const adminPageHandler = withRouteParameter(adminPagesHandler, 'page', 'dashboard');
+const adminLeadsPageHandler = withRouteParameter(adminPagesHandler, 'page', 'leads');
+const adminAnalyticsPageHandler = withRouteParameter(adminPagesHandler, 'page', 'analytics');
+const adminSettingsPageHandler = withRouteParameter(adminPagesHandler, 'page', 'settings');
 
 const contentTypes = {
   '.css': 'text/css; charset=utf-8',

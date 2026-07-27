@@ -6,42 +6,64 @@
   "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/api/admin/login",
+      "destination": "/api/admin-auth?action=login"
+    },
+    {
+      "source": "/api/admin/logout",
+      "destination": "/api/admin-auth?action=logout"
+    },
+    {
+      "source": "/api/admin/session",
+      "destination": "/api/admin-auth?action=session"
+    },
+    {
+      "source": "/api/admin/dashboard",
+      "destination": "/api/admin-data?action=dashboard"
+    },
+    {
+      "source": "/api/admin/leads",
+      "destination": "/api/admin-data?action=leads"
+    },
+    {
+      "source": "/api/admin/analytics",
+      "destination": "/api/admin-data?action=analytics"
+    },
+    {
+      "source": "/api/admin/export",
+      "destination": "/api/admin-data?action=export"
+    },
+    {
       "source": "/admin/leads",
-      "destination": "/api/admin-leads-page"
+      "destination": "/api/admin-pages?page=leads"
     },
     {
       "source": "/admin/analytics",
-      "destination": "/api/admin-analytics-page"
+      "destination": "/api/admin-pages?page=analytics"
     },
     {
       "source": "/admin/configuracoes",
-      "destination": "/api/admin-settings-page"
+      "destination": "/api/admin-pages?page=settings"
     },
     {
       "source": "/admin",
-      "destination": "/api/admin-page"
+      "destination": "/api/admin-pages?page=dashboard"
     }
   ],
   "functions": {
     "api/register-lead.js": {
       "maxDuration": 30
     },
-    "api/admin-page.js": {
-      "maxDuration": 30
-    },
-    "api/admin-leads-page.js": {
-      "maxDuration": 30
-    },
-    "api/admin-analytics-page.js": {
-      "maxDuration": 30
-    },
-    "api/admin-settings-page.js": {
-      "maxDuration": 30
-    },
     "api/analytics.js": {
       "maxDuration": 30
     },
-    "api/admin/*.js": {
+    "api/admin-auth.js": {
+      "maxDuration": 30
+    },
+    "api/admin-data.js": {
+      "maxDuration": 30
+    },
+    "api/admin-pages.js": {
       "maxDuration": 30
     }
   },

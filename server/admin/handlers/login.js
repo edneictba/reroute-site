@@ -6,8 +6,8 @@ const {
   resetLocalLoginRateLimit,
   setSessionCookies,
   signInWithPassword
-} = require('../../server/admin/admin-auth');
-const { genericError, json } = require('../../server/admin/admin-response');
+} = require('../admin-auth');
+const { genericError, json } = require('../admin-response');
 
 const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value) && value.length <= 254;
 

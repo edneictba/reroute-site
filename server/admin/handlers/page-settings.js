@@ -1,6 +1,6 @@
-const { ACCESS_COOKIE, REFRESH_COOKIE, authenticateAdmin, logAdminEvent, parseCookies } = require('../server/admin/admin-auth');
-const { applyPrivateHeaders } = require('../server/admin/admin-response');
-const { renderAdminAnalytics } = require('../server/admin/analytics-template');
+const { ACCESS_COOKIE, REFRESH_COOKIE, authenticateAdmin, logAdminEvent, parseCookies } = require('../admin-auth');
+const { applyPrivateHeaders } = require('../admin-response');
+const { renderAdminSettings } = require('../settings-template');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -15,7 +15,7 @@ module.exports = async function handler(req, res) {
   const session = await authenticateAdmin(req, res);
   if (!session) {
     if (cookies[ACCESS_COOKIE] || cookies[REFRESH_COOKIE]) {
-      await logAdminEvent({ eventType: 'session_expired', req, metadata: { route: '/admin/analytics' } });
+      await logAdminEvent({ eventType: 'session_expired', req, metadata: { route: '/admin/configuracoes' } });
     }
     res.statusCode = 302;
     res.setHeader('Location', '/admin/login');
@@ -25,5 +25,5 @@ module.exports = async function handler(req, res) {
 
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.end(renderAdminAnalytics());
+  res.end(renderAdminSettings());
 };

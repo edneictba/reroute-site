@@ -5,7 +5,11 @@ const { validateAnalyticsEvent } = require('../server/analytics-event');
 const { getExecutiveDashboard } = require('../server/admin/analytics-data');
 const { renderAdminAnalytics } = require('../server/admin/analytics-template');
 const analyticsHandler = require('../api/analytics');
-const adminDashboardHandler = require('../api/admin/dashboard');
+const adminDataRouter = require('../api/admin-data');
+const adminDashboardHandler = (req, res) => {
+  req.query = { ...(req.query || {}), action: 'dashboard' };
+  return adminDataRouter(req, res);
+};
 
 const rootDir = path.resolve(__dirname, '..');
 const migrationPath = path.join(rootDir, 'supabase/migrations/20260727003820_landing_analytics_events.sql');

@@ -1,6 +1,6 @@
-const { authenticateAdmin } = require('../../server/admin/admin-auth');
-const { createXlsx, getExportRows } = require('../../server/admin/admin-data');
-const { applyPrivateHeaders, genericError, json } = require('../../server/admin/admin-response');
+const { authenticateAdmin } = require('../admin-auth');
+const { createXlsx, getExportRows } = require('../admin-data');
+const { applyPrivateHeaders, genericError, json } = require('../admin-response');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') {

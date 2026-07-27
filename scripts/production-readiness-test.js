@@ -67,6 +67,27 @@ if (fs.existsSync(distDir)) {
 }
 
 const vercelConfig = JSON.parse(fs.readFileSync(path.join(rootDir, 'vercel.json'), 'utf8'));
+const apiFunctions = walk(path.join(rootDir, 'api')).filter((file) => file.endsWith('.js'));
+assert(
+  apiFunctions.length <= 12,
+  `Quantidade de Vercel Functions excede o limite do plano Hobby: ${apiFunctions.length}.`
+);
+const rewriteSources = new Set((vercelConfig.rewrites || []).map((rewrite) => rewrite.source));
+for (const route of [
+  '/admin',
+  '/admin/leads',
+  '/admin/analytics',
+  '/admin/configuracoes',
+  '/api/admin/login',
+  '/api/admin/logout',
+  '/api/admin/session',
+  '/api/admin/dashboard',
+  '/api/admin/leads',
+  '/api/admin/analytics',
+  '/api/admin/export'
+]) {
+  assert(rewriteSources.has(route), `Rota consolidada sem rewrite: ${route}`);
+}
 const registrationFunction = vercelConfig.functions?.['api/register-lead.js'];
 assert(
   Number(registrationFunction?.maxDuration) >= 25 && Number(registrationFunction?.maxDuration) <= 60,

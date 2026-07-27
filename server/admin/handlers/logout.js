@@ -4,8 +4,8 @@ const {
   hasAllowedOriginAndHost,
   logAdminEvent,
   revokeSession
-} = require('../../server/admin/admin-auth');
-const { genericError, json } = require('../../server/admin/admin-response');
+} = require('../admin-auth');
+const { genericError, json } = require('../admin-response');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {

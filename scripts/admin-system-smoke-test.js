@@ -2,15 +2,22 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Readable } = require('node:stream');
 
-const loginHandler = require('../api/admin/login');
-const logoutHandler = require('../api/admin/logout');
-const sessionHandler = require('../api/admin/session');
-const leadsHandler = require('../api/admin/leads');
-const exportHandler = require('../api/admin/export');
-const pageHandler = require('../api/admin-page');
-const leadsPageHandler = require('../api/admin-leads-page');
-const analyticsPageHandler = require('../api/admin-analytics-page');
-const settingsPageHandler = require('../api/admin-settings-page');
+const adminAuthRouter = require('../api/admin-auth');
+const adminDataRouter = require('../api/admin-data');
+const adminPagesRouter = require('../api/admin-pages');
+const withRoute = (handler, key, value) => (req, res) => {
+  req.query = { ...(req.query || {}), [key]: value };
+  return handler(req, res);
+};
+const loginHandler = withRoute(adminAuthRouter, 'action', 'login');
+const logoutHandler = withRoute(adminAuthRouter, 'action', 'logout');
+const sessionHandler = withRoute(adminAuthRouter, 'action', 'session');
+const leadsHandler = withRoute(adminDataRouter, 'action', 'leads');
+const exportHandler = withRoute(adminDataRouter, 'action', 'export');
+const pageHandler = withRoute(adminPagesRouter, 'page', 'dashboard');
+const leadsPageHandler = withRoute(adminPagesRouter, 'page', 'leads');
+const analyticsPageHandler = withRoute(adminPagesRouter, 'page', 'analytics');
+const settingsPageHandler = withRoute(adminPagesRouter, 'page', 'settings');
 
 const rootDir = path.resolve(__dirname, '..');
 const adminId = '11111111-1111-4111-8111-111111111111';
