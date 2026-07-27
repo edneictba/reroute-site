@@ -173,6 +173,7 @@ const run = async () => {
     res = await call(pageHandler, { cookie });
     assert(res.statusCode === 200 && res.body.includes('Atalhos administrativos'), 'Admin autorizado nao recebeu o dashboard.');
     assert(/href="\/admin" aria-current="page"/.test(res.body), 'Dashboard nao destacou o item ativo.');
+    assert(res.body.includes('Atividade recente') && res.body.includes('Visitas de hoje'), 'Resumo executivo nao foi renderizado no Dashboard.');
     assert(/no-store/.test(res.headers['cache-control']), 'Dashboard administrativo permite cache.');
 
     res = await call(leadsPageHandler, { cookie });
@@ -215,6 +216,7 @@ const run = async () => {
     const publicAdminJs = [
       fs.readFileSync(path.join(rootDir, 'assets/admin/admin-login.js'), 'utf8'),
       fs.readFileSync(path.join(rootDir, 'assets/admin/admin-dashboard.js'), 'utf8'),
+      fs.readFileSync(path.join(rootDir, 'assets/admin/admin-dashboard-overview.js'), 'utf8'),
       fs.readFileSync(path.join(rootDir, 'assets/admin/admin-navigation.js'), 'utf8')
     ].join('\n');
     assert(!/(service_role|SUPABASE_|RESEND_|ADMIN_AUDIT_SECRET)/i.test(publicAdminJs), 'Segredo ou acesso Supabase encontrado no frontend admin.');

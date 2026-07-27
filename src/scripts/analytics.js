@@ -3,6 +3,7 @@
   const VISITOR_KEY = 'reroute_analytics_visitor';
   const SESSION_KEY = 'reroute_analytics_session';
   const ACQUISITION_KEY = 'reroute_analytics_acquisition';
+  const OPT_OUT_KEY = 'reroute_analytics_opt_out';
   const UUID_PATTERN = /^[0-9a-f-]{36}$/i;
   const pageStartedAt = Date.now();
   const sentScrollMilestones = new Set();
@@ -47,6 +48,29 @@
     writeStorage(storage, key, generated);
     return generated;
   };
+
+  const hasOptOut = () => {
+    const cookieOptOut = document.cookie
+      .split(';')
+      .map((part) => part.trim())
+      .some((part) => part === `${OPT_OUT_KEY}=true`);
+    return cookieOptOut || readStorage(window.localStorage, OPT_OUT_KEY) === 'true';
+  };
+
+  const hasAdminSession = async () => {
+    try {
+      const response = await fetch('/api/admin/session', {
+        credentials: 'same-origin',
+        cache: 'no-store'
+      });
+      return response.ok;
+    } catch {
+      return false;
+    }
+  };
+
+  const startAnalytics = async () => {
+    if (hasOptOut() || await hasAdminSession()) return;
 
   const visitorId = getOrCreateId(window.localStorage, VISITOR_KEY);
   const sessionId = getOrCreateId(window.sessionStorage, SESSION_KEY);
@@ -225,4 +249,7 @@
   });
 
   send('page_view');
+  };
+
+  startAnalytics();
 })();

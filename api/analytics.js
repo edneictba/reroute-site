@@ -4,6 +4,12 @@ const {
   saveAnalyticsEvent,
   validateAnalyticsEvent
 } = require('../server/analytics-event');
+const {
+  ACCESS_COOKIE,
+  REFRESH_COOKIE,
+  authenticateAdmin,
+  parseCookies
+} = require('../server/admin/admin-auth');
 const { genericError, json } = require('../server/admin/admin-response');
 
 module.exports = async function handler(req, res) {
@@ -15,6 +21,16 @@ module.exports = async function handler(req, res) {
   if (!hasAllowedOriginAndHost(req)) {
     return json(res, 403, genericError());
   }
+
+  const cookies = parseCookies(req);
+  if (
+    (cookies[ACCESS_COOKIE] || cookies[REFRESH_COOKIE])
+    && await authenticateAdmin(req, res)
+  ) {
+    res.statusCode = 204;
+    return res.end();
+  }
+
   if (isRateLimited(req)) {
     return json(res, 429, genericError());
   }

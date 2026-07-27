@@ -1,0 +1,92 @@
+.admin-executive-metrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.metric-card--date strong {
+  font-size: clamp(1.15rem, 2vw, 1.55rem);
+  line-height: 1.25;
+}
+
+.admin-activity-card {
+  min-width: 0;
+}
+
+.admin-activity-heading {
+  align-items: center;
+}
+
+.admin-activity-controls,
+.admin-activity-controls label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.admin-activity-controls label {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.admin-activity-controls select {
+  min-height: 44px;
+  padding: 0 2.2rem 0 0.8rem;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.admin-activity-list {
+  display: grid;
+}
+
+.admin-activity-item {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr);
+  gap: 0.9rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.admin-activity-marker {
+  width: 9px;
+  height: 9px;
+  margin-top: 0.35rem;
+  background: linear-gradient(135deg, var(--cyan), var(--green));
+  border-radius: 50%;
+  box-shadow: 0 0 14px rgba(34, 211, 238, 0.4);
+}
+
+.admin-activity-item strong {
+  color: var(--text);
+}
+
+.admin-activity-item p {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1050px) {
+  .admin-executive-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-activity-heading,
+  .admin-activity-controls,
+  .admin-activity-controls label {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .admin-activity-controls,
+  .admin-activity-controls select,
+  .admin-activity-controls .admin-button {
+    width: 100%;
+  }
+}

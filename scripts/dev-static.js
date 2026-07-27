@@ -39,6 +39,7 @@ const apiRoutes = new Map([
   ['/api/admin/login', require('../api/admin/login')],
   ['/api/admin/logout', require('../api/admin/logout')],
   ['/api/admin/session', require('../api/admin/session')],
+  ['/api/admin/dashboard', require('../api/admin/dashboard')],
   ['/api/admin/leads', require('../api/admin/leads')],
   ['/api/admin/analytics', require('../api/admin/analytics')],
   ['/api/admin/export', require('../api/admin/export')],
