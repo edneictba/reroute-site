@@ -130,6 +130,7 @@ const run = async () => {
 
     const invalidPayloads = [
       { ...validPayload(), name: '' },
+      { ...validPayload(), name: 'A' },
       { ...validPayload(), email: 'email-invalido' },
       { ...validPayload(), whatsapp: '11999999999' },
       { ...validPayload(), name: 'A'.repeat(81) },
@@ -196,6 +197,9 @@ const run = async () => {
     assert(/interval '24 hours'/i.test(migration), 'Janela por e-mail incorreta.');
     assert(/pg_advisory_xact_lock/i.test(migration), 'Rate limit nao esta protegido contra concorrencia.');
     assert(indexHtml.includes('turnstileWidget'), 'Widget Turnstile ausente.');
+    assert(/<form[^>]+id="waitlistForm"[^>]+action="\/api\/register-lead"[^>]+method="post"/i.test(indexHtml), 'Formulario nao possui fallback POST seguro.');
+    assert(indexHtml.includes('/politica-de-privacidade.html'), 'Aviso LGPD nao aponta para a Politica de Privacidade.');
+    assert(translations.includes("'form.nameInvalid': 'Digite pelo menos 2 caracteres.'"), 'Mensagem curta de nome nao foi atualizada.');
     assert(['pt:', 'es:', 'en:'].every((language) => translations.includes(language)), 'Idiomas da Landing foram afetados.');
 
     originalConsoleError(

@@ -127,10 +127,12 @@ if (inlineStructuredData) {
 }
 
 const frontend = fs.readFileSync(path.join(rootDir, 'src/scripts/script.js'), 'utf8');
+const publicStyles = fs.readFileSync(path.join(rootDir, 'src/styles/style.css'), 'utf8');
 for (const forbidden of ['SUPABASE_', '/rest/v1/leads', 'send-welcome-email', 'RESEND_API_KEY']) {
   assert(!frontend.includes(forbidden), `Frontend contem integracao proibida: ${forbidden}`);
 }
 assert(frontend.includes("const REGISTRATION_ENDPOINT = '/api/register-lead'"), 'Frontend nao usa exclusivamente a API de cadastro.');
+assert(/\.product-tour-dots button::after\{[^}]*inset:-12px -4px/i.test(publicStyles), 'Area de toque ampliada do carrossel ausente.');
 
 const setupMigration = fs.readFileSync(
   path.join(rootDir, 'supabase/migrations/20260721232000_secure_public_lead_registration.sql'),

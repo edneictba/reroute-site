@@ -605,7 +605,7 @@ const validateLeadForm = () => {
   const invalidFields = [];
 
   if (name.length < 2) {
-    setFieldError(nameInput, fieldErrors.nome, getTranslation('form.nameInvalid', 'Informe o nome pelo qual você gostaria de ser chamado.'));
+    setFieldError(nameInput, fieldErrors.nome, getTranslation('form.nameInvalid', 'Digite pelo menos 2 caracteres.'));
     invalidFields.push(nameInput);
   } else {
     setFieldError(nameInput, fieldErrors.nome, '');

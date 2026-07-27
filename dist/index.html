@@ -435,7 +435,7 @@ A reprodução deste código, identidade visual, metodologia, arquitetura ou con
             <h2>Talvez tudo o que você precise agora seja descobrir qual é o próximo passo.</h2>
             <p>Se o REROUTE puder ajudar você a encontrar essa resposta com mais clareza, por que não experimentar gratuitamente?</p>
           </div>
-          <form class="waitlist-form" id="waitlistForm" aria-describedby="formMessage" novalidate>
+          <form class="waitlist-form" id="waitlistForm" action="/api/register-lead" method="post" aria-describedby="formMessage" novalidate>
             <div class="form-field">
               <label class="sr-only" for="nome">Como você gostaria de ser chamado?</label>
               <input type="text" id="nome" name="nome" placeholder="Como você gostaria de ser chamado?" autocomplete="name" required aria-describedby="nomeError" />
@@ -453,6 +453,10 @@ A reprodução deste código, identidade visual, metodologia, arquitetura ou con
               <p class="field-error" id="whatsappError" aria-live="polite"></p>
             </div>
             <div id="turnstileWidget" aria-live="polite"></div>
+            <p class="form-privacy">
+              <span class="form-privacy-copy">Utilizaremos seus dados apenas para entrar em contato sobre o acesso ao REROUTE. Ao enviar, você concorda com nossa</span>
+              <a href="/politica-de-privacidade.html">Política de Privacidade</a>.
+            </p>
             <button class="btn btn-primary" type="submit">Quero experimentar gratuitamente</button>
             <p class="form-message" id="formMessage" role="status" aria-live="polite" aria-atomic="true"></p>
           </form>
