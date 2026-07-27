@@ -1,6 +1,4 @@
 const elements = {
-  email: document.getElementById('adminEmail'),
-  logout: document.getElementById('logoutButton'),
   period: document.getElementById('analyticsPeriod'),
   status: document.getElementById('analyticsStatus'),
   visits: document.getElementById('metricVisits'),
@@ -95,15 +93,4 @@ const loadAnalytics = async () => {
 };
 
 elements.period?.addEventListener('change', loadAnalytics);
-elements.logout?.addEventListener('click', async () => {
-  await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' });
-  window.location.replace('/admin/login');
-});
-
-fetch('/api/admin/session', { credentials: 'same-origin', cache: 'no-store' })
-  .then((response) => response.ok ? response.json() : Promise.reject(new Error('unauthorized')))
-  .then((payload) => {
-    elements.email.textContent = payload.user.email;
-    return loadAnalytics();
-  })
-  .catch(() => window.location.replace('/admin/login'));
+loadAnalytics();

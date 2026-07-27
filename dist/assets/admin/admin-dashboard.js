@@ -1,9 +1,7 @@
 const state = { page: 1, pageSize: 25, totalPages: 1, search: '' };
 const elements = {
-  adminEmail: document.getElementById('adminEmail'),
   chart: document.getElementById('growthChart'),
   exportButton: document.getElementById('exportButton'),
-  logoutButton: document.getElementById('logoutButton'),
   month: document.getElementById('metricMonth'),
   next: document.getElementById('nextPage'),
   pageInfo: document.getElementById('pageInfo'),
@@ -148,27 +146,4 @@ elements.search?.addEventListener('input', () => {
   }, 300);
 });
 
-elements.logoutButton?.addEventListener('click', async () => {
-  elements.logoutButton.disabled = true;
-  try {
-    await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' });
-  } finally {
-    redirectToLogin();
-  }
-});
-
-fetch('/api/admin/session', { credentials: 'same-origin', cache: 'no-store' })
-  .then(async (response) => {
-    if (!response.ok) {
-      redirectToLogin();
-      return null;
-    }
-    return response.json();
-  })
-  .then((payload) => {
-    if (payload?.user?.email) {
-      elements.adminEmail.textContent = payload.user.email;
-      loadData();
-    }
-  })
-  .catch(redirectToLogin);
+loadData();

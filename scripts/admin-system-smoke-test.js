@@ -8,6 +8,9 @@ const sessionHandler = require('../api/admin/session');
 const leadsHandler = require('../api/admin/leads');
 const exportHandler = require('../api/admin/export');
 const pageHandler = require('../api/admin-page');
+const leadsPageHandler = require('../api/admin-leads-page');
+const analyticsPageHandler = require('../api/admin-analytics-page');
+const settingsPageHandler = require('../api/admin-settings-page');
 
 const rootDir = path.resolve(__dirname, '..');
 const adminId = '11111111-1111-4111-8111-111111111111';
@@ -121,7 +124,12 @@ const run = async () => {
 
     let res = await call(pageHandler);
     assert(res.statusCode === 302 && res.headers.location === '/admin/login', 'Acesso anonimo ao /admin nao foi redirecionado.');
-    assert(!res.body.includes('Painel de Leads'), 'Dashboard foi entregue sem autenticacao.');
+    assert(!res.body.includes('Atalhos administrativos'), 'Dashboard foi entregue sem autenticacao.');
+
+    for (const protectedHandler of [leadsPageHandler, analyticsPageHandler, settingsPageHandler]) {
+      res = await call(protectedHandler);
+      assert(res.statusCode === 302 && res.headers.location === '/admin/login', 'Rota administrativa interna foi entregue sem autenticacao.');
+    }
 
     res = await call(sessionHandler);
     assert(res.statusCode === 401, 'Sessao anonima deveria retornar 401.');
@@ -163,8 +171,21 @@ const run = async () => {
 
     const cookie = 'reroute_admin_access=access-token; reroute_admin_refresh=refresh-token';
     res = await call(pageHandler, { cookie });
-    assert(res.statusCode === 200 && res.body.includes('Painel de Leads'), 'Admin autorizado nao recebeu o dashboard.');
+    assert(res.statusCode === 200 && res.body.includes('Atalhos administrativos'), 'Admin autorizado nao recebeu o dashboard.');
+    assert(/href="\/admin" aria-current="page"/.test(res.body), 'Dashboard nao destacou o item ativo.');
     assert(/no-store/.test(res.headers['cache-control']), 'Dashboard administrativo permite cache.');
+
+    res = await call(leadsPageHandler, { cookie });
+    assert(res.statusCode === 200 && res.body.includes('Painel de Leads'), 'Pagina de Leads nao foi entregue.');
+    assert(/href="\/admin\/leads" aria-current="page"/.test(res.body), 'Leads nao destacou o item ativo.');
+
+    res = await call(analyticsPageHandler, { cookie });
+    assert(res.statusCode === 200 && res.body.includes('Funil de cadastro'), 'Pagina de Analytics nao foi entregue.');
+    assert(/href="\/admin\/analytics" aria-current="page"/.test(res.body), 'Analytics nao destacou o item ativo.');
+
+    res = await call(settingsPageHandler, { cookie });
+    assert(res.statusCode === 200 && res.body.includes('serão adicionadas futuramente'), 'Pagina de Configuracoes nao foi entregue.');
+    assert(/href="\/admin\/configuracoes" aria-current="page"/.test(res.body), 'Configuracoes nao destacou o item ativo.');
 
     res = await call(leadsHandler, { cookie, query: { search: '  Maria  ', page: '2', pageSize: '10' } });
     assert(res.statusCode === 200, 'API de leads falhou.');
@@ -193,7 +214,8 @@ const run = async () => {
 
     const publicAdminJs = [
       fs.readFileSync(path.join(rootDir, 'assets/admin/admin-login.js'), 'utf8'),
-      fs.readFileSync(path.join(rootDir, 'assets/admin/admin-dashboard.js'), 'utf8')
+      fs.readFileSync(path.join(rootDir, 'assets/admin/admin-dashboard.js'), 'utf8'),
+      fs.readFileSync(path.join(rootDir, 'assets/admin/admin-navigation.js'), 'utf8')
     ].join('\n');
     assert(!/(service_role|SUPABASE_|RESEND_|ADMIN_AUDIT_SECRET)/i.test(publicAdminJs), 'Segredo ou acesso Supabase encontrado no frontend admin.');
 

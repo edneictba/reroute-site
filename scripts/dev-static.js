@@ -46,7 +46,9 @@ const apiRoutes = new Map([
   ['/api/register-lead', require('../api/register-lead')]
 ]);
 const adminPageHandler = require('../api/admin-page');
+const adminLeadsPageHandler = require('../api/admin-leads-page');
 const adminAnalyticsPageHandler = require('../api/admin-analytics-page');
+const adminSettingsPageHandler = require('../api/admin-settings-page');
 
 const contentTypes = {
   '.css': 'text/css; charset=utf-8',
@@ -113,8 +115,16 @@ const server = http.createServer(async (req, res) => {
       await apiRoutes.get(pathname)(req, res);
       return;
     }
+    if (pathname === '/admin/leads') {
+      await adminLeadsPageHandler(req, res);
+      return;
+    }
     if (pathname === '/admin/analytics') {
       await adminAnalyticsPageHandler(req, res);
+      return;
+    }
+    if (pathname === '/admin/configuracoes') {
+      await adminSettingsPageHandler(req, res);
       return;
     }
     if (pathname === '/admin') {

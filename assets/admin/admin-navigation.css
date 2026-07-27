@@ -1,0 +1,181 @@
+.admin-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+}
+
+.admin-sidebar {
+  position: sticky;
+  top: 24px;
+  display: grid;
+  gap: 14px;
+  margin-top: 32px;
+  padding: 20px 14px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: linear-gradient(145deg, rgba(18, 35, 59, 0.92), rgba(8, 18, 33, 0.9));
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.2), inset 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.admin-sidebar-heading {
+  padding: 0 10px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+}
+
+.admin-navigation {
+  display: grid;
+  gap: 6px;
+}
+
+.admin-nav-link {
+  display: flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 12px;
+  color: var(--muted);
+  border: 1px solid transparent;
+  border-radius: 13px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 800;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.admin-nav-link:hover,
+.admin-nav-link:focus-visible {
+  color: var(--text);
+  border-color: rgba(34, 211, 238, 0.25);
+  background: rgba(34, 211, 238, 0.06);
+  outline: none;
+}
+
+.admin-nav-link.is-active {
+  color: var(--text);
+  border-color: rgba(34, 211, 238, 0.36);
+  background: linear-gradient(90deg, rgba(22, 140, 255, 0.16), rgba(65, 230, 111, 0.08));
+  box-shadow: inset 3px 0 var(--cyan);
+}
+
+.admin-nav-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.7);
+  cursor: pointer;
+}
+
+.admin-nav-toggle span {
+  display: block;
+  height: 2px;
+  margin: 4px 0;
+  background: var(--text);
+  border-radius: 999px;
+}
+
+.admin-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.admin-shortcut {
+  min-height: 190px;
+  padding: 26px;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: linear-gradient(145deg, rgba(18, 35, 59, 0.92), rgba(8, 18, 33, 0.9));
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.04);
+  text-decoration: none;
+}
+
+.admin-shortcut:hover,
+.admin-shortcut:focus-visible {
+  border-color: rgba(34, 211, 238, 0.48);
+  outline: none;
+}
+
+.admin-shortcut h2 {
+  margin: 10px 0;
+  font-size: 28px;
+}
+
+.admin-shortcut p,
+.admin-placeholder p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.admin-placeholder {
+  min-height: 260px;
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+
+.admin-placeholder h2 {
+  margin: 10px 0;
+  font-size: 30px;
+}
+
+@media (max-width: 900px) {
+  .admin-layout {
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 760px) {
+  .admin-layout {
+    display: block;
+  }
+
+  .admin-nav-toggle {
+    display: block;
+  }
+
+  .admin-sidebar {
+    position: fixed;
+    z-index: 30;
+    top: 74px;
+    right: 16px;
+    left: 16px;
+    margin: 0;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  }
+
+  .admin-sidebar.is-open {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .admin-navigation-open::after {
+    content: "";
+    position: fixed;
+    z-index: 20;
+    inset: 80px 0 0;
+    background: rgba(2, 6, 23, 0.72);
+    backdrop-filter: blur(4px);
+  }
+
+  .admin-main {
+    position: relative;
+    z-index: 1;
+  }
+
+  .admin-shortcuts {
+    grid-template-columns: 1fr;
+  }
+}
