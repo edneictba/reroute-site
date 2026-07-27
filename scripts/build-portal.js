@@ -24,7 +24,7 @@ loadEnvFile('.env');
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || '';
 
-if (!supabaseUrl || !supabaseAnonKey) {
+if (!/^https:\/\/[a-z0-9]+\.supabase\.co$/i.test(supabaseUrl) || supabaseAnonKey.length < 20) {
   throw new Error('NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY são obrigatórias para o build do Portal.');
 }
 

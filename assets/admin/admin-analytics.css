@@ -1,0 +1,71 @@
+.analytics-period {
+  display: grid;
+  gap: 0.45rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.analytics-period select {
+  min-width: 150px;
+  min-height: 44px;
+  padding: 0 0.8rem;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.analytics-list {
+  display: grid;
+  gap: 1rem;
+  padding: 0 1.25rem 1.4rem;
+}
+
+.analytics-list-item {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.analytics-list-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.analytics-list-heading strong {
+  color: var(--text);
+}
+
+.analytics-bar-track {
+  height: 8px;
+  overflow: hidden;
+  background: rgba(148, 163, 184, 0.12);
+  border-radius: 999px;
+}
+
+.analytics-bar {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #0ea5e9, #22c55e);
+  border-radius: inherit;
+}
+
+@media (max-width: 760px) {
+  .analytics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .analytics-period,
+  .analytics-period select {
+    width: 100%;
+  }
+}

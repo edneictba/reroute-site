@@ -51,6 +51,7 @@ const entries = [
 const publicSourceEntries = [
   'src/scripts/i18n.js',
   'src/scripts/script.js',
+  'src/scripts/analytics.js',
   'src/styles/style.css'
 ];
 

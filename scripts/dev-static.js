@@ -40,10 +40,13 @@ const apiRoutes = new Map([
   ['/api/admin/logout', require('../api/admin/logout')],
   ['/api/admin/session', require('../api/admin/session')],
   ['/api/admin/leads', require('../api/admin/leads')],
+  ['/api/admin/analytics', require('../api/admin/analytics')],
   ['/api/admin/export', require('../api/admin/export')],
+  ['/api/analytics', require('../api/analytics')],
   ['/api/register-lead', require('../api/register-lead')]
 ]);
 const adminPageHandler = require('../api/admin-page');
+const adminAnalyticsPageHandler = require('../api/admin-analytics-page');
 
 const contentTypes = {
   '.css': 'text/css; charset=utf-8',
@@ -108,6 +111,10 @@ const server = http.createServer(async (req, res) => {
         req.body = await readJsonBody(req);
       }
       await apiRoutes.get(pathname)(req, res);
+      return;
+    }
+    if (pathname === '/admin/analytics') {
+      await adminAnalyticsPageHandler(req, res);
       return;
     }
     if (pathname === '/admin') {

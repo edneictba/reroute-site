@@ -6,6 +6,10 @@
   "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/admin/analytics",
+      "destination": "/api/admin-analytics-page"
+    },
+    {
       "source": "/admin",
       "destination": "/api/admin-page"
     }
@@ -15,6 +19,12 @@
       "maxDuration": 30
     },
     "api/admin-page.js": {
+      "maxDuration": 30
+    },
+    "api/admin-analytics-page.js": {
+      "maxDuration": 30
+    },
+    "api/analytics.js": {
       "maxDuration": 30
     },
     "api/admin/*.js": {

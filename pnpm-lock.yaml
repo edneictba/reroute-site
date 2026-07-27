@@ -6,4 +6,25 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    dependencies:
+      write-excel-file:
+        specifier: ^4.1.1
+        version: 4.1.1
+
+packages:
+
+  fflate@0.8.3:
+    resolution: {integrity: sha512-tbZNuJrLwGUp3zshBtdy4W+ORxZuIh8a5ilyIEQDC5rY1f3U20JMry0Ll3WBzU58EZKsEuJFXhb5gwv8CsPvgA==}
+
+  write-excel-file@4.1.1:
+    resolution: {integrity: sha512-MUnCnNtQrcZek832ZcU24uU0rSphFmKPD1DvIjXOlygVb93CV7Tme6H3jUTkxsMmjB2W7HIzERzjqTi5kui71A==}
+    engines: {node: '>=18'}
+
+snapshots:
+
+  fflate@0.8.3: {}
+
+  write-excel-file@4.1.1:
+    dependencies:
+      fflate: 0.8.3

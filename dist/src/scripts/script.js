@@ -847,6 +847,7 @@ form?.addEventListener('submit', async (event) => {
       whatsappE164Input.value = '';
     }
 
+    window.dispatchEvent(new CustomEvent('reroute:formsubmit'));
     openSuccessModal();
   } catch (error) {
     setFormMessage(getTranslation('form.failure', 'Não foi possível enviar seu cadastro agora. Tente novamente em instantes.'));
