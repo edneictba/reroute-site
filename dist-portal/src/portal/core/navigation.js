@@ -7,10 +7,10 @@ export const portalNavigationItems = [
   ['Financeiro', '/portal/financeiro/', 60, ['portal.access', 'workspace.access']],
   ['Investidores', '/portal/investidores/', 70, ['portal.access', 'workspace.access', 'investor.manage']],
   ['Admin Center', '/portal/admin/', 75, ['portal.access', 'workspace.access', 'users.manage', 'roles.view', 'audit.view']],
-  ['Configurações', '/portal/manutencao/', 80, ['portal.access', 'workspace.access']]
+  ['Configurações', '/portal/configuracoes/', 80, ['portal.access', 'workspace.access']]
 ].map(([label, route, displayOrder, requiredCapabilities]) => ({
   label, route, displayOrder, requiredCapabilities,
-  status: label === 'Configurações' ? 'soon' : 'active'
+  status: 'active'
 }));
 
 export const getNavigationForContext = (context) => {

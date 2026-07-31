@@ -12,6 +12,7 @@ import { getAdminData, loadAdminData } from '../providers/admin-provider.js';
 import { getExecutiveDashboardData } from '../providers/executive-dashboard-provider.js';
 import { setActiveWorkspace, subscribeUserContext } from '../auth/user-context.js';
 import { requestPasswordReset, updatePassword } from '../services/auth-service.js';
+import { updatePreferredLanguage } from '../services/profile-service.js';
 import { bindLogout, getSafeReturnPath, protectPrivatePage, redirectAuthenticatedUser } from '../guards/route-guard.js';
 
 const sidebar = document.querySelector('[data-portal-sidebar]');
@@ -3459,6 +3460,64 @@ const renderInvestorDashboard = (context) => {
   renderExecutiveDashboard(context);
 };
 
+const renderSettingsModule = (context) => {
+  if (!document.body.matches('[data-portal-page="settings"]')) {
+    return;
+  }
+
+  const profile = context.profile || {};
+  const displayName = getDisplayName(context);
+  const lastAccess = context.authUser?.last_sign_in_at;
+
+  setText('[data-settings-name]', displayName);
+  setText('[data-settings-email]', context.authUser?.email || profile.email || 'Não informado');
+  setText('[data-settings-organization]', context.organization?.name || 'Não definida');
+  setText('[data-settings-workspace]', context.activeWorkspace?.name || 'Não definido');
+  setText('[data-settings-role]', getPrimaryRole(context));
+  setText('[data-settings-status]', profile.status || 'Não informado');
+  setText('[data-settings-last-access]', lastAccess ? new Date(lastAccess).toLocaleString('pt-BR') : 'Não disponível');
+  setText('[data-settings-session]', context.isAuthenticated ? 'Sessão autenticada' : 'Sessão indisponível');
+
+  const form = document.querySelector('[data-settings-preferences]');
+  const language = form?.elements?.preferredLanguage;
+  const message = document.querySelector('[data-settings-message]');
+
+  if (!form || !language || form.dataset.bound === 'true') {
+    return;
+  }
+
+  language.value = ['pt-BR', 'es', 'en'].includes(profile.preferredLanguage)
+    ? profile.preferredLanguage
+    : 'pt-BR';
+  form.dataset.bound = 'true';
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const submit = form.querySelector('button[type="submit"]');
+    const originalText = submit?.textContent || 'Salvar idioma';
+
+    if (submit) {
+      submit.disabled = true;
+      submit.textContent = 'Salvando...';
+    }
+    if (message) {
+      message.classList.remove('error');
+      message.textContent = '';
+    }
+
+    const result = await updatePreferredLanguage(profile.id, language.value);
+
+    if (message) {
+      message.classList.toggle('error', !result.success);
+      message.textContent = result.success ? 'Idioma do Portal salvo com segurança.' : result.error;
+    }
+    if (submit) {
+      submit.disabled = false;
+      submit.textContent = originalText;
+    }
+  });
+};
+
 const renderContext = async (context) => {
   if (!context.isAuthorized) {
     return;
@@ -3506,6 +3565,7 @@ const renderContext = async (context) => {
   renderInvestorsModule();
   renderInvestorWorkspaceModule(context);
   renderAdminCenter();
+  renderSettingsModule(context);
 
   [
     [getUpdatesData(), '[data-updates-list]', 'Atualizações'],

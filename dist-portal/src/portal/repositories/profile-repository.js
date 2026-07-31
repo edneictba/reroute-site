@@ -5,5 +5,11 @@ export const profileRepository = {
     .from('profiles')
     .select('id, organization_id, display_name, full_name, email, phone, avatar_url, status, preferred_language, timezone, created_at, updated_at')
     .eq('id', authUserId)
-    .maybeSingle()
+    .maybeSingle(),
+  updatePreferredLanguage: (profileId, preferredLanguage) => getSupabaseClient()
+    .from('profiles')
+    .update({ preferred_language: preferredLanguage })
+    .eq('id', profileId)
+    .select('preferred_language, updated_at')
+    .single()
 };

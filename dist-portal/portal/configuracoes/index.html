@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Configurações | REROUTE Portal</title>
+  <link rel="icon" href="/assets/icons/favicon.ico" sizes="any" />
+  <link rel="stylesheet" href="/src/portal/styles/portal.css" />
+  <script src="/src/portal/core/runtime-config.js"></script>
+  <script src="/src/portal/vendor/supabase.js"></script><script type="module" src="/src/portal/core/portal.js"></script>
+</head>
+<body data-auth-required="true" data-context-required="true" data-required-capabilities="portal.access,workspace.access" data-portal-page="settings">
+  <main class="portal-shell portal-state" data-auth-loading>
+    <section class="portal-card portal-state-card">
+      <span class="portal-loading">Verificando sessão...</span>
+      <p class="portal-page-copy">Validando seu acesso ao REROUTE Portal.</p>
+    </section>
+  </main>
+
+  <main class="portal-shell portal-state" data-auth-error hidden>
+    <section class="portal-card portal-state-card">
+      <div class="portal-state-icon">!</div>
+      <h1 class="portal-page-title">Não foi possível validar o acesso.</h1>
+      <p class="portal-page-copy" data-auth-error-message></p>
+      <div class="portal-actions"><a class="portal-button primary" href="/portal/login/">Voltar ao login</a></div>
+    </section>
+  </main>
+
+  <div class="portal-shell portal-app" data-private-content hidden>
+    <aside class="portal-sidebar" data-portal-sidebar>
+      <div class="portal-sidebar-inner">
+        <a class="portal-mark compact" href="/portal/" aria-label="REROUTE Portal">
+          <img src="/assets/images/logo-reroute-hns-640.png" alt="REROUTE - The First Human Navigation System" width="142" height="95" />
+        </a>
+        <nav class="portal-nav" aria-label="Navegação do Portal" data-portal-nav></nav>
+        <footer class="portal-footer" data-dashboard-footer>Dados reais protegidos por contexto autorizado e RLS.</footer>
+      </div>
+    </aside>
+
+    <main class="portal-main">
+      <header class="portal-topbar">
+        <button class="portal-mobile-toggle" type="button" aria-label="Abrir menu do portal" aria-expanded="false" data-sidebar-toggle>
+          <span></span><span></span><span></span>
+        </button>
+        <span class="portal-badge demo" data-dashboard-environment>Workspace autenticado</span>
+        <div class="portal-workspace-switcher" data-workspace-switcher hidden></div>
+        <div class="portal-user-menu" aria-label="Usuário autenticado">
+          <span data-user-name>Usuário autenticado</span>
+          <span class="portal-avatar" data-user-initial>R</span>
+          <button class="portal-button secondary compact" type="button" data-logout>Sair</button>
+        </div>
+      </header>
+
+      <div class="portal-content portal-settings">
+        <section class="portal-page-header">
+          <div>
+            <span class="portal-kicker">Preferências do Portal</span>
+            <h1 class="portal-page-title">Configurações</h1>
+            <p class="portal-page-copy">Consulte sua conta e gerencie as preferências disponíveis com segurança.</p>
+          </div>
+        </section>
+
+        <section class="portal-card padded portal-settings-section" aria-labelledby="settingsAccountTitle">
+          <div class="portal-settings-heading">
+            <div><span class="portal-kicker">Perfil</span><h2 id="settingsAccountTitle">Minha conta</h2></div>
+            <span class="portal-badge success">Somente leitura</span>
+          </div>
+          <dl class="portal-settings-details">
+            <div><dt>Nome</dt><dd data-settings-name>Carregando...</dd></div>
+            <div><dt>E-mail</dt><dd data-settings-email>Carregando...</dd></div>
+            <div><dt>Organização</dt><dd data-settings-organization>Carregando...</dd></div>
+            <div><dt>Workspace</dt><dd data-settings-workspace>Carregando...</dd></div>
+            <div><dt>Role</dt><dd data-settings-role>Carregando...</dd></div>
+            <div><dt>Status do perfil</dt><dd data-settings-status>Carregando...</dd></div>
+          </dl>
+        </section>
+
+        <section class="portal-card padded portal-settings-section" aria-labelledby="settingsPreferencesTitle">
+          <div class="portal-settings-heading">
+            <div><span class="portal-kicker">Experiência</span><h2 id="settingsPreferencesTitle">Preferências</h2></div>
+          </div>
+          <form class="portal-settings-form" data-settings-preferences>
+            <label class="portal-field" for="preferredLanguage">
+              <span>Idioma do Portal</span>
+              <select id="preferredLanguage" name="preferredLanguage">
+                <option value="pt-BR">Português (Brasil)</option>
+                <option value="es">Español</option>
+                <option value="en">English</option>
+              </select>
+            </label>
+            <div class="portal-settings-preferences" aria-label="Preferências de notificações indisponíveis nesta etapa">
+              <label><input type="checkbox" disabled /> <span><strong>Notificações por e-mail</strong><small>Disponível em uma próxima etapa.</small></span></label>
+              <label><input type="checkbox" disabled /> <span><strong>Atualizações do projeto</strong><small>Disponível em uma próxima etapa.</small></span></label>
+              <label><input type="checkbox" disabled /> <span><strong>Avisos sobre documentos</strong><small>Disponível em uma próxima etapa.</small></span></label>
+              <label><input type="checkbox" disabled /> <span><strong>Avisos financeiros</strong><small>Disponível em uma próxima etapa.</small></span></label>
+            </div>
+            <div class="portal-settings-actions">
+              <button class="portal-button primary" type="submit">Salvar idioma</button>
+              <p class="portal-form-message" data-settings-message aria-live="polite"></p>
+            </div>
+          </form>
+        </section>
+
+        <section class="portal-grid two portal-settings-secondary">
+          <article class="portal-card padded portal-settings-section" aria-labelledby="settingsSecurityTitle">
+            <div class="portal-settings-heading">
+              <div><span class="portal-kicker">Acesso</span><h2 id="settingsSecurityTitle">Segurança</h2></div>
+            </div>
+            <dl class="portal-settings-details compact">
+              <div><dt>Último acesso</dt><dd data-settings-last-access>Carregando...</dd></div>
+              <div><dt>Status da sessão</dt><dd data-settings-session>Carregando...</dd></div>
+            </dl>
+            <button class="portal-button secondary portal-settings-signout" type="button" data-logout>Sair de todos os dispositivos</button>
+          </article>
+
+          <article class="portal-card padded portal-settings-section" aria-labelledby="settingsPrivacyTitle">
+            <div class="portal-settings-heading">
+              <div><span class="portal-kicker">Transparência</span><h2 id="settingsPrivacyTitle">Privacidade</h2></div>
+            </div>
+            <nav class="portal-settings-links" aria-label="Documentos legais">
+              <a href="https://reroute.com.br/politica-de-privacidade.html">Política de Privacidade <span aria-hidden="true">→</span></a>
+              <a href="https://reroute.com.br/termos-de-uso.html">Termos de Uso <span aria-hidden="true">→</span></a>
+              <a href="https://reroute.com.br/aviso-legal.html">Aviso Legal <span aria-hidden="true">→</span></a>
+            </nav>
+          </article>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
