@@ -1609,6 +1609,13 @@ const renderProjectsBoard = (data, projects) => {
   }
 
   container.innerHTML = '';
+
+  if (!projects.length) {
+    container.hidden = true;
+    return;
+  }
+
+  container.hidden = false;
   data.statuses.forEach((status) => {
     const column = document.createElement('section');
     column.className = 'portal-kanban-column';
