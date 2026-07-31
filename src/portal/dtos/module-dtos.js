@@ -2,6 +2,33 @@ const state = (result) => ({ status: result?.status || 'empty', message: result?
 const payload = (result) => result?.status === 'success' && result.data && typeof result.data === 'object' ? result.data : {};
 const list = (value) => Array.isArray(value) ? value : [];
 const text = (value, fallback = '') => typeof value === 'string' ? value : fallback;
+const number = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
+const percentage = (value) => Math.min(100, Math.max(0, number(value)));
+
+const normalizeRoadmapStatus = (value) => {
+  const status = String(value || '').trim().toLowerCase();
+
+  if (['concluído', 'concluido', 'completed', 'done'].includes(status)) {
+    return 'Concluído';
+  }
+
+  if (['em andamento', 'em desenvolvimento', 'in progress', 'in_progress', 'progress'].includes(status)) {
+    return 'Em andamento';
+  }
+
+  return 'Planejado';
+};
+
+const normalizeRoadmapMilestone = (item, index) => ({
+  id: text(item?.id, `roadmap-${index + 1}`),
+  title: text(item?.title || item?.titulo, 'Marco sem título'),
+  description: text(item?.description || item?.descricao),
+  status: normalizeRoadmapStatus(item?.status),
+  percent: percentage(item?.percent ?? item?.percentage ?? item?.progress ?? item?.percentual),
+  expectedDate: text(item?.expectedDate || item?.forecast || item?.previsao),
+  order: number(item?.order ?? item?.ordem, index + 1),
+  isNextMilestone: item?.isNextMilestone === true
+});
 
 export const DashboardDTO = {
   fromResult: (result) => {
@@ -18,8 +45,47 @@ export const DashboardDTO = {
 
 export const UpdatesDTO = { fromResult: (result) => { const data = payload(result); return { page: { eyebrow: text(data.page?.eyebrow, 'Comunicação oficial'), title: text(data.page?.title, 'Atualizações Oficiais'), description: text(data.page?.description, 'Nenhuma atualização publicada.') }, categories: list(data.categories), statuses: list(data.statuses), updates: list(data.updates), moduleState: state(result) }; } };
 export const DocumentsDTO = { fromResult: (result) => { const data = payload(result); return { page: { eyebrow: text(data.page?.eyebrow, 'Investor Data Room'), title: text(data.page?.title, 'Documentos do Investidor'), description: text(data.page?.description, 'Nenhum documento publicado.') }, dashboard: { title: text(data.dashboard?.title, 'Documentos Recentes'), description: text(data.dashboard?.description, 'Nenhum documento disponível.') }, categories: list(data.categories), statuses: list(data.statuses), documents: list(data.documents), moduleState: state(result) }; } };
-export const RoadmapDTO = { fromResult: (result) => { const data = payload(result); return { page: { eyebrow: text(data.page?.eyebrow, 'Roadmap'), title: text(data.page?.title, 'Roadmap do REROUTE'), description: text(data.page?.description, 'Nenhum marco publicado.') }, dashboard: { title: text(data.dashboard?.title, 'Roadmap Geral'), description: text(data.dashboard?.description, 'Nenhum marco disponível.') }, categories: list(data.categories), statuses: list(data.statuses), statusOrder: list(data.statusOrder), milestones: list(data.milestones), summary: data.summary || { total: 0, completed: 0, inProgress: 0, planned: 0, progress: 0, currentSprint: 'Sem registro', nextSprint: 'Sem registro', latestUpdate: null }, moduleState: state(result) }; } };
+export const RoadmapDTO = {
+  fromResult: (result) => {
+    const data = payload(result);
+    const milestones = list(data.milestones || data.roadmap)
+      .map(normalizeRoadmapMilestone)
+      .sort((a, b) => a.order - b.order);
+    const completed = milestones.filter((item) => item.status === 'Concluído').length;
+    const inProgress = milestones.filter((item) => item.status === 'Em andamento').length;
+    const planned = milestones.filter((item) => item.status === 'Planejado').length;
+    const progress = milestones.length
+      ? Math.round(milestones.reduce((total, item) => total + item.percent, 0) / milestones.length)
+      : 0;
+
+    return {
+      page: {
+        eyebrow: text(data.page?.eyebrow, 'Roadmap'),
+        title: text(data.page?.title, 'Roadmap do REROUTE'),
+        description: text(data.page?.description, 'Acompanhe os marcos publicados e a evolução do REROUTE.')
+      },
+      dashboard: {
+        title: text(data.dashboard?.title, 'Roadmap Geral'),
+        description: text(data.dashboard?.description, 'Nenhum marco disponível.')
+      },
+      categories: [],
+      statuses: ['Concluído', 'Em andamento', 'Planejado'],
+      statusOrder: ['Em andamento', 'Planejado', 'Concluído'],
+      milestones,
+      summary: {
+        total: milestones.length,
+        completed,
+        inProgress,
+        planned,
+        progress,
+        currentSprint: text(data.summary?.currentSprint, 'Sem registro'),
+        nextSprint: text(data.summary?.nextSprint, 'Sem registro'),
+        latestUpdate: data.summary?.latestUpdate || null
+      },
+      moduleState: state(result)
+    };
+  }
+};
 export const ProjectsDTO = { fromResult: (result) => { const data = payload(result); return { page: { eyebrow: text(data.page?.eyebrow, 'Execution Center'), title: text(data.page?.title, 'MVP / Projetos'), description: text(data.page?.description, 'Nenhum projeto publicado.') }, dashboard: { title: text(data.dashboard?.title, 'Execution Center'), description: text(data.dashboard?.description, 'Nenhum projeto disponível.') }, statuses: list(data.statuses), categories: list(data.categories), priorities: list(data.priorities), projects: list(data.projects), epics: list(data.epics), modules: list(data.modules), sprints: list(data.sprints), tasks: list(data.tasks), summary: data.summary || { projects: 0, epics: 0, modules: 0, sprints: 0, tasks: 0, progress: 0, activeProjects: 0, currentSprint: 'Sem registro', completedTasks: 0, upcomingDeliveries: [] }, moduleState: state(result) }; } };
 export const InvestorsDTO = { fromResult: (result) => { const data = payload(result); return { page: { eyebrow: text(data.page?.eyebrow, 'Gestão de Investidores'), title: text(data.page?.title, 'Investidores e Cap Table'), description: text(data.page?.description, 'Nenhum investidor disponível.') }, dashboard: { title: text(data.dashboard?.title, 'Cap Table'), description: text(data.dashboard?.description, 'Nenhuma posição disponível.') }, quotaValue: Number(data.quotaValue || 0), totalQuotas: Number(data.totalQuotas || 0), statuses: data.statuses || { investment: [], payment: [], documentation: [], access: [], labels: {} }, investors: list(data.investors), capTable: list(data.capTable), contributions: list(data.contributions), documents: list(data.documents), summary: data.summary || { committedCapital: 0, paidCapital: 0, pendingCapital: 0, occupiedQuotas: 0, availableQuotas: 0, distributedOwnership: 0 }, alerts: list(data.alerts), charts: data.charts || { capital: { labels: [], values: [] }, ownership: { labels: [], values: [] }, occupancy: { labels: [], values: [] }, contributions: { labels: [], values: [] } }, moduleState: state(result) }; } };
 export const AdminDTO = { fromResult: (result) => { const data = payload(result); return { page: { eyebrow: text(data.page?.eyebrow, 'Governança'), title: text(data.page?.title, 'Admin Center'), description: text(data.page?.description, 'Nenhum dado administrativo disponível.') }, navigation: list(data.navigation), metrics: list(data.metrics), workspaces: list(data.workspaces), roles: list(data.roles), capabilities: list(data.capabilities), users: list(data.users), invites: list(data.invites), editorial: list(data.editorial), roadmapAdmin: list(data.roadmapAdmin), documentsAdmin: list(data.documentsAdmin), settings: list(data.settings), logs: list(data.logs), audit: list(data.audit), moduleState: state(result) }; } };
-
