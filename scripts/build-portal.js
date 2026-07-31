@@ -46,6 +46,10 @@ const sourcePatterns = [
   ['src/portal/services', '.js'],
   ['src/portal/styles', '.css']
 ];
+const supabaseBrowserBundle = path.join(
+  rootDir,
+  'node_modules/@supabase/supabase-js/dist/umd/supabase.js'
+);
 
 fs.rmSync(outputDir, { recursive: true, force: true });
 fs.mkdirSync(outputDir, { recursive: true });
@@ -70,6 +74,43 @@ for (const [sourceDirectory, extension] of sourcePatterns) {
     }
   }
 }
+
+if (!fs.existsSync(supabaseBrowserBundle)) {
+  throw new Error('Bundle do cliente Supabase nao foi encontrado.');
+}
+
+const vendorDir = path.join(outputDir, 'src/portal/vendor');
+fs.mkdirSync(vendorDir, { recursive: true });
+fs.copyFileSync(supabaseBrowserBundle, path.join(vendorDir, 'supabase.js'));
+
+const injectSupabaseBundle = (directory) => {
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    const filePath = path.join(directory, entry.name);
+
+    if (entry.isDirectory()) {
+      injectSupabaseBundle(filePath);
+      continue;
+    }
+
+    if (!entry.isFile() || entry.name !== 'index.html') continue;
+
+    const html = fs.readFileSync(filePath, 'utf8');
+    const portalModule = '<script type="module" src="/src/portal/core/portal.js"></script>';
+
+    if (!html.includes(portalModule)) continue;
+
+    fs.writeFileSync(
+      filePath,
+      html.replace(
+        portalModule,
+        `<script src="/src/portal/vendor/supabase.js"></script>${portalModule}`
+      ),
+      'utf8'
+    );
+  }
+};
+
+injectSupabaseBundle(path.join(outputDir, 'portal'));
 
 const runtimeConfigPath = path.join(outputDir, 'src/portal/core/runtime-config.js');
 fs.writeFileSync(

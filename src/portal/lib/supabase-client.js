@@ -1,4 +1,3 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 import { validatePortalConfig } from '../core/config.js';
 
 let supabaseClient = null;
@@ -14,6 +13,14 @@ export const getSupabaseClient = () => {
   }
 
   if (!supabaseClient) {
+    const createClient = globalThis.supabase?.createClient;
+
+    if (typeof createClient !== 'function') {
+      const error = new Error('Nao foi possivel carregar o cliente Supabase do Portal.');
+      error.code = 'SUPABASE_CLIENT_UNAVAILABLE';
+      throw error;
+    }
+
     supabaseClient = createClient(validation.config.supabaseUrl, validation.config.supabaseAnonKey, {
       auth: {
         persistSession: true,
