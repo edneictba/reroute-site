@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Dashboard do Cotista | REROUTE Portal</title>
+  <link rel="icon" href="/assets/icons/favicon.ico" sizes="any" />
+  <link rel="stylesheet" href="/src/portal/styles/portal.css" />
+  <script src="/src/portal/core/runtime-config.js"></script>
+  <script type="module" src="/src/portal/core/portal.js"></script>
+</head>
+<body data-auth-required="true" data-context-required="true" data-required-capabilities="portal.access,workspace.access" data-portal-page="investor-workspace" data-portal-section="investor-workspace" data-investor-view="dashboard">
+  <main class="portal-shell portal-state" data-auth-loading><section class="portal-card portal-state-card"><span class="portal-loading">Verificando sessao...</span><p class="portal-page-copy">Validando seu acesso ao REROUTE Portal.</p></section></main>
+  <main class="portal-shell portal-state" data-auth-error hidden><section class="portal-card portal-state-card"><div class="portal-state-icon">!</div><h1 class="portal-page-title">Nao foi possivel validar o acesso.</h1><p class="portal-page-copy" data-auth-error-message></p><div class="portal-actions"><a class="portal-button primary" href="/portal/login/">Voltar ao login</a></div></section></main>
+  <div class="portal-shell portal-app" data-private-content hidden>
+    <aside class="portal-sidebar" data-portal-sidebar><div class="portal-sidebar-inner"><a class="portal-mark compact" href="/portal/investidor/dashboard/" aria-label="REROUTE Portal"><img src="/assets/images/logo-reroute-hns-640.png" alt="REROUTE - The First Human Navigation System" width="142" height="95" /></a><nav class="portal-nav" aria-label="Navegacao do workspace do cotista" data-portal-nav></nav><footer class="portal-footer" data-dashboard-footer></footer></div></aside>
+    <main class="portal-main"><header class="portal-topbar"><button class="portal-mobile-toggle" type="button" aria-label="Abrir menu do portal" aria-expanded="false" data-sidebar-toggle><span></span><span></span><span></span></button><span class="portal-badge demo" data-dashboard-environment>Workspace do cotista</span><div class="portal-workspace-switcher" data-workspace-switcher hidden></div><div class="portal-user-menu" aria-label="Usuario autenticado"><span data-user-name>Usuario autenticado</span><span class="portal-badge success" data-investor-header-number>Cotista</span><span class="portal-avatar" data-user-initial>R</span><button class="portal-button secondary compact" type="button" data-logout>Sair</button></div></header><div class="portal-content"><section class="portal-page-header" data-investor-workspace-header></section><section class="portal-grid metrics portal-investor-workspace-metrics" data-investor-workspace-metrics aria-label="Resumo do cotista"></section><section class="portal-investor-workspace-content" data-investor-workspace-content aria-live="polite"></section></div></main>
+  </div>
+</body>
+</html>

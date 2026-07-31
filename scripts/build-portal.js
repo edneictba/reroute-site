@@ -29,13 +29,7 @@ if (!/^https:\/\/[a-z0-9]+\.supabase\.co$/i.test(supabaseUrl) || supabaseAnonKey
 }
 
 const publicEntries = [
-  ['portal/index.html', 'portal/index.html'],
-  ['portal/login', 'portal/login'],
-  ['portal/dashboard', 'portal/dashboard'],
-  ['portal/recuperar-senha', 'portal/recuperar-senha'],
-  ['portal/redefinir-senha', 'portal/redefinir-senha'],
-  ['portal/acesso-negado', 'portal/acesso-negado'],
-  ['portal/404', 'portal/404'],
+  ['portal', 'portal'],
   ['assets/icons', 'assets/icons'],
   ['assets/images/logo-reroute-hns-640.png', 'assets/images/logo-reroute-hns-640.png']
 ];

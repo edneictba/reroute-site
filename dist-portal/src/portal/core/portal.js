@@ -4,7 +4,7 @@ import { getDashboardData, loadDashboardData } from '../providers/dashboard-prov
 import { getUpdatesData, getLatestUpdates, loadUpdatesData } from '../providers/updates-provider.js';
 import { getDocumentsData, getLatestDocuments, loadDocumentsData } from '../providers/documents-provider.js';
 import { getRoadmapData, loadRoadmapData } from '../providers/roadmap-provider.js';
-import { getProjectsData, getModulesByRoadmapId, loadProjectsData } from '../providers/projects-provider.js';
+import { getProjectsData, loadProjectsData } from '../providers/projects-provider.js';
 import { getFinanceData } from '../providers/finance-provider.js';
 import { getInvestorsData, loadInvestorsData } from '../providers/investors-provider.js';
 import { getInvestorWorkspaceData, investorWorkspaceNav } from '../providers/demo-investor-workspace.js';
@@ -1196,7 +1196,7 @@ const renderRoadmapPageHeader = (data) => {
   description.textContent = data.page.description;
 
   content.append(breadcrumb, eyebrow, title, description);
-  container.append(content, createBadge('Roadmap demonstrativo', 'portal-badge demo'));
+  container.append(content, createBadge('Roadmap publicado', 'portal-badge'));
 };
 
 const renderRoadmapOverview = (data) => {
@@ -1211,11 +1211,13 @@ const renderRoadmapOverview = (data) => {
 
   const content = document.createElement('div');
   const title = document.createElement('h2');
-  title.textContent = 'Visão estratégica dos próximos anos';
+  title.textContent = 'Evolução do REROUTE';
 
   const copy = document.createElement('p');
   copy.className = 'portal-page-copy';
-  copy.textContent = 'Uma leitura demonstrativa sobre onde estamos, o que já foi entregue e os próximos movimentos estratégicos do REROUTE.';
+  copy.textContent = data.milestones.length
+    ? 'Acompanhe os marcos concluídos, em andamento e planejados.'
+    : 'Os próximos marcos serão exibidos aqui quando forem publicados.';
 
   content.append(title, copy);
 
@@ -1265,7 +1267,6 @@ const filterRoadmap = (data, filters) => {
   const query = filters.query.trim().toLowerCase();
 
   return data.milestones
-    .filter((item) => filters.category === 'all' || item.category === filters.category)
     .filter((item) => filters.status === 'all' || item.status === filters.status)
     .filter((item) => {
       if (!query) {
@@ -1274,22 +1275,20 @@ const filterRoadmap = (data, filters) => {
 
       const searchable = [
         item.title,
-        item.category,
         item.description,
-        item.priority,
         item.status,
-        item.expectedDate,
-        item.version,
-        item.owner,
-        ...item.dependencies
+        item.expectedDate
       ].join(' ').toLowerCase();
 
       return searchable.includes(query);
     })
-    .sort((a, b) => {
-      const statusDiff = data.statusOrder.indexOf(a.status) - data.statusOrder.indexOf(b.status);
-      return statusDiff || new Date(a.expectedDate) - new Date(b.expectedDate);
-    });
+    .sort((a, b) => a.order - b.order);
+};
+
+const roadmapStatusPresentation = {
+  'Concluído': { icon: '●', marker: 'done', label: 'Concluído' },
+  'Em andamento': { icon: '●', marker: 'current', label: 'Em andamento' },
+  Planejado: { icon: '●', marker: 'planned', label: 'Planejado' }
 };
 
 const renderRoadmapList = (milestones) => {
@@ -1311,16 +1310,17 @@ const renderRoadmapList = (milestones) => {
 
   milestones.forEach((item) => {
     const card = document.createElement('article');
-    card.className = 'portal-smart-roadmap-card';
+    card.className = `portal-smart-roadmap-card${item.isNextMilestone ? ' is-next-milestone' : ''}`;
+    const statusPresentation = roadmapStatusPresentation[item.status] || roadmapStatusPresentation.Planejado;
 
     const meta = document.createElement('div');
     meta.className = 'portal-update-meta';
     meta.append(
-      createBadge(item.category),
-      createBadge(item.status, getStatusBadgeClass(item.status)),
-      createBadge(item.priority, 'portal-badge'),
-      createBadge(item.version, 'portal-badge')
+      createBadge(`${statusPresentation.icon} ${statusPresentation.label}`, `portal-badge roadmap-status-${statusPresentation.marker}`)
     );
+    if (item.isNextMilestone) {
+      meta.append(createBadge('Próximo marco', 'portal-badge success'));
+    }
 
     const title = document.createElement('h2');
     title.textContent = item.title;
@@ -1341,18 +1341,11 @@ const renderRoadmapList = (milestones) => {
     progress.className = 'portal-smart-progress';
     progress.innerHTML = `<span style="width:${item.percent}%"></span>`;
 
-    const relatedModules = getModulesByRoadmapId(item.id);
-    const relatedLink = document.createElement('a');
-    relatedLink.className = 'portal-button secondary compact portal-roadmap-related-link';
-    relatedLink.href = `/portal/projetos/?roadmap=${encodeURIComponent(item.id)}`;
-    relatedLink.textContent = `${relatedModules.length} módulos relacionados`;
-
     const details = document.createElement('div');
-    details.className = 'portal-roadmap-detail-grid';
+    details.className = 'portal-roadmap-detail-grid portal-roadmap-detail-grid-compact';
     [
-      ['Data prevista', formatPortalDate(item.expectedDate)],
-      ['Responsável', item.owner],
-      ['Dependências', item.dependencies.join(', ')]
+      ['Previsão', item.expectedDate ? formatPortalDate(item.expectedDate) : 'A definir'],
+      ['Ordem', String(item.order)]
     ].forEach(([label, value]) => {
       const detail = document.createElement('div');
       const labelElement = document.createElement('span');
@@ -1363,7 +1356,7 @@ const renderRoadmapList = (milestones) => {
       details.appendChild(detail);
     });
 
-    card.append(meta, title, description, progressHeader, progress, relatedLink, details);
+    card.append(meta, title, description, progressHeader, progress, details);
     container.appendChild(card);
   });
 };
@@ -1385,17 +1378,18 @@ const renderRoadmapStrategy = (data, milestones) => {
 
   milestones.slice(0, 10).forEach((item) => {
     const row = document.createElement('li');
-    row.className = `portal-roadmap-item ${item.status === 'Concluído' ? 'done' : item.status === 'Em desenvolvimento' ? 'current' : 'planned'}`;
+    const statusPresentation = roadmapStatusPresentation[item.status] || roadmapStatusPresentation.Planejado;
+    row.className = `portal-roadmap-item ${statusPresentation.marker}${item.isNextMilestone ? ' next' : ''}`;
 
     const marker = document.createElement('span');
-    marker.className = `portal-roadmap-marker ${item.status === 'Concluído' ? 'done' : item.status === 'Em desenvolvimento' ? 'current' : 'planned'}`;
+    marker.className = `portal-roadmap-marker ${statusPresentation.marker}${item.isNextMilestone ? ' next' : ''}`;
     marker.textContent = item.status === 'Concluído' ? '✓' : '';
 
     const body = document.createElement('div');
     const label = document.createElement('strong');
     label.textContent = item.title;
     const status = document.createElement('span');
-    status.textContent = `${item.status} • ${formatPortalDate(item.expectedDate)}`;
+    status.textContent = `${item.status} • ${item.expectedDate ? formatPortalDate(item.expectedDate) : 'Previsão a definir'}${item.isNextMilestone ? ' • Próximo marco' : ''}`;
     body.append(label, status);
     row.append(marker, body);
     timeline.appendChild(row);
@@ -1419,12 +1413,6 @@ const renderRoadmapToolbar = (data) => {
   search.placeholder = 'Pesquisar no roadmap';
   search.setAttribute('aria-label', 'Pesquisar no roadmap');
 
-  const category = document.createElement('select');
-  category.className = 'portal-select';
-  category.setAttribute('aria-label', 'Filtrar roadmap por categoria');
-  category.append(new Option('Todas as categorias', 'all'));
-  data.categories.forEach((item) => category.append(new Option(item, item)));
-
   const status = document.createElement('select');
   status.className = 'portal-select';
   status.setAttribute('aria-label', 'Filtrar roadmap por status');
@@ -1437,7 +1425,6 @@ const renderRoadmapToolbar = (data) => {
   const applyFilters = () => {
     const filtered = filterRoadmap(data, {
       query: search.value,
-      category: category.value,
       status: status.value
     });
 
@@ -1447,10 +1434,9 @@ const renderRoadmapToolbar = (data) => {
   };
 
   search.addEventListener('input', applyFilters);
-  category.addEventListener('change', applyFilters);
   status.addEventListener('change', applyFilters);
 
-  container.append(search, category, status, result);
+  container.append(search, status, result);
   applyFilters();
 };
 

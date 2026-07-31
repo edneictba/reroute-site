@@ -16,9 +16,14 @@ assert(fs.existsSync(outputDir), 'dist-portal ausente.');
 
 if (fs.existsSync(outputDir)) {
   const files = walk(outputDir).map((file) => path.relative(outputDir, file).replaceAll('\\', '/'));
+  const portalSourceDir = path.join(rootDir, 'portal');
+  const portalRoutes = walk(portalSourceDir)
+    .filter((file) => path.basename(file) === 'index.html')
+    .map((file) => path.relative(rootDir, file).replaceAll('\\', '/'));
   const required = [
     'portal/login/index.html',
     'portal/dashboard/index.html',
+    'portal/roadmap/index.html',
     'portal/recuperar-senha/index.html',
     'portal/redefinir-senha/index.html',
     'portal/acesso-negado/index.html',
@@ -27,6 +32,7 @@ if (fs.existsSync(outputDir)) {
     'src/portal/styles/portal.css'
   ];
   required.forEach((file) => assert(files.includes(file), `Arquivo obrigatório ausente: ${file}`));
+  portalRoutes.forEach((file) => assert(files.includes(file), `Rota do Portal ausente no build: ${file}`));
 
   const forbidden = [/\.sql$/i, /\.md$/i, /(^|\/)\.env/i, /^supabase\//, /^server\//, /^api\//];
   files.forEach((file) => assert(!forbidden.some((pattern) => pattern.test(file)), `Arquivo interno publicado: ${file}`));
