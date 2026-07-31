@@ -6,6 +6,17 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "portal.reroute.com.br"
+        }
+      ],
+      "destination": "/portal/",
+      "permanent": true
+    },
+    {
       "source": "/portal/investidor/dashboard",
       "destination": "/portal/dashboard",
       "permanent": true
