@@ -31,7 +31,8 @@ if (!/^https:\/\/[a-z0-9]+\.supabase\.co$/i.test(supabaseUrl) || supabaseAnonKey
 const publicEntries = [
   ['portal', 'portal'],
   ['assets/icons', 'assets/icons'],
-  ['assets/images/logo-reroute-hns-640.png', 'assets/images/logo-reroute-hns-640.png']
+  ['assets/images/logo-reroute-hns-640.png', 'assets/images/logo-reroute-hns-640.png'],
+  ['assets/images/og-reroute-portal.png', 'assets/images/og-reroute-portal.png']
 ];
 
 const sourcePatterns = [
