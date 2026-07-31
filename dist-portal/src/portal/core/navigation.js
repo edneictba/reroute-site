@@ -1,5 +1,4 @@
 export const portalNavigationItems = [
-  ['Meu Portal', '/portal/investidor/dashboard/', 5, ['portal.access', 'workspace.access']],
   ['Dashboard', '/portal/dashboard/', 10, ['portal.access', 'workspace.access']],
   ['Roadmap', '/portal/roadmap/', 20, ['portal.access', 'workspace.access']],
   ['Atualizações', '/portal/atualizacoes/', 30, ['portal.access', 'workspace.access']],

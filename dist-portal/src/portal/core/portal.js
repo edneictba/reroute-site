@@ -152,6 +152,11 @@ const renderNavigation = (context) => {
 
   nav.innerHTML = '';
 
+  const title = document.createElement('span');
+  title.className = 'portal-nav-title';
+  title.textContent = 'Meu Portal';
+  nav.appendChild(title);
+
   if (document.body.matches('[data-portal-section="investor-workspace"]')) {
     investorWorkspaceNav.forEach((item) => {
       const link = document.createElement('a');

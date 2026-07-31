@@ -4,6 +4,13 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/portal/investidor/dashboard",
+      "destination": "/portal/dashboard",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/admin/login",

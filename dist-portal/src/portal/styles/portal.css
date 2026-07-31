@@ -467,6 +467,13 @@ button { cursor: pointer; }
   border-radius: 20px;
   background: rgba(255, 255, 255, .025);
 }
+.portal-nav-title {
+  display: block;
+  padding: 10px 14px 4px;
+  color: var(--portal-muted);
+  font-weight: 850;
+  cursor: default;
+}
 .portal-nav a {
   position: relative;
   display: flex;

@@ -76,7 +76,7 @@ const getAcceptances = () => ([
 ]);
 
 export const investorWorkspaceNav = [
-  { label: 'Visao geral', route: '/portal/investidor/dashboard/' },
+  { label: 'Visao geral', route: '/portal/dashboard/' },
   { label: 'Minha participacao', route: '/portal/investidor/participacao/' },
   { label: 'Aportes', route: '/portal/investidor/aportes/' },
   { label: 'Documentos', route: '/portal/investidor/documentos/' },
