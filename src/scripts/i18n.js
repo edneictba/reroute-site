@@ -157,6 +157,10 @@ const translations = {
     'details.title': 'Quer conhecer o REROUTE em mais detalhes?',
     'details.body': 'Veja como funciona o sistema, o método ROTA, o Human Navigation System e toda a estrutura por trás da plataforma.',
     'details.cta': 'Conhecer o REROUTE',
+    'conheca.meta.title': 'Conheça o REROUTE | Human Navigation System', 'conheca.meta.description': 'Conheça o sistema, o método ROTA e o Human Navigation System por trás do REROUTE.',
+    'conheca.nav.action': 'Em ação', 'conheca.nav.how': 'Como funciona', 'conheca.nav.back': 'Voltar para a página principal', 'conheca.nav.register': 'Cadastre-se gratuitamente',
+    'conheca.hero.kicker': 'Conheça o REROUTE', 'conheca.hero.title': 'Conheça o sistema que organiza, adapta e ajuda você a continuar avançando.', 'conheca.hero.body': 'O REROUTE transforma objetivos em uma rota prática, acompanha a sua realidade e ajusta o próximo passo quando a vida muda.', 'conheca.hero.back': 'Voltar para a Landing',
+    'conheca.final.kicker': 'Comece sua jornada', 'conheca.final.title': 'Pronto para começar sua rota?', 'conheca.final.body': 'Cadastre-se gratuitamente para participar dos primeiros testes do REROUTE.', 'conheca.final.cta': 'Quero testar gratuitamente',
     'form.kicker': 'Participe dos primeiros testes',
     'form.title': 'Comece gratuitamente sua rota de emagrecimento.',
     'form.lead': 'Cadastre-se para participar dos primeiros testes do REROUTE e receber acesso a uma experiência personalizada de treino, alimentação, hidratação e acompanhamento.',
@@ -289,6 +293,10 @@ const translations = {
     'promise.item1': 'Una mejor decisión hoy puede cambiar el rumbo de mañana.', 'promise.item2': 'El error es un evento, no una identidad.', 'promise.item3': 'El próximo paso importa más que el último desvío.',
     'promise.imageAlt': 'Human Navigation System con mapa global y rutas digitales',
     'details.kicker': 'Conoce la plataforma', 'details.title': '¿Quieres conocer REROUTE con más detalle?', 'details.body': 'Descubre cómo funciona el sistema, el método ROTA, el Human Navigation System y toda la estructura detrás de la plataforma.', 'details.cta': 'Conocer REROUTE',
+    'conheca.meta.title': 'Conoce REROUTE | Human Navigation System', 'conheca.meta.description': 'Conoce el sistema, el método ROTA y el Human Navigation System detrás de REROUTE.',
+    'conheca.nav.action': 'En acción', 'conheca.nav.how': 'Cómo funciona', 'conheca.nav.back': 'Volver a la página principal', 'conheca.nav.register': 'Regístrate gratis',
+    'conheca.hero.kicker': 'Conoce REROUTE', 'conheca.hero.title': 'Conoce el sistema que organiza, se adapta y te ayuda a seguir avanzando.', 'conheca.hero.body': 'REROUTE transforma objetivos en una ruta práctica, acompaña tu realidad y ajusta el próximo paso cuando la vida cambia.', 'conheca.hero.back': 'Volver a la Landing',
+    'conheca.final.kicker': 'Comienza tu recorrido', 'conheca.final.title': '¿Listo para comenzar tu ruta?', 'conheca.final.body': 'Regístrate gratis para participar en las primeras pruebas de REROUTE.', 'conheca.final.cta': 'Quiero probarlo gratis',
     'form.kicker': 'Participa en las primeras pruebas', 'form.title': 'Comienza gratis tu ruta de pérdida de peso.', 'form.lead': 'Regístrate para participar en las primeras pruebas de REROUTE y acceder a una experiencia personalizada de entrenamiento, alimentación, hidratación y seguimiento.',
     'form.name': '¿Cómo te gustaría que te llamemos?', 'form.email': 'Tu mejor correo electrónico', 'form.phone': 'Número de WhatsApp', 'form.submit': 'Quiero participar en la prueba gratuita',
     'form.nameInvalid': 'Ingresa al menos 2 caracteres.', 'form.privacy': 'Tus datos se utilizarán únicamente para contactarte sobre tu acceso y participación en las pruebas de REROUTE. Al enviar, aceptas nuestra', 'form.conversionTitle': 'Regístrate gratis', 'form.conversionText': 'Participa en la creación de una experiencia adaptada a la vida real.', 'form.benefit1': 'Acceso anticipado gratuito', 'form.benefit2': 'Ruta inicial personalizada', 'form.benefit3': 'Seguimiento durante las pruebas', 'form.benefit4': 'Participación en la evolución del producto', 'form.phoneNote': 'Usaremos tu WhatsApp únicamente para contactarte sobre tu acceso y participación en las pruebas.', 'form.speed': 'Toma menos de 30 segundos.', 'form.emailInvalid': 'Ingresa un correo electrónico válido.', 'form.phoneInvalid': 'Ingresa un WhatsApp válido para el país seleccionado.',
@@ -376,6 +384,10 @@ const translations = {
     'promise.item1': 'A better decision today can change tomorrow’s direction.', 'promise.item2': 'A mistake is an event, not an identity.', 'promise.item3': 'The next step matters more than the last detour.',
     'promise.imageAlt': 'Human Navigation System with a global map and digital routes',
     'details.kicker': 'Explore the platform', 'details.title': 'Want to learn more about REROUTE?', 'details.body': 'See how the system, the ROTA Method, the Human Navigation System, and the platform’s complete structure work.', 'details.cta': 'Discover REROUTE',
+    'conheca.meta.title': 'Discover REROUTE | Human Navigation System', 'conheca.meta.description': 'Discover the system, the ROTA Method, and the Human Navigation System behind REROUTE.',
+    'conheca.nav.action': 'In action', 'conheca.nav.how': 'How it works', 'conheca.nav.back': 'Back to the main page', 'conheca.nav.register': 'Sign up for free',
+    'conheca.hero.kicker': 'Discover REROUTE', 'conheca.hero.title': 'Discover the system that organizes, adapts, and helps you keep moving forward.', 'conheca.hero.body': 'REROUTE turns goals into a practical route, follows your reality, and adjusts the next step when life changes.', 'conheca.hero.back': 'Back to the Landing Page',
+    'conheca.final.kicker': 'Start your journey', 'conheca.final.title': 'Ready to start your route?', 'conheca.final.body': 'Sign up for free to take part in the first REROUTE tests.', 'conheca.final.cta': 'I want to try it for free',
     'form.kicker': 'Join the first tests', 'form.title': 'Start your weight-loss route for free.', 'form.lead': 'Sign up to take part in the first REROUTE tests and access a personalized experience for training, nutrition, hydration, and daily support.',
     'form.name': 'What would you like us to call you?', 'form.email': 'Your best email address', 'form.phone': 'WhatsApp number', 'form.submit': 'I want to join the free test',
     'form.nameInvalid': 'Enter at least 2 characters.', 'form.privacy': 'Your data will be used only to contact you about access to and participation in REROUTE tests. By submitting, you agree to our', 'form.conversionTitle': 'Sign up for free', 'form.conversionText': 'Help shape an experience designed for real life.', 'form.benefit1': 'Free early access', 'form.benefit2': 'Personalized initial route', 'form.benefit3': 'Support during testing', 'form.benefit4': 'Participation in product evolution', 'form.phoneNote': 'We will use your WhatsApp only to contact you about access to and participation in the tests.', 'form.speed': 'Takes less than 30 seconds.', 'form.emailInvalid': 'Enter a valid email address.', 'form.phoneInvalid': 'Enter a valid WhatsApp number for the selected country.',
@@ -519,8 +531,9 @@ const applyLanguage = (language, { persist = true } = {}) => {
   }
 
   document.documentElement.lang = languageOptions[currentLanguage].lang;
-  document.title = translate('meta.title');
-  document.querySelector('meta[name="description"]')?.setAttribute('content', translate('meta.description'));
+  const pageKey = document.documentElement.dataset.page === 'conheca' ? 'conheca.' : '';
+  document.title = translate(`${pageKey}meta.title`);
+  document.querySelector('meta[name="description"]')?.setAttribute('content', translate(`${pageKey}meta.description`));
 
   textBindings.forEach(([selector, key, mode]) => {
     document.querySelectorAll(selector).forEach((element) => {
@@ -534,12 +547,15 @@ const applyLanguage = (language, { persist = true } = {}) => {
   });
   htmlBindings.forEach(([selector, key]) => document.querySelectorAll(selector).forEach((element) => { element.innerHTML = translate(key); }));
   attributeBindings.forEach(([selector, attribute, key]) => document.querySelectorAll(selector).forEach((element) => element.setAttribute(attribute, translate(key))));
+  document.querySelectorAll('[data-i18n]').forEach((element) => { element.textContent = translate(element.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-aria-label]').forEach((element) => { element.setAttribute('aria-label', translate(element.dataset.i18nAriaLabel)); });
   updateTourAccessibility();
 
   document.querySelectorAll('[data-language-switcher]').forEach(renderLanguageSwitcher);
   document.querySelector('[data-menu-toggle]')?.setAttribute('aria-label', translate('nav.open'));
 
   window.dispatchEvent(new CustomEvent('reroute:languagechange', { detail: { language: currentLanguage } }));
+  document.documentElement.classList.remove('i18n-pending');
 };
 
 document.addEventListener('click', (event) => {

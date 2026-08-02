@@ -50,6 +50,7 @@ const entries = [
 ];
 
 const publicSourceEntries = [
+  'src/scripts/i18n-bootstrap.js',
   'src/scripts/i18n.js',
   'src/scripts/script.js',
   'src/scripts/analytics.js',
