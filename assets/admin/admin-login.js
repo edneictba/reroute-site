@@ -1,11 +1,21 @@
 const form = document.getElementById('adminLoginForm');
 const emailInput = document.getElementById('adminEmailInput');
 const passwordInput = document.getElementById('adminPasswordInput');
+const passwordToggle = document.getElementById('adminPasswordToggle');
 const message = document.getElementById('loginMessage');
 
 const setMessage = (text) => {
   message.textContent = text;
 };
+
+passwordToggle?.addEventListener('click', () => {
+  const showPassword = passwordInput.type === 'password';
+  passwordInput.type = showPassword ? 'text' : 'password';
+  passwordToggle.setAttribute('aria-pressed', String(showPassword));
+  passwordToggle.setAttribute('aria-label', showPassword ? 'Ocultar senha' : 'Mostrar senha');
+  passwordToggle.classList.toggle('password-toggle--visible', showPassword);
+  passwordInput.focus({ preventScroll: true });
+});
 
 form?.addEventListener('submit', async (event) => {
   event.preventDefault();

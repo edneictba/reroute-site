@@ -4,8 +4,8 @@ const renderAdminAnalytics = () => renderAdminLayout({
   activeItem: 'analytics',
   title: 'Analytics',
   brandLabel: 'Admin Analytics',
-  styles: ['/assets/admin/admin-analytics.css?v=20260727-analytics1'],
-  scripts: ['/assets/admin/admin-analytics.js?v=20260727-admin-navigation'],
+  styles: ['/assets/admin/admin-analytics.css?v=20260802-journey-diagnostics'],
+  scripts: ['/assets/admin/admin-analytics.js?v=20260802-journey-diagnostics'],
   content: `
     <section class="admin-intro">
       <div>
@@ -25,6 +25,18 @@ const renderAdminAnalytics = () => renderAdminLayout({
 
     <div id="analyticsStatus" class="table-status" role="status" aria-live="polite">Carregando métricas…</div>
 
+    <section class="admin-card analytics-diagnosis" aria-labelledby="journeyDiagnosisTitle">
+      <div class="card-heading">
+        <div><span class="admin-kicker">RESUMO EXECUTIVO</span><h2 id="journeyDiagnosisTitle">Diagnóstico da Jornada</h2></div>
+      </div>
+      <div class="analytics-diagnosis-metrics">
+        <div><span>Visitantes</span><strong id="diagnosisVisitors">—</strong></div>
+        <div><span>Cadastros</span><strong id="diagnosisRegistrations">—</strong></div>
+        <div><span>Conversão</span><strong id="diagnosisConversion">—</strong></div>
+      </div>
+      <p class="analytics-diagnosis-message" id="diagnosisMessage">Analisando a jornada dos visitantes…</p>
+    </section>
+
     <section class="metric-grid" aria-label="Resumo de Analytics">
       <article class="metric-card"><span>Visitas</span><strong id="metricVisits">—</strong></article>
       <article class="metric-card"><span>Visitantes únicos</span><strong id="metricVisitors">—</strong></article>
@@ -41,9 +53,50 @@ const renderAdminAnalytics = () => renderAdminLayout({
         <div class="card-heading"><div><span class="admin-kicker">AQUISIÇÃO</span><h2>Origem do tráfego</h2></div></div>
         <div class="analytics-list" id="trafficList"></div>
       </article>
+      <article class="admin-card analytics-card--wide">
+        <div class="card-heading"><div><span class="admin-kicker">CONVERSÃO</span><h2>Origem × Conversão</h2></div></div>
+        <div class="analytics-table-wrap">
+          <table class="analytics-table">
+            <thead><tr><th>Origem</th><th>Visitas</th><th>Cadastros</th><th>Conversão</th></tr></thead>
+            <tbody id="originConversionList"></tbody>
+          </table>
+        </div>
+      </article>
       <article class="admin-card">
         <div class="card-heading"><div><span class="admin-kicker">TECNOLOGIA</span><h2>Dispositivos</h2></div></div>
         <div class="analytics-list" id="deviceList"></div>
+      </article>
+      <article class="admin-card">
+        <div class="card-heading"><div><span class="admin-kicker">TECNOLOGIA</span><h2>Sistema Operacional</h2></div></div>
+        <div class="analytics-list" id="operatingSystemList"></div>
+      </article>
+      <article class="admin-card">
+        <div class="card-heading"><div><span class="admin-kicker">TECNOLOGIA</span><h2>Navegadores</h2></div></div>
+        <div class="analytics-list" id="browserList"></div>
+      </article>
+      <article class="admin-card">
+        <div class="card-heading"><div><span class="admin-kicker">AUDIÊNCIA</span><h2>Visitantes</h2></div></div>
+        <div class="analytics-list" id="visitorTypeList"></div>
+      </article>
+      <article class="admin-card analytics-card--wide">
+        <div class="card-heading"><div><span class="admin-kicker">DISTRIBUIÇÃO</span><h2>Horário das visitas</h2></div></div>
+        <div class="analytics-hourly" id="hourlyVisitorsList"></div>
+      </article>
+      <article class="admin-card">
+        <div class="card-heading"><div><span class="admin-kicker">PROFUNDIDADE</span><h2>Scroll da página</h2></div></div>
+        <div class="analytics-list" id="scrollJourneyList"></div>
+      </article>
+      <article class="admin-card">
+        <div class="card-heading"><div><span class="admin-kicker">INTERAÇÃO</span><h2>Cliques nos CTAs</h2></div></div>
+        <div class="analytics-list" id="ctaClickList"></div>
+      </article>
+      <article class="admin-card analytics-card--wide">
+        <div class="card-heading"><div><span class="admin-kicker">VELOCIDADE DA JORNADA</span><h2>Tempo médio</h2></div></div>
+        <div class="analytics-time-grid">
+          <div><span>Na página</span><strong id="averagePageTime">—</strong></div>
+          <div><span>Até abrir o formulário</span><strong id="averageFormOpenTime">—</strong></div>
+          <div><span>Até concluir o cadastro</span><strong id="averageRegistrationTime">—</strong></div>
+        </div>
       </article>
       <article class="admin-card">
         <div class="card-heading"><div><span class="admin-kicker">COMPORTAMENTO</span><h2>Eventos mais frequentes</h2></div></div>

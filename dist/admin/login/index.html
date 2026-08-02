@@ -23,7 +23,12 @@
           <input id="adminEmailInput" name="email" type="email" maxlength="254" autocomplete="username" required>
         </label>
         <label>Senha
-          <input id="adminPasswordInput" name="password" type="password" maxlength="256" autocomplete="current-password" required>
+          <span class="password-field">
+            <input id="adminPasswordInput" name="password" type="password" maxlength="256" autocomplete="current-password" required>
+            <button class="password-toggle" id="adminPasswordToggle" type="button" aria-label="Mostrar senha" aria-pressed="false">
+              <span class="password-toggle-icon" aria-hidden="true"></span>
+            </button>
+          </span>
         </label>
         <button class="admin-button admin-button-primary" type="submit">Entrar com segurança</button>
         <p class="login-message" id="loginMessage" role="status" aria-live="polite"></p>
@@ -31,6 +36,6 @@
       <a class="back-link" href="/">← Voltar para a Landing</a>
     </section>
   </main>
-  <script src="/assets/admin/admin-login.js?v=20260722-admin1" defer></script>
+  <script src="/assets/admin/admin-login.js?v=20260802-password-toggle" defer></script>
 </body>
 </html>

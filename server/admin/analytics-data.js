@@ -1,6 +1,196 @@
 const { serviceRoleRequest } = require('./admin-auth');
 const { getDashboardData } = require('./admin-data');
 
+const ANALYTICS_EVENT_SELECT = [
+  'visitor_id',
+  'session_id',
+  'event_name',
+  'occurred_at',
+  'referrer_host',
+  'utm_source',
+  'duration_seconds',
+  'scroll_percent',
+  'event_data'
+].join(',');
+
+const percentage = (value, total) => total
+  ? Number(((Number(value) / Number(total)) * 100).toFixed(1))
+  : 0;
+
+const classifyOrigin = (row) => {
+  const source = `${row.utm_source || ''} ${row.referrer_host || ''}`.toLowerCase();
+  if (/facebook|fb\b|meta/.test(source)) return 'Facebook';
+  if (/instagram|ig\b/.test(source)) return 'Instagram';
+  if (/linkedin/.test(source)) return 'LinkedIn';
+  if (/google/.test(source)) return 'Google';
+  if (/chatgpt|openai/.test(source)) return 'ChatGPT';
+  if (!source.trim()) return 'Direto';
+  return 'Outros';
+};
+
+const classifyCta = (row) => {
+  const name = String(row.event_data?.name || '').toLowerCase();
+  const target = String(row.event_data?.target || '').toLowerCase();
+  if (name.includes('hero_') || name.includes('quero testar gratuitamente')) return 'CTA Hero';
+  if (name.includes('história') || name.includes('historia')) return 'CTA História';
+  if (name.includes('como_funciona') || name.includes('veja como funciona')) return 'CTA Como Funciona';
+  if (target === '#comecar' || name.includes('participar do teste') || name === 'começar') return 'CTA Final';
+  return null;
+};
+
+const secondsBetween = (start, end) => Math.max(
+  Math.round((new Date(end).getTime() - new Date(start).getTime()) / 1000),
+  0
+);
+
+const buildJourneyDiagnosis = ({ visitors, registrations, eventVisitors }) => {
+  const stages = [
+    { value: visitors, message: 'Maior perda ocorre antes do clique no CTA.' },
+    { value: eventVisitors.cta_click, message: 'Maior perda ocorre antes da abertura do formulário.' },
+    { value: eventVisitors.form_open, message: 'Maior abandono ocorre durante o preenchimento do formulário.' },
+    { value: eventVisitors.form_start, message: 'Boa taxa de abertura do formulário, mas baixa conclusão.' },
+    { value: registrations, message: 'A jornada apresenta boa continuidade até a conclusão do cadastro.' }
+  ];
+
+  if (!visitors) return 'Ainda não há visitas suficientes para gerar um diagnóstico.';
+  let weakestIndex = stages.length - 1;
+  let weakestRetention = 1;
+  for (let index = 0; index < stages.length - 1; index += 1) {
+    const current = stages[index].value;
+    const next = stages[index + 1].value;
+    const retention = current ? next / current : 1;
+    if (retention < weakestRetention) {
+      weakestRetention = retention;
+      weakestIndex = index;
+    }
+  }
+  return stages[weakestIndex].message;
+};
+
+const aggregateEventDetails = (rows) => {
+  const pageViews = rows.filter((row) => row.event_name === 'page_view');
+  const visitorIds = new Set(pageViews.map((row) => row.visitor_id));
+  const registrations = new Set(rows.filter((row) => row.event_name === 'form_submit').map((row) => row.visitor_id));
+  const eventVisitors = Object.fromEntries(
+    ['cta_click', 'form_open', 'form_start', 'form_submit'].map((eventName) => [
+      eventName,
+      new Set(rows.filter((row) => row.event_name === eventName).map((row) => row.visitor_id)).size
+    ])
+  );
+
+  const originNames = ['Facebook', 'Instagram', 'LinkedIn', 'Google', 'Direto', 'ChatGPT', 'Outros'];
+  const origins = new Map(originNames.map((name) => [name, { visits: 0, registrations: 0 }]));
+  for (const row of pageViews) origins.get(classifyOrigin(row)).visits += 1;
+  for (const row of rows.filter((event) => event.event_name === 'form_submit')) {
+    origins.get(classifyOrigin(row)).registrations += 1;
+  }
+
+  const hourlyVisitors = Array.from({ length: 24 }, (_, hour) => ({
+    name: `${String(hour).padStart(2, '0')}h`,
+    visitors: new Set()
+  }));
+  for (const row of pageViews) {
+    const hour = Number(new Intl.DateTimeFormat('pt-BR', {
+      timeZone: 'America/Sao_Paulo',
+      hour: '2-digit',
+      hourCycle: 'h23'
+    }).format(new Date(row.occurred_at)));
+    if (hourlyVisitors[hour]) hourlyVisitors[hour].visitors.add(row.visitor_id);
+  }
+
+  const visitsByVisitor = new Map();
+  for (const row of pageViews) visitsByVisitor.set(row.visitor_id, (visitsByVisitor.get(row.visitor_id) || 0) + 1);
+  const recurringVisitors = [...visitsByVisitor.values()].filter((visits) => visits > 1).length;
+  const newVisitors = Math.max(visitorIds.size - recurringVisitors, 0);
+
+  const scrollSteps = [
+    { name: 'Hero', threshold: 0, visitors: new Set(pageViews.map((row) => row.visitor_id)) },
+    { name: 'História do fundador', threshold: 25, visitors: new Set() },
+    { name: 'Para quem é', threshold: 50, visitors: new Set() },
+    { name: 'Como funciona', threshold: 75, visitors: new Set() },
+    { name: 'CTA final', threshold: 90, visitors: new Set() }
+  ];
+  for (const row of rows.filter((event) => event.event_name === 'scroll_depth')) {
+    for (const step of scrollSteps) {
+      if (Number(row.scroll_percent) >= step.threshold) step.visitors.add(row.visitor_id);
+    }
+  }
+
+  const ctaNames = ['CTA Hero', 'CTA História', 'CTA Como Funciona', 'CTA Final'];
+  const ctaClicks = new Map(ctaNames.map((name) => [name, 0]));
+  for (const row of rows.filter((event) => event.event_name === 'cta_click')) {
+    const name = classifyCta(row);
+    if (name) ctaClicks.set(name, ctaClicks.get(name) + 1);
+  }
+
+  const sessionEvents = new Map();
+  for (const row of rows) {
+    if (!sessionEvents.has(row.session_id)) sessionEvents.set(row.session_id, []);
+    sessionEvents.get(row.session_id).push(row);
+  }
+  const timeToOpen = [];
+  const timeToSubmit = [];
+  for (const events of sessionEvents.values()) {
+    const ordered = events.sort((left, right) => new Date(left.occurred_at) - new Date(right.occurred_at));
+    const pageView = ordered.find((row) => row.event_name === 'page_view');
+    const formOpen = ordered.find((row) => row.event_name === 'form_open');
+    const formSubmit = ordered.find((row) => row.event_name === 'form_submit');
+    if (pageView && formOpen) timeToOpen.push(secondsBetween(pageView.occurred_at, formOpen.occurred_at));
+    if (pageView && formSubmit) timeToSubmit.push(secondsBetween(pageView.occurred_at, formSubmit.occurred_at));
+  }
+  const durations = rows
+    .filter((row) => row.event_name === 'page_duration' && Number.isFinite(Number(row.duration_seconds)))
+    .map((row) => Number(row.duration_seconds));
+  const average = (values) => values.length
+    ? Math.round(values.reduce((sum, value) => sum + value, 0) / values.length)
+    : 0;
+
+  return {
+    diagnosis: {
+      visitors: visitorIds.size,
+      registrations: registrations.size,
+      conversionRate: percentage(registrations.size, visitorIds.size),
+      message: buildJourneyDiagnosis({ visitors: visitorIds.size, registrations: registrations.size, eventVisitors })
+    },
+    originConversion: originNames.map((name) => ({
+      name,
+      visits: origins.get(name).visits,
+      registrations: origins.get(name).registrations,
+      conversionRate: percentage(origins.get(name).registrations, origins.get(name).visits)
+    })),
+    hourlyVisitors: hourlyVisitors.map(({ name, visitors }) => ({ name, total: visitors.size })),
+    visitorTypes: [
+      { name: 'Novos visitantes', total: newVisitors, percentage: percentage(newVisitors, visitorIds.size) },
+      { name: 'Visitantes recorrentes', total: recurringVisitors, percentage: percentage(recurringVisitors, visitorIds.size) }
+    ],
+    scrollJourney: scrollSteps.map(({ name, visitors }) => ({
+      name,
+      total: visitors.size,
+      percentage: percentage(visitors.size, visitorIds.size)
+    })),
+    ctaClicks: ctaNames.map((name) => ({ name, total: ctaClicks.get(name) })),
+    averageTimes: {
+      page: average(durations),
+      formOpen: average(timeToOpen),
+      registration: average(timeToSubmit)
+    }
+  };
+};
+
+const getAnalyticsEventDetails = async (safeDays, fetchImpl) => {
+  const since = new Date(Date.now() - safeDays * 24 * 60 * 60 * 1000).toISOString();
+  const params = new URLSearchParams({
+    select: ANALYTICS_EVENT_SELECT,
+    occurred_at: `gte.${since}`,
+    order: 'occurred_at.asc',
+    limit: '10000'
+  });
+  const response = await serviceRoleRequest(`/rest/v1/analytics_events?${params}`, { method: 'GET' }, fetchImpl);
+  if (!response.ok) return null;
+  const rows = await response.json();
+  return Array.isArray(rows) ? aggregateEventDetails(rows) : null;
+};
+
 const getAnalyticsDashboard = async ({ days = 30 } = {}, fetchImpl = fetch) => {
   const safeDays = [7, 30, 90, 365].includes(Number(days)) ? Number(days) : 30;
   try {
@@ -9,7 +199,9 @@ const getAnalyticsDashboard = async ({ days = 30 } = {}, fetchImpl = fetch) => {
       body: JSON.stringify({ p_days: safeDays })
     }, fetchImpl);
     if (!response.ok) return null;
-    return response.json();
+    const dashboard = await response.json();
+    const details = await getAnalyticsEventDetails(safeDays, fetchImpl).catch(() => null);
+    return details ? { ...dashboard, ...details } : dashboard;
   } catch {
     return null;
   }
