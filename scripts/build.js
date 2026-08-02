@@ -41,6 +41,7 @@ const entries = [
   'politica-de-privacidade.html',
   'termos-de-uso.html',
   'aviso-legal.html',
+  'conheca',
   'admin/login',
   'assets',
   'robots.txt',
@@ -77,6 +78,51 @@ for (const entry of publicSourceEntries) {
 
   fs.mkdirSync(path.dirname(target), { recursive: true });
   fs.copyFileSync(source, target);
+}
+
+const indexHtml = fs.readFileSync(path.join(rootDir, 'index.html'), 'utf8');
+const conhecaSourcePath = path.join(rootDir, 'conheca', 'index.html');
+const conhecaTargetPath = path.join(distDir, 'conheca', 'index.html');
+
+const extractTemplate = (id) => {
+  const match = indexHtml.match(new RegExp(`<template id="${id}">([\\s\\S]*?)<\\/template>`));
+  if (!match) {
+    throw new Error(`Template institucional ausente: ${id}`);
+  }
+  return match[1].trim();
+};
+
+const extractBlock = (pattern, label) => {
+  const match = indexHtml.match(pattern);
+  if (!match) {
+    throw new Error(`Bloco compartilhado ausente: ${label}`);
+  }
+  return match[0].trim();
+};
+
+const normalizeSharedMarkup = (markup) => markup
+  .replaceAll('src="assets/', 'src="/assets/')
+  .replaceAll('srcset="assets/', 'srcset="/assets/')
+  .replaceAll(', assets/', ', /assets/')
+  .replaceAll('href="politica-de-privacidade.html"', 'href="/politica-de-privacidade.html"')
+  .replaceAll('href="termos-de-uso.html"', 'href="/termos-de-uso.html"')
+  .replaceAll('href="aviso-legal.html"', 'href="/aviso-legal.html"');
+
+if (fs.existsSync(conhecaSourcePath)) {
+  const sharedBlocks = {
+    '<!-- REROUTE_PRODUCT_TOUR -->': extractTemplate('conheca-reroute-product-tour'),
+    '<!-- REROUTE_METHOD_SECTIONS -->': extractTemplate('conheca-reroute-method-sections'),
+    '<!-- REROUTE_HNS_SECTION -->': extractTemplate('conheca-reroute-hns-section'),
+    '<!-- REROUTE_FOOTER -->': extractBlock(/<footer class="footer">[\s\S]*?<\/footer>/, 'rodape'),
+    '<!-- REROUTE_DEMO_MODAL -->': extractBlock(/<div class="demo-modal" id="interactiveDemoModal"[\s\S]*?<\/div>\s*<script src="src\/scripts\/runtime-config\.js/, 'modal interativo')
+      .replace(/\s*<script src="src\/scripts\/runtime-config\.js[\s\S]*$/, '')
+  };
+
+  let conhecaHtml = fs.readFileSync(conhecaSourcePath, 'utf8');
+  for (const [placeholder, markup] of Object.entries(sharedBlocks)) {
+    conhecaHtml = conhecaHtml.replace(placeholder, normalizeSharedMarkup(markup));
+  }
+  fs.writeFileSync(conhecaTargetPath, conhecaHtml, 'utf8');
 }
 
 if (localPortalEnabled) {

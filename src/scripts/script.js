@@ -229,7 +229,7 @@ const initInteractiveDemo = () => {
 
   const demoSteps = [
     {
-      image: 'assets/images/reroute-em-acao/01.png',
+      image: '/assets/images/reroute-em-acao/01.png',
       altKey: 'tour.alt1',
       titleKey: 'demo.title1',
       descriptionKey: 'demo.description1',
@@ -237,7 +237,7 @@ const initInteractiveDemo = () => {
       description: 'Tudo começa entendendo onde você quer chegar. O REROUTE transforma seu objetivo em um destino claro.'
     },
     {
-      image: 'assets/images/reroute-em-acao/02.png',
+      image: '/assets/images/reroute-em-acao/02.png',
       altKey: 'tour.alt2',
       titleKey: 'demo.title2',
       descriptionKey: 'demo.description2',
@@ -245,7 +245,7 @@ const initInteractiveDemo = () => {
       description: 'Sua rotina, seu tempo e sua realidade ajudam o REROUTE a entender de onde você está partindo.'
     },
     {
-      image: 'assets/images/reroute-em-acao/03.png',
+      image: '/assets/images/reroute-em-acao/03.png',
       altKey: 'tour.alt3',
       titleKey: 'demo.title3',
       descriptionKey: 'demo.description3',
@@ -253,7 +253,7 @@ const initInteractiveDemo = () => {
       description: 'O REROUTE identifica padrões, pontos fortes e obstáculos que podem influenciar sua jornada.'
     },
     {
-      image: 'assets/images/reroute-em-acao/04.png',
+      image: '/assets/images/reroute-em-acao/04.png',
       altKey: 'tour.alt4',
       titleKey: 'demo.title4',
       descriptionKey: 'demo.description4',
@@ -261,7 +261,7 @@ const initInteractiveDemo = () => {
       description: 'Quando a vida muda, o REROUTE recalcula o próximo passo para manter você avançando.'
     },
     {
-      image: 'assets/images/reroute-em-acao/05.png',
+      image: '/assets/images/reroute-em-acao/05.png',
       altKey: 'tour.alt5',
       titleKey: 'demo.title5',
       descriptionKey: 'demo.description5',
@@ -269,7 +269,7 @@ const initInteractiveDemo = () => {
       description: 'A rota começa com uma ação possível para hoje, acompanhada de check-ins e ajustes ao longo da jornada.'
     },
     {
-      image: 'assets/images/reroute-em-acao/06-1.png',
+      image: '/assets/images/reroute-em-acao/06-1.png',
       altKey: 'tour.alt6',
       titleKey: 'demo.title6',
       descriptionKey: 'demo.description6',
