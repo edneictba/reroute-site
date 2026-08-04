@@ -1,0 +1,182 @@
+<svg viewBox="0 0 980 730" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arquitetura técnica do REROUTE">
+  <style>
+    text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,Arial,sans-serif}
+    .t{fill:#ffffff;font-size:13px;font-weight:700}
+    .st{fill:#ffffff;font-size:11.5px;font-weight:700}
+    .b{fill:rgba(226,232,240,.82);font-size:10.5px}
+    .lb{fill:#9fffc2;font-size:9.5px}
+    .lane{fill:rgba(226,232,240,.6);font-size:10px;font-style:italic}
+    .box{fill:#0b1220;stroke:rgba(255,255,255,.14);stroke-width:1;rx:14}
+    .sub{fill:#111827;stroke:rgba(255,255,255,.12);stroke-width:1}
+    .arrow{stroke:#22d3ee;stroke-width:1.6;fill:none;marker-end:url(#ah)}
+    .arrowg{stroke:#22c55e;stroke-width:1.6;fill:none;marker-end:url(#ahg)}
+    .arrowm{stroke:rgba(226,232,240,.55);stroke-width:1.4;fill:none;marker-end:url(#ahm)}
+  </style>
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#22c55e"/></marker>
+    <marker id="ahm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="rgba(226,232,240,.55)"/></marker>
+    <linearGradient id="gbc" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1687ff"/><stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+  </defs>
+
+  <!-- fundo -->
+  <rect x="0" y="0" width="980" height="730" rx="18" fill="#060b14"/>
+
+  <!-- push OneSignal -> Pessoa (curva no topo) -->
+  <path class="arrow" d="M810,46 C560,-10 300,-8 118,48"/>
+  <text class="lb" x="430" y="16" text-anchor="middle">push: manhã · noite · lembretes de água</text>
+
+  <!-- PESSOA -->
+  <rect class="box" x="20" y="50" width="180" height="170" rx="14"/>
+  <rect x="20" y="50" width="180" height="3" rx="1.5" fill="#9fffc2"/>
+  <text class="t" x="35" y="78">Pessoa</text>
+  <text class="b" x="35" y="100">Celular · navegador</text>
+  <text class="b" x="35" y="118">PWA: atalho na tela inicial</text>
+  <text class="b" x="35" y="136">iOS: atalho · Android: TWA</text>
+  <text class="b" x="35" y="154">Recebe push e abre o app</text>
+  <text class="b" x="35" y="172">2 toques/dia (~30s cada)</text>
+  <text class="b" x="35" y="190">check-in ☀ · check-out ☾</text>
+
+  <!-- CLOUDFLARE -->
+  <rect class="box" x="240" y="75" width="130" height="120" rx="14"/>
+  <rect x="240" y="75" width="130" height="3" rx="1.5" fill="#22d3ee"/>
+  <text class="t" x="255" y="103">Cloudflare</text>
+  <text class="b" x="255" y="125">DNS · SSL</text>
+  <text class="b" x="255" y="143">WAF / proteção</text>
+  <text class="b" x="255" y="161">Turnstile</text>
+  <text class="b" x="255" y="179">(plano free)</text>
+
+  <!-- setas pessoa -> cloudflare -> vercel -->
+  <path class="arrow" d="M200,135 L238,135"/>
+  <path class="arrow" d="M370,135 L408,135"/>
+
+  <!-- VERCEL -->
+  <rect class="box" x="410" y="30" width="350" height="330" rx="16"/>
+  <rect x="410" y="30" width="350" height="3" rx="1.5" fill="url(#gbc)"/>
+  <text class="t" x="428" y="58">Vercel · app.reroute.com.br</text>
+  <text class="b" x="428" y="76">Next.js + TypeScript · PWA (manifest + service worker)</text>
+
+  <rect class="sub" x="425" y="92" width="155" height="118" rx="10"/>
+  <text class="st" x="437" y="112">UI (React)</text>
+  <text class="b" x="437" y="130">uma tarefa por vez</text>
+  <text class="b" x="437" y="146">check-in da manhã</text>
+  <text class="b" x="437" y="162">check-out ROTA (noite)</text>
+  <text class="b" x="437" y="178">A Linha · Dial · Espelho</text>
+  <text class="b" x="437" y="194">hidratação incremental</text>
+
+  <rect class="sub" x="595" y="92" width="155" height="118" rx="10"/>
+  <text class="st" x="607" y="112">API Routes</text>
+  <text class="b" x="607" y="130">sessão (Supabase Auth)</text>
+  <text class="b" x="607" y="146">check-ins · sintomas</text>
+  <text class="b" x="607" y="162">rate limit · Turnstile</text>
+  <text class="b" x="607" y="178">agenda notificações</text>
+
+  <rect class="sub" x="425" y="222" width="155" height="128" rx="10"/>
+  <rect x="425" y="222" width="155" height="2.5" rx="1" fill="#22c55e"/>
+  <text class="st" x="437" y="243">Motor determinístico</text>
+  <text class="b" x="437" y="261">resolver(checkin) — puro</text>
+  <text class="b" x="437" y="277">SEG·CUI·SIN·NIV·REC·PRG</text>
+  <text class="b" x="437" y="293">PEP · escada N0–N4</text>
+  <text class="b" x="437" y="309">precedência de travas</text>
+  <text class="b" x="437" y="325">suíte de testes = 100%</text>
+  <text class="b" x="437" y="341">decide O QUÊ</text>
+
+  <rect class="sub" x="595" y="222" width="155" height="128" rx="10"/>
+  <rect x="595" y="222" width="155" height="2.5" rx="1" fill="#1687ff"/>
+  <text class="st" x="607" y="243">Voz (LLM)</text>
+  <text class="b" x="607" y="261">recebe plano imutável</text>
+  <text class="b" x="607" y="277">arsenal por ID (18 args)</text>
+  <text class="b" x="607" y="293">bandit de tom</text>
+  <text class="b" x="607" y="309">validador → fallback</text>
+  <text class="b" x="607" y="325">texto livre → enum</text>
+  <text class="b" x="607" y="341">decide COMO DIZER</text>
+
+  <path class="arrowg" d="M580,286 L593,286"/>
+
+  <!-- SERVIÇOS (coluna direita) -->
+  <rect class="box" x="810" y="30" width="150" height="80" rx="14"/>
+  <rect x="810" y="30" width="150" height="3" rx="1.5" fill="#22d3ee"/>
+  <text class="st" x="823" y="54">OneSignal</text>
+  <text class="b" x="823" y="72">web push ilimitado</text>
+  <text class="b" x="823" y="88">free tier · serve o TWA</text>
+
+  <rect class="box" x="810" y="130" width="150" height="110" rx="14"/>
+  <rect x="810" y="130" width="150" height="3" rx="1.5" fill="#22d3ee"/>
+  <text class="st" x="823" y="154">PostHog</text>
+  <text class="b" x="823" y="172">D7/D30 · pós-lapso 48h</text>
+  <text class="b" x="823" y="188">dias compostos</text>
+  <text class="b" x="823" y="204">feature flags (paywall)</text>
+  <text class="b" x="823" y="220">coortes por origem</text>
+
+  <rect class="box" x="810" y="260" width="150" height="75" rx="14"/>
+  <rect x="810" y="260" width="150" height="3" rx="1.5" fill="#22d3ee"/>
+  <text class="st" x="823" y="284">Sentry</text>
+  <text class="b" x="823" y="302">erros front + back</text>
+  <text class="b" x="823" y="318">release por commit</text>
+
+  <rect class="box" x="810" y="400" width="150" height="80" rx="14"/>
+  <rect x="810" y="400" width="150" height="3" rx="1.5" fill="#1687ff"/>
+  <text class="st" x="823" y="424">OpenRouter (IA)</text>
+  <text class="b" x="823" y="442">qualquer modelo, 1 chave</text>
+  <text class="b" x="823" y="458">teto de gasto · guardrails</text>
+  <text class="b" x="823" y="474">nunca decide regra</text>
+
+  <!-- setas vercel -> serviços -->
+  <path class="arrow" d="M760,70 L808,70"/>
+  <text class="lb" x="784" y="63" text-anchor="middle">agenda</text>
+  <path class="arrow" d="M760,185 L808,185"/>
+  <text class="lb" x="784" y="178" text-anchor="middle">eventos</text>
+  <path class="arrow" d="M760,297 L808,297"/>
+  <text class="lb" x="784" y="290" text-anchor="middle">erros</text>
+  <path class="arrow" d="M750,330 C790,352 798,375 808,408"/>
+
+  <!-- SUPABASE -->
+  <rect class="box" x="410" y="400" width="350" height="120" rx="16"/>
+  <rect x="410" y="400" width="350" height="3" rx="1.5" fill="#22c55e"/>
+  <text class="t" x="428" y="428">Supabase · Postgres + Auth</text>
+  <text class="b" x="428" y="448">RLS em todas as tabelas (dado de saúde · LGPD)</text>
+  <text class="b" x="428" y="466">perfil · rota · dia · check-in/out · sintoma · hidratação</text>
+  <text class="b" x="428" y="482">exercício (CREF) · alimento (POF, fonte_id) · arsenal (CRN)</text>
+  <text class="b" x="428" y="500">migrations versionadas no repositório · projeto separado do site</text>
+
+  <path class="arrowg" d="M585,360 L585,398"/>
+  <text class="lb" x="597" y="382">SQL · RLS</text>
+
+  <!-- nota gate analytics -->
+  <text class="lane" x="200" y="385">gate por ambiente: analytics e telemetria</text>
+  <text class="lane" x="200" y="400">só ligam em produção (função pura testável)</text>
+
+  <!-- ENTREGA CONTÍNUA -->
+  <rect x="20" y="555" width="940" height="155" rx="16" fill="none" stroke="rgba(255,255,255,.18)" stroke-dasharray="6 5"/>
+  <text class="lane" x="40" y="580">Entrega contínua — GitHub é a fonte da verdade ("o nosso Drive")</text>
+
+  <rect class="box" x="40" y="598" width="220" height="95" rx="12"/>
+  <text class="st" x="53" y="620">GitHub · reroute-app</text>
+  <text class="b" x="53" y="638">privado · AGENTS.md + docs/</text>
+  <text class="b" x="53" y="654">branch → PR → squash merge</text>
+  <text class="b" x="53" y="670">Dependabot: alertas, sem PRs</text>
+
+  <rect class="box" x="300" y="598" width="250" height="95" rx="12"/>
+  <text class="st" x="313" y="620">GitHub Actions (CI)</text>
+  <text class="b" x="313" y="638">quality: lint · types · test · build</text>
+  <text class="b" x="313" y="654">security: Gitleaks · Semgrep</text>
+  <text class="b" x="313" y="670">CI vermelho = não sobe</text>
+
+  <rect class="box" x="590" y="598" width="170" height="95" rx="12"/>
+  <text class="st" x="603" y="620">Deploy Vercel</text>
+  <text class="b" x="603" y="638">merge na main publica</text>
+  <text class="b" x="603" y="654">envs no painel</text>
+  <text class="b" x="603" y="670">(nunca no código)</text>
+
+  <rect class="box" x="800" y="598" width="140" height="95" rx="12"/>
+  <text class="st" x="813" y="620">GitHub Pages</text>
+  <text class="b" x="813" y="638">demo pública</text>
+  <text class="b" x="813" y="654">só index.html</text>
+  <text class="b" x="813" y="670">docs/ nunca sai</text>
+
+  <path class="arrowm" d="M260,645 L298,645"/>
+  <path class="arrowm" d="M550,645 L588,645"/>
+  <path class="arrowm" d="M550,612 C660,582 720,582 798,614"/>
+</svg>

@@ -1,0 +1,87 @@
+{
+  "atualizado_em": "2026-08-04",
+  "protocolo": "Antes de trabalhar numa missão: mude o status para 'doing', escreva uma nota do que vai fazer, commit e push. Ao terminar: status 'done', nota do que foi feito, commit e push. Nunca trabalhe sem a missão marcada — é assim que o acompanhamento funciona.",
+  "fases": [
+    {
+      "id": "F0",
+      "titulo": "Fundações da consultoria",
+      "janela": "concluída",
+      "missoes": [
+        { "id": "M-01", "titulo": "Criar o repositório reroute-app com documentação completa", "dono": "Renato", "status": "done", "resumo": "Repo privado com AGENTS.md, docs/, roadmap e este painel de missões.", "done_quando": "Repo no ar com docs navegáveis", "notas": ["04/08: repo criado, renomeado de reroute-mvp, estrutura completa"] },
+        { "id": "M-02", "titulo": "Pipeline de segurança no CI", "dono": "Renato", "status": "done", "resumo": "Gitleaks (segredos) + Semgrep (código inseguro) em todo push. Dependabot só com alertas, sem PRs automáticos.", "done_quando": "Workflows verdes", "notas": ["04/08: rodando verde"] },
+        { "id": "M-03", "titulo": "Demo e documentação publicadas no GitHub Pages", "dono": "Renato", "status": "done", "resumo": "Protótipo guiado em / e este hub em /docs/ — públicos com noindex.", "done_quando": "As duas URLs respondendo", "notas": ["04/08: no ar"] },
+        { "id": "M-04", "titulo": "Convidar Ednei como colaborador do repositório", "dono": "Renato", "status": "done", "resumo": "Convite com permissão de escrita enviado para edneictba.", "done_quando": "Convite enviado", "notas": ["04/08: enviado"] }
+      ]
+    },
+    {
+      "id": "FA",
+      "titulo": "Contas e acessos",
+      "janela": "agosto · 1ª quinzena",
+      "missoes": [
+        { "id": "M-05", "titulo": "Aceitar o convite do GitHub", "dono": "Ednei", "status": "todo", "resumo": "Abrir o e-mail/notificação do GitHub e aceitar o convite do repositório reroute-app.", "done_quando": "Ednei consegue abrir o repo logado", "notas": [] },
+        { "id": "M-06", "titulo": "Definir o canal seguro de credenciais", "dono": "Ednei + Renato", "status": "todo", "resumo": "Escolher um gerenciador de senhas (ex.: Bitwarden, 1Password) com cofre compartilhado. Chave e senha NUNCA por WhatsApp/e-mail em texto puro.", "done_quando": "Cofre compartilhado criado com a 1ª credencial dentro", "notas": [] },
+        { "id": "M-07", "titulo": "Criar conta Cloudflare e migrar o DNS", "dono": "Ednei (guiado)", "status": "todo", "resumo": "Conta free, adicionar reroute.com.br, trocar os nameservers no Registro.br. Guia passo a passo na seção Infraestrutura.", "done_quando": "Site, portal e e-mail funcionando atrás do Cloudflare", "notas": [] },
+        { "id": "M-08", "titulo": "Criar conta OpenRouter com limite de gasto", "dono": "Ednei (guiado)", "status": "todo", "resumo": "O gateway de IA do projeto: uma chave para qualquer modelo. Configurar crédito pré-pago e LIMITE de gasto para não ter surpresa.", "done_quando": "Chave criada, teto de gasto definido, credencial no cofre", "notas": [] },
+        { "id": "M-09", "titulo": "Criar conta PostHog e convidar Renato", "dono": "Ednei (guiado)", "status": "todo", "resumo": "Projeto 'reroute-app' no plano free. É onde veremos se as pessoas voltam.", "done_quando": "Projeto criado + Renato com acesso", "notas": [] },
+        { "id": "M-10", "titulo": "Criar conta Sentry e convidar Renato", "dono": "Ednei (guiado)", "status": "todo", "resumo": "Projeto Next.js no plano free. É o alarme de erros em produção.", "done_quando": "Projeto criado + Renato com acesso", "notas": [] },
+        { "id": "M-11", "titulo": "Criar conta OneSignal", "dono": "Ednei (guiado)", "status": "todo", "resumo": "App 'REROUTE' com Web Push. É por onde as notificações de manhã e noite saem.", "done_quando": "App criado, chaves no cofre", "notas": [] },
+        { "id": "M-12", "titulo": "Criar o projeto Supabase do app e convidar Renato", "dono": "Ednei (guiado)", "status": "todo", "resumo": "Projeto separado do site (dado de saúde isolado). Convite pelo painel: Settings → Team.", "done_quando": "Projeto criado + Renato com acesso", "notas": [] },
+        { "id": "M-13", "titulo": "Criar o projeto Vercel do app", "dono": "Ednei (guiado)", "status": "todo", "resumo": "Importar o repo reroute-app e apontar o domínio app.reroute.com.br (CNAME no Cloudflare).", "done_quando": "URL do app respondendo com o esqueleto", "notas": [] }
+      ]
+    },
+    {
+      "id": "FB",
+      "titulo": "Etapa 00 — Fundação: motor e dados",
+      "janela": "agosto → início de setembro",
+      "missoes": [
+        { "id": "M-14", "titulo": "Esqueleto do app (Next.js + qualidade)", "dono": "Renato", "status": "todo", "resumo": "Projeto Next.js + TypeScript strict + testes + Husky. O CI de qualidade passa a bloquear merge.", "done_quando": "npm run lint/test/build verdes no CI e proteção da main ligada", "notas": [] },
+        { "id": "M-15", "titulo": "Suíte de testes do motor (antes do motor!)", "dono": "Renato", "status": "todo", "resumo": "Os casos de teste derivados da matriz cruzada (8 estados do dia × 4 pilares). O motor é o produto.", "done_quando": "Suíte escrita e vermelha", "notas": [] },
+        { "id": "M-16", "titulo": "Motor determinístico passando 100%", "dono": "Renato + Codex", "status": "todo", "resumo": "resolver(checkin) com as regras auditáveis (SEG, CUI, SIN, NIV, REC, PRG) + modelo PEP.", "done_quando": "100% da suíte verde", "notas": [] },
+        { "id": "M-17", "titulo": "Definir os revisores CRN e CREF", "dono": "Ednei", "status": "todo", "resumo": "Um(a) nutricionista (CRN) e um(a) profissional de educação física (CREF) para revisar os catálogos. Sem isso, nada de saúde publica.", "done_quando": "Nomes e registros definidos e de acordo", "notas": [] },
+        { "id": "M-18", "titulo": "Pesquisa: fontes de exercícios com animação", "dono": "a definir", "status": "todo", "resumo": "Pergunta aberta que bloqueia o catálogo — prompt de pesquisa pronto na seção Perguntas Abertas. Darebee já verificado e descartado (All Rights Reserved).", "done_quando": "Tabela comparativa de fontes entregue na call", "notas": ["04/08: Darebee verificado — © todos os direitos reservados, fora como fonte"] },
+        { "id": "M-19", "titulo": "Pesquisa: bases públicas de alimentação (POF)", "dono": "a definir", "status": "todo", "resumo": "Pergunta aberta que bloqueia a base de alimentos — prompt pronto na seção Perguntas Abertas: achar a POF estruturada e estimar a cobertura mínima.", "done_quando": "Fontes + recomendação entregues na call", "notas": [] },
+        { "id": "M-20", "titulo": "Catálogo de ~20 movimentos com revisão CREF", "dono": "Renato + Codex", "status": "todo", "resumo": "Taxonomia limpa, texto na voz REROUTE, imagens licenciadas com atribuição. Depende de M-17 e M-18.", "done_quando": "Catálogo no banco com revisado_por preenchido", "notas": [] },
+        { "id": "M-21", "titulo": "Base de alimentos (POF) + arsenal com revisão CRN", "dono": "Renato + Codex", "status": "todo", "resumo": "POF estruturada com fonte por linha + os 18 argumentos citáveis versionados. Depende de M-17 e M-19.", "done_quando": "Base no banco com fonte_id e revisado_por", "notas": [] }
+      ]
+    },
+    {
+      "id": "FC",
+      "titulo": "Etapa 01 — O Loop: provar a tese",
+      "janela": "setembro",
+      "missoes": [
+        { "id": "M-22", "titulo": "Login e onboarding (uma pergunta por tela)", "dono": "Renato + Codex", "status": "todo", "resumo": "Cadastro, altura/peso/objetivo/relação com a caneta, triagem de segurança, captura de origem (UTM/cupom).", "done_quando": "Do link ao onboarding completo no celular, sem instrução", "notas": [] },
+        { "id": "M-23", "titulo": "Check-in da manhã", "dono": "Ednei + Codex", "status": "todo", "resumo": "As 3 perguntas rápidas e o plano do dia. Primeira missão de código do Ednei, com o prompt de missão.", "done_quando": "Check-in salvo mudando a rota do dia", "notas": [] },
+        { "id": "M-24", "titulo": "Check-out da noite (clique + áudio)", "dono": "Renato + Codex", "status": "todo", "resumo": "Método ROTA, relato de sintomas, recálculo do dia seguinte. Áudio transcrito via OpenRouter.", "done_quando": "Lapso relatado hoje muda o plano de amanhã, de forma explicável", "notas": [] },
+        { "id": "M-25", "titulo": "Hidratação incremental", "dono": "Ednei + Codex", "status": "todo", "resumo": "500ml por toque, plano de distribuição no dia, fallback no check-out.", "done_quando": "Registro incremental funcionando", "notas": [] },
+        { "id": "M-26", "titulo": "PWA instalável + push (OneSignal)", "dono": "Renato", "status": "todo", "resumo": "Atalho na tela testado em Android e iPhone + notificações de manhã e noite.", "done_quando": "Quem não abre o app recebe os dois toques diários", "notas": [] },
+        { "id": "M-27", "titulo": "Medição ligada (PostHog + Sentry)", "dono": "Renato", "status": "todo", "resumo": "As 3 provas do MVP medidas desde o 1º usuário: retenção D7/D30, recuperação pós-lapso 48h, dias compostos.", "done_quando": "Dashboard respondendo 'as pessoas voltam depois de um lapso?'", "notas": [] },
+        { "id": "M-28", "titulo": "Tela de cupom + paywall desenhado (desligado)", "dono": "Renato + Codex", "status": "todo", "resumo": "Entrada do beta por cupom identificando quem indicou; cobrança desenhada e desabilitada via feature flag.", "done_quando": "Cupom funcionando; flag do paywall no PostHog", "notas": [] },
+        { "id": "M-29", "titulo": "Recrutar 30–50 pessoas para o beta", "dono": "Ednei", "status": "todo", "resumo": "Instagram + lista de espera da landing. Contato próximo (o beta não paga — o acompanhamento compensa).", "done_quando": "30+ pessoas com cupom ativado", "notas": [] },
+        { "id": "M-30", "titulo": "Beta no ar + primeira leitura das métricas", "dono": "ambos", "status": "todo", "resumo": "Alvos: D7 ≥ 45%, D30 ≥ 30%, recuperação pós-lapso ≥ 50% em 48h. Se o loop cru não retém, paramos e investigamos.", "done_quando": "4 semanas de dados analisadas na call", "notas": [] }
+      ]
+    },
+    {
+      "id": "FD",
+      "titulo": "Decisões em paralelo",
+      "janela": "agosto → setembro",
+      "missoes": [
+        { "id": "M-31", "titulo": "Decidir a comunicação IA × algoritmo", "dono": "Ednei + Renato", "status": "todo", "resumo": "A pergunta nº 1 da seção Perguntas Abertas: o que chamamos de IA no produto e no marketing.", "done_quando": "Decisão registrada em ADR + refletida na copy", "notas": [] },
+        { "id": "M-32", "titulo": "Corrigir o domínio canônico da landing", "dono": "Renato", "status": "todo", "resumo": "index.html, robots.txt e sitemap.xml ainda apontam reroutehns.com.br (morto). Trocar para www.reroute.com.br.", "done_quando": "SEO apontando para o domínio certo", "notas": [] },
+        { "id": "M-33", "titulo": "E-mail sem limite: SMTP do Supabase via Resend", "dono": "Renato", "status": "todo", "resumo": "Resolver o limite de e-mails que o Ednei relatou apontando o SMTP do Supabase para o Resend já configurado.", "done_quando": "E-mail de cadastro chegando sem esbarrar em limite", "notas": [] },
+        { "id": "M-34", "titulo": "Jurídico: política de privacidade e consentimento LGPD", "dono": "Ednei (contratar) + Renato (requisitos)", "status": "todo", "resumo": "Dado de saúde exige consentimento específico e destacado. Precisa antes do beta abrir.", "done_quando": "Textos prontos e tela de consentimento aprovada", "notas": [] },
+        { "id": "M-35", "titulo": "Definir preço e momento da cobrança", "dono": "Ednei", "status": "todo", "resumo": "R$ 8/mês se sustenta? Anual desde o início? Decidir com os dados do beta na mão.", "done_quando": "Decisão registrada + paywall configurado", "notas": [] }
+      ]
+    },
+    {
+      "id": "FE",
+      "titulo": "Etapas 02–05 — Diferencial e escala",
+      "janela": "outubro em diante",
+      "missoes": [
+        { "id": "M-36", "titulo": "Etapa 02: A Linha + O Espelho", "dono": "a definir", "status": "todo", "resumo": "A jornada vira o desenho que nunca quebra + comparação só com você mesmo. O app deixa de parecer um tracker.", "done_quando": "Retorno à home fora do horário de check-in sobe; D30 sobe vs Etapa 01", "notas": [] },
+        { "id": "M-37", "titulo": "Etapa 03: O Dial + A Conversa + O Porquê", "dono": "a definir", "status": "todo", "resumo": "Negociação com piso científico, escada de exigência de 6 níveis, fonte visível em cada item.", "done_quando": "Piso negociado cumprido ≥ 70%", "notas": [] },
+        { "id": "M-38", "titulo": "Etapa 04: A Voz (IA via OpenRouter)", "dono": "a definir", "status": "todo", "resumo": "Texto livre → estado, mensagens no tom amigo sobre o plano imutável, validador com fallback, bandit de tom.", "done_quando": "Fallback < 5% · interpretação ≥ 90% de acerto", "notas": [] },
+        { "id": "M-39", "titulo": "Etapa 05: Dois humores + app Android", "dono": "a definir", "status": "todo", "resumo": "App de manhã ≠ app de noite; TWA na Play Store (US$ 25); biblioteca de arte própria.", "done_quando": "App na loja + A/B dos humores rodando", "notas": [] }
+      ]
+    }
+  ]
+}

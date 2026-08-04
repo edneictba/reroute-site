@@ -1,0 +1,2286 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>REROUTE — Documentação</title>
+<style>
+:root{
+  --bg:#020617;--bg2:#07111f;--panel:#0b1220;--panel2:#111827;--white:#fff;
+  --muted:rgba(226,232,240,.82);--soft:rgba(255,255,255,.08);--line:rgba(255,255,255,.12);
+  --blue:#1687ff;--cyan:#22d3ee;--green:#22c55e;--mint:#9fffc2;--radius:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:linear-gradient(180deg,#020617,#07111f 58%,#020617);color:var(--white);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;line-height:1.6}
+.layout{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:100vh}
+aside{position:sticky;top:0;height:100vh;overflow-y:auto;background:rgba(2,6,23,.92);
+  border-right:1px solid var(--line);padding:28px 18px}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.brand .dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--cyan));
+  box-shadow:0 0 14px rgba(34,211,238,.8)}
+.brand h1{font-size:1.15rem;margin:0;letter-spacing:.14em}
+.brand-sub{color:var(--muted);font-size:.78rem;margin:0 0 22px 22px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;margin:4px 0;border-radius:12px;
+  color:var(--muted);text-decoration:none;font-size:.9rem;border:1px solid transparent;transition:.15s}
+.nav-item:hover{background:var(--soft);color:var(--white)}
+.nav-item.active{background:linear-gradient(135deg,rgba(22,135,255,.22),rgba(34,211,238,.12));
+  border-color:rgba(34,211,238,.35);color:var(--white)}
+.nav-icon{width:1.4em;text-align:center}
+.side-note{margin-top:26px;padding:14px;border:1px solid var(--line);border-radius:12px;
+  font-size:.75rem;color:var(--muted);background:var(--panel)}
+main{padding:40px clamp(20px,3.5vw,80px)}
+.wrap{max-width:1560px;margin:0 auto}
+.hero{margin-bottom:34px;padding:34px clamp(24px,3vw,48px);border-radius:22px;border:1px solid var(--line);
+  background:radial-gradient(circle at 80% 0%,rgba(22,135,255,.28),transparent 60%),var(--panel)}
+.hero h2{margin:0 0 10px;font-size:clamp(1.5rem,2.2vw,2.1rem)}
+.hero p{margin:0;color:var(--muted);max-width:70ch;font-size:1.02rem}
+.hero .tags{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
+.tag{font-size:.74rem;padding:5px 13px;border-radius:999px;border:1px solid rgba(34,211,238,.4);
+  color:var(--mint);background:rgba(34,211,238,.08)}
+.doc{margin-bottom:28px;padding:30px clamp(20px,2.5vw,44px) 26px;background:var(--panel);
+  border:1px solid var(--line);border-radius:var(--radius);scroll-margin-top:24px}
+.doc-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.doc-ico{font-size:1.5rem}
+.doc-title{margin:0;font-size:1.45rem;background:linear-gradient(135deg,var(--blue),var(--cyan));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.doc-file{margin-left:auto;font-size:.72rem;color:rgba(226,232,240,.5);font-family:ui-monospace,monospace}
+.mini-h{margin:30px 0 14px;font-size:1.02rem;color:var(--cyan);font-weight:700}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:14px}
+.card{padding:20px 22px;border:1px solid var(--line);border-radius:14px;
+  background:linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.015))}
+.card .ci{font-size:1.5rem;margin-bottom:8px}
+.card h4{margin:0 0 6px;font-size:1.02rem;color:var(--white)}
+.card p{margin:0;font-size:.93rem;color:var(--muted);line-height:1.55}
+.card a{color:var(--cyan)}
+.card.big p{font-size:.98rem}
+.card.ok{border-color:rgba(34,197,94,.4)}
+.card.warn{border-color:rgba(34,211,238,.4)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.step{padding:16px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.03)}
+.step .sn{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;
+  border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--cyan));font-weight:800;
+  font-size:.82rem;margin-bottom:8px}
+.step.done .sn{background:linear-gradient(135deg,var(--green),var(--mint));color:#052e13}
+.step b{display:block;font-size:.95rem;margin-bottom:4px}
+.step p{margin:0;font-size:.82rem;color:var(--muted);line-height:1.45}
+details.deep{margin-top:20px;border:1px solid var(--line);border-radius:14px;background:rgba(2,6,23,.4)}
+details.deep>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;font-size:.92rem;color:var(--cyan);font-weight:600;user-select:none}
+details.deep>summary::-webkit-details-marker{display:none}
+details.deep>summary:hover{background:rgba(34,211,238,.06);border-radius:14px}
+details.deep .chev{transition:.2s}
+details.deep[open] .chev{transform:rotate(180deg)}
+details.deep .prose{padding:6px 24px 24px;border-top:1px solid var(--line)}
+.prose h1{font-size:1.3rem;margin:14px 0 4px;color:var(--white)}
+.prose h2{font-size:1.1rem;margin-top:2em;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.prose h3{font-size:.98rem;color:var(--cyan)}
+.prose p,.prose li{color:var(--muted);max-width:88ch}
+.prose strong{color:var(--white)}
+.prose a{color:var(--cyan)}
+.prose blockquote{margin:1em 0;padding:12px 18px;border-left:3px solid var(--cyan);
+  background:rgba(34,211,238,.06);border-radius:0 10px 10px 0;color:var(--muted);max-width:88ch}
+.prose blockquote p{margin:4px 0}
+.prose code{background:var(--panel2);border:1px solid var(--line);border-radius:6px;
+  padding:1px 6px;font-size:.85em;color:var(--mint)}
+.prose pre{background:#060b14;border:1px solid var(--line);border-radius:12px;padding:16px;
+  overflow-x:auto;max-width:960px}
+.prose pre code{background:none;border:none;padding:0;color:#c9e8ff;font-size:.82rem;line-height:1.5}
+.prose table{border-collapse:collapse;margin:1em 0;font-size:.88rem;display:block;overflow-x:auto;max-width:100%}
+.prose th,.prose td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+.prose th{background:var(--panel2);color:var(--white);white-space:nowrap}
+.prose td{color:var(--muted)}
+.prose hr{border:none;border-top:1px solid var(--line);margin:2em 0}
+.mintro{color:var(--muted);max-width:90ch;margin:0 0 18px}
+.chip{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.72rem;font-weight:700;vertical-align:1px}
+.chip.todo{background:rgba(226,232,240,.1);color:rgba(226,232,240,.75);border:1px solid var(--line)}
+.chip.doing{background:rgba(34,211,238,.14);color:var(--cyan);border:1px solid rgba(34,211,238,.45)}
+.chip.done{background:rgba(34,197,94,.14);color:var(--mint);border:1px solid rgba(34,197,94,.45)}
+.mi-resumo{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;align-items:center}
+.mi-stat{padding:10px 18px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03);font-size:.9rem}
+.mi-stat b{font-size:1.25rem;margin-right:6px}
+.mi-upd{color:rgba(226,232,240,.5);font-size:.78rem;margin-left:auto}
+.fase{margin:22px 0 8px;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.fase-h{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:13px 18px;background:rgba(255,255,255,.04)}
+.fase-h h3{margin:0;font-size:1rem}
+.fase-h .fj{font-size:.78rem;color:var(--muted)}
+.fase-h .fp{margin-left:auto;font-size:.78rem;color:var(--mint)}
+.fbar{height:4px;background:rgba(255,255,255,.06)}
+.fbar i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--mint))}
+.mrow{display:grid;grid-template-columns:96px 1fr;gap:6px 14px;padding:12px 18px;border-top:1px solid rgba(255,255,255,.07);align-items:baseline}
+.mrow.doing{background:rgba(34,211,238,.05);border-left:3px solid var(--cyan)}
+.mrow.done{opacity:.62}
+.mrow .mt{font-weight:600;font-size:.94rem}
+.mrow .mt .mid{color:rgba(226,232,240,.45);font-family:ui-monospace,monospace;font-size:.76rem;margin-right:8px}
+.mrow .mt .mdono{font-size:.72rem;color:var(--cyan);border:1px solid rgba(34,211,238,.3);border-radius:999px;padding:1px 9px;margin-left:10px;font-weight:600;white-space:nowrap}
+.mrow .md{grid-column:2;font-size:.85rem;color:var(--muted)}
+.mrow .md .dq{color:rgba(159,255,194,.75);font-style:italic}
+.mrow .mn{grid-column:2;font-size:.79rem;color:rgba(34,211,238,.85);margin-top:2px}
+@media(max-width:700px){.mrow{grid-template-columns:1fr}.mrow .md,.mrow .mn{grid-column:1}}
+.diagram{margin:20px 0 4px;border:1px solid var(--line);border-radius:14px;overflow-x:auto}
+.diagram svg{display:block;width:100%;min-width:760px;height:auto}
+footer{color:var(--muted);font-size:.75rem;padding:20px 0 40px;text-align:center}
+@media(min-width:1750px){body{font-size:17px}}
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  aside{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--line)}
+}
+@media print{
+  body{background:#fff;color:#111}
+  aside,.doc-file{display:none}
+  .layout{display:block}
+  .doc,.card,.step{border-color:#ddd;background:#fff;color:#111}
+  .prose p,.prose li,.prose td,.card p,.step p{color:#222}
+  .prose strong,.prose th,.card h4{color:#000}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside>
+  <div class="brand"><span class="dot"></span><h1>REROUTE</h1></div>
+  <p class="brand-sub">Documentação do projeto</p>
+  <a class="nav-item" href="#inicio" data-target="inicio"><span class="nav-icon">🚀</span><span>Comece por aqui</span></a><a class="nav-item" href="#missoes" data-target="missoes"><span class="nav-icon">🚦</span><span>Missões (ao vivo)</span></a><a class="nav-item" href="#contexto" data-target="contexto"><span class="nav-icon">🧭</span><span>Contexto e Visão</span></a>
+<a class="nav-item" href="#prototipo" data-target="prototipo"><span class="nav-icon">📱</span><span>O Protótipo</span></a>
+<a class="nav-item" href="#planejamento" data-target="planejamento"><span class="nav-icon">🗺️</span><span>Planejamento</span></a>
+<a class="nav-item" href="#perguntas" data-target="perguntas"><span class="nav-icon">❓</span><span>Perguntas Abertas</span></a>
+<a class="nav-item" href="#arquitetura" data-target="arquitetura"><span class="nav-icon">🏗️</span><span>Arquitetura</span></a>
+<a class="nav-item" href="#identidade" data-target="identidade"><span class="nav-icon">🎨</span><span>Identidade Visual</span></a>
+<a class="nav-item" href="#praticas" data-target="praticas"><span class="nav-icon">✅</span><span>Boas Práticas</span></a>
+<a class="nav-item" href="#infra" data-target="infra"><span class="nav-icon">⚙️</span><span>Infraestrutura</span></a>
+<a class="nav-item" href="#prompts" data-target="prompts"><span class="nav-icon">🤖</span><span>Prompts (Codex)</span></a>
+<a class="nav-item" href="#referencias" data-target="referencias"><span class="nav-icon">📚</span><span>Referências</span></a>
+  <div class="side-note">
+    <strong>Como ler:</strong> cada seção abre com um <b>resumo simples</b>.
+    Quem quiser o detalhe técnico expande o "Documento completo".
+    <br><br>Fonte da verdade: os arquivos <code>docs/*.md</code> no GitHub.
+  </div>
+</aside>
+<main><div class="wrap">
+<div class="hero">
+  <h2>Se o destino é o app no ar, esta é a rota.</h2>
+  <p>Tudo do projeto REROUTE em um lugar: o que é, por que existe, como vamos construir e o que
+  cada um faz. Comece pelo resumo de 2 minutos — o detalhe técnico está a um clique em cada seção.</p>
+  <div class="tags">
+    <span class="tag">2 toques por dia</span><span class="tag">Recalcula, não pune</span>
+    <span class="tag">Sem loja de app (PWA)</span><span class="tag">GitHub = fonte da verdade</span>
+    <span class="tag">Custo de infra: R$ 0</span>
+  </div>
+</div>
+<section class="doc" id="inicio">
+<div class="doc-head"><span class="doc-ico">🚀</span><h2 class="doc-title">Comece por aqui — o projeto em 2 minutos</h2></div>
+
+<div class="cards">
+  <div class="card big"><div class="ci">🧭</div><h4>O REROUTE</h4><p>Um <b>GPS para emagrecer</b>. A pessoa diz o destino; o app monta a rota do dia. Deu errado hoje? <b>Recalcula amanhã</b> — nunca culpa, nunca "volta à estaca zero".</p></div>
+  <div class="card big"><div class="ci">💡</div><h4>O diferencial</h4><p>Nenhum concorrente cuida do <b>dia seguinte ao erro</b> — nem de quem usa caneta e <b>perde músculo</b>, nem de quem para a medicação e <b>recupera o peso</b>. É aí que entramos.</p></div>
+  <div class="card big"><div class="ci">📱</div><h4>Como funciona no dia a dia</h4><p><b>2 toques por dia</b> (~30s cada): de manhã o app mostra o plano; à noite pergunta como foi. As respostas de hoje montam a rota de amanhã.</p></div>
+</div>
+
+<h3 class="mini-h">O caminho de construção</h3>
+<div class="steps">
+  <div class="step done"><span class="sn">00</span><b>Fundação</b><p>Motor de regras + dados confiáveis. Repo e robôs de qualidade prontos ✓</p></div>
+  <div class="step"><span class="sn">01</span><b>O Loop</b><p>Cadastro + check-ins + notificações. Beta com 30–50 pessoas de verdade</p></div>
+  <div class="step"><span class="sn">02</span><b>A Linha</b><p>A jornada vira um desenho que nunca quebra — a marca do produto</p></div>
+  <div class="step"><span class="sn">03</span><b>O Dial</b><p>Negociação honesta: "quanto você consegue hoje?" — com piso científico</p></div>
+  <div class="step"><span class="sn">04</span><b>A Voz</b><p>A IA ganha a palavra: tom de amigo, com guarda-corpos rígidos</p></div>
+  <div class="step"><span class="sn">05</span><b>Acabamento</b><p>App de manhã ≠ app de noite · app Android na loja</p></div>
+</div>
+
+<h3 class="mini-h">Quem faz o quê</h3>
+<div class="cards">
+  <div class="card"><div class="ci">👨‍💼</div><h4>Ednei</h4><p>Dono do produto. Desenvolve com o <b>Codex</b> usando os prompts prontos, cuida do marketing e dos primeiros usuários.</p></div>
+  <div class="card"><div class="ci">👨‍🔧</div><h4>Renato</h4><p>Consultor. Constrói os alicerces (motor, segurança, robôs de qualidade) e ensina o caminho nas quintas-feiras.</p></div>
+  <div class="card"><div class="ci">🤝</div><h4>O combinado</h4><p><b>GitHub é a fonte da verdade</b> ("o nosso Drive"). Todo trabalho termina com commit e push — de qualquer um dos dois.</p></div>
+</div>
+
+<h3 class="mini-h">Onde estamos agora</h3>
+<div class="cards">
+  <div class="card ok"><div class="ci">✅</div><h4>Pronto</h4><p>Landing no ar captando leads · <a href="https://rnatto-gempe.github.io/reroute-app/" target="_blank" rel="noopener">protótipo guiado do app (demo)</a> · repositório com documentação e robôs de segurança · este material</p></div>
+  <div class="card warn"><div class="ci">🔜</div><h4>Próximo passo</h4><p>Etapa 00: esqueleto do app + motor de regras com testes + catálogos com revisão profissional (CRN/CREF)</p></div>
+  <div class="card"><div class="ci">🗓️</div><h4>Ritmo</h4><p>Encontro toda quinta: revisar o que subiu no GitHub, destravar, aprender uma coisa nova do fluxo</p></div>
+</div>
+</section>
+<section class="doc" id="missoes">
+<div class="doc-head"><span class="doc-ico">🚦</span><h2 class="doc-title">Missões — o cronograma vivo</h2><span class="doc-file">docs/missoes.json</span></div>
+<p class="mintro">Todo o plano de execução como missões com status. <b>A regra do projeto:</b> antes de trabalhar, a missão vira
+<span class="chip doing">fazendo</span> aqui (com nota do plano) e sobe pro GitHub — só então o trabalho começa. Ao terminar, vira
+<span class="chip done">feito</span> com nota do que foi feito. Assim esta página conta a verdade do projeto, sempre.</p>
+<div id="mi-resumo" class="mi-resumo"></div>
+<div id="mi-board"></div>
+</section>
+<section class="doc" id="contexto">
+<div class="doc-head"><span class="doc-ico">🧭</span><h2 class="doc-title">Contexto e Visão</h2><span class="doc-file">docs/00-contexto-e-visao.md</span></div>
+<div class="cards"><div class="card"><div class="ci">🧭</div><h4>O que é</h4><p>Um GPS para emagrecer. Quando a vida sai do plano — festa, sono ruim, enjoo — o app recalcula a rota em vez de cobrar culpa.</p></div><div class="card"><div class="ci">💊</div><h4>Para quem</h4><p>Quem quer emagrecer: usando caneta (Ozempic, Mounjaro), pensando em usar, ou parando. O app serve os três.</p></div><div class="card"><div class="ci">📈</div><h4>Por que agora</h4><p>Mercado de R$ 20 bi em 2026. Ninguém cuida de quem abandona o tratamento, perde músculo ou sai da medicação.</p></div><div class="card"><div class="ci">🛡️</div><h4>Regra de ouro</h4><p>O app orienta e acompanha — nunca substitui médico ou nutricionista. Isso protege as pessoas e o negócio.</p></div></div>
+
+<details class="deep">
+<summary><span>📄 Documento completo (versão detalhada)</span><span class="chev">▾</span></summary>
+<div class="prose"><h1>REROUTE — Contexto e Visão do Produto</h1>
+<blockquote>
+<p>Documento-base da consultoria. Consolida o kick-off de 30/07/2026 e a pesquisa/documentação de concepção (<code>referencias/sugestoes-iniciais/</code>). É o ponto de partida para qualquer pessoa (ou agente de IA) entender o projeto.</p>
+</blockquote>
+<h2>O que é o REROUTE</h2>
+<p>O REROUTE é um <strong>Human Navigation System (HNS)</strong>: um &quot;GPS para emagrecer&quot;. A pessoa define o destino (emagrecer com saúde) e o sistema traça uma rota personalizada — e, quando a vida sai do planejado (sono ruim, festa, viagem, efeito colateral da medicação), <strong>recalcula a rota em vez de punir o erro</strong>.</p>
+<p><strong>Método ROTA</strong>: recalcular em vez de recomeçar. O princípio-síntese do produto é: <em>&quot;o erro não quebra nada — e a interface não pode ter um lugar onde algo quebre.&quot;</em></p>
+<h2>Público-alvo do MVP</h2>
+<p>Pessoas em processo de emagrecimento, <strong>com ou sem medicação GLP-1</strong> (semaglutida/Ozempic, tirzepatida/Mounjaro, retatrutida). O produto é <strong>agnóstico de medicação</strong>: acompanha quem usa, quem não usa e quem está saindo da medicação.</p>
+<h2>Por que agora (síntese da pesquisa de mercado)</h2>
+<ul>
+<li>Mercado brasileiro de canetas GLP-1: <strong>R$ 11 bi (2025) → R$ 20 bi (2026)</strong> com a perda de patente da semaglutida em março/2026 (preços devem cair 30–50%).</li>
+<li><strong>64,8%</strong> descontinuam a medicação em 12 meses; <strong>⅔ do peso perdido volta em 1 ano</strong> após parar.</li>
+<li>Até <strong>40% do peso perdido pode ser massa magra</strong> sem proteína adequada e treino de força.</li>
+<li>O mercado está polarizado entre <strong>trackers passivos baratos</strong> (Shotsy) e <strong>programas clínicos caros</strong> (Noom, telehealth). Há um <strong>vazio no meio</strong>: comportamento adaptativo, agnóstico de medicação, a preço de assinatura de consumo.</li>
+</ul>
+<h3>Os 4 gaps que formam a oportunidade</h3>
+<ol>
+<li><strong>Preservação de massa magra</strong> — fosso mais defensável; nenhum app brasileiro cobre bem.</li>
+<li><strong>A fase de saída da medicação</strong> — ninguém acompanha; módulo de manutenção pós-medicação é diferencial genuíno.</li>
+<li><strong>Adaptação, não registro</strong> — efeito colateral é o motivo nº 1 de desistência (28,2%); recalcular o plano a partir do sintoma ataca a causa do abandono.</li>
+<li><strong>Retenção pela não-punição</strong> — 70% abandonam apps complexos em 2 semanas; autocompaixão pós-lapso reduz o lapso seguinte.</li>
+</ol>
+<h3>Posicionamento</h3>
+<blockquote>
+<p><em>&quot;Um GPS para emagrecer — usando ou não medicamentos — sem perder saúde, força e a capacidade de continuar.&quot;</em></p>
+</blockquote>
+<p><strong>Atenção competitiva:</strong> a Liti (BR) já ocupa a narrativa de &quot;companheiro diário de emagrecimento&quot;, mas é anti-medicação. O diferencial do REROUTE deve ser <strong>recálculo sem punição + preservação de força + agnosticismo de medicação</strong> — não &quot;acompanhamento diário&quot;.</p>
+<h2>Decisões do kick-off (30/07/2026)</h2>
+<table>
+<thead>
+<tr>
+<th>Decisão</th>
+<th>Detalhe</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Escopo do MVP</strong></td>
+<td>Foco único: emagrecimento. Básico de treino, alimentação e check-in diário. Evitar dispersão.</td>
+</tr>
+<tr>
+<td><strong>Plataforma</strong></td>
+<td><strong>Aplicação web (PWA)</strong> primeiro — atalho na tela do celular, sem depender de aprovação em lojas. App Android depois (taxa única US$ 25); iOS via atalho web (Apple cobra US$ 99/ano).</td>
+</tr>
+<tr>
+<td><strong>Check-ins</strong></td>
+<td>Notificação no início do dia (planejamento) e no fim do dia (check-up). Formulários simples, possivelmente entrada por voz.</td>
+</tr>
+<tr>
+<td><strong>UI</strong></td>
+<td>Uma tarefa por vez (inspiração: app Fabulous). Progresso visual com percentuais claros.</td>
+</tr>
+<tr>
+<td><strong>Relação com IA</strong></td>
+<td>A IA como &quot;amigo virtual&quot;: conexão, acompanhamento da jornada, sem substituir orientação médica.</td>
+</tr>
+<tr>
+<td><strong>Fonte da verdade</strong></td>
+<td>GitHub. Todo código versionado; <code>node_modules</code>/<code>.next</code> fora do repositório.</td>
+</tr>
+<tr>
+<td><strong>Infra atual</strong></td>
+<td>Vercel (hospedagem), Supabase (dados/auth/e-mail), Registro.br (domínio reroute.com.br), Resend (e-mail transacional).</td>
+</tr>
+<tr>
+<td><strong>Repositórios</strong></td>
+<td>Separar landing page, portal do investidor e aplicativo MVP.</td>
+</tr>
+<tr>
+<td><strong>Qualidade</strong></td>
+<td>Validação automática de código antes de produção (CI). Camada de segurança desde o início.</td>
+</tr>
+<tr>
+<td><strong>Monetização</strong></td>
+<td>Momento de pagamento dentro do MVP ainda a definir. Benchmark: assinatura anual retém ~33% vs 17% da mensal.</td>
+</tr>
+</tbody></table>
+<h2>Limites éticos e regulatórios (inegociáveis)</h2>
+<ol>
+<li>O app <strong>orienta e apoia execução; nunca prescreve</strong> nem substitui aconselhamento médico/nutricional.</li>
+<li>Catálogos de nutrição e exercício só vão ao ar com <strong>revisão profissional registrada</strong> (CRN para nutrição, CREF para exercício) no campo <code>revisado_por</code>.</li>
+<li>Travas de segurança (ex.: por exame) <strong>nunca são desativadas</strong> por diretriz de usuário — funcionam como teto.</li>
+<li>Diretrizes de suplementação, dose ou medicamento <strong>nunca viram campo estruturado</strong> — ficam como nota literal para a consulta.</li>
+<li>Conflitos entre fontes legítimas (profissional × trava por exame) ficam <strong>visíveis e pendentes</strong>, nunca resolvidos silenciosamente por algoritmo.</li>
+</ol>
+<h2>Métricas do MVP (decisão da pesquisa)</h2>
+<p><strong>Perda de peso NÃO é a métrica primária</strong> (desfecho lento, confundido pela medicação, e otimizá-la leva às práticas que destroem retenção). As provas do produto são:</p>
+<ul>
+<li><strong>Retenção D7 / D30</strong></li>
+<li><strong>Recuperação pós-lapso em 48h</strong></li>
+<li><strong>Dias compostos</strong> (proteína + movimento no mesmo dia)</li>
+</ul>
+<h2>Estado atual dos ativos</h2>
+<table>
+<thead>
+<tr>
+<th>Ativo</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Landing page</td>
+<td>Em produção em <a href="https://www.reroute.com.br">https://www.reroute.com.br</a>, refeita para o MVP de emagrecimento, com formulário de lista de espera (Supabase) + Turnstile</td>
+</tr>
+<tr>
+<td>Portal do investidor</td>
+<td>Em produção em portal.reroute.com.br (mesmo repositório)</td>
+</tr>
+<tr>
+<td>Admin/analytics da landing</td>
+<td>Dashboard próprio com API serverless na Vercel</td>
+</tr>
+<tr>
+<td>App MVP</td>
+<td><strong>Não iniciado</strong> — objeto deste planejamento</td>
+</tr>
+<tr>
+<td>Documentação de concepção</td>
+<td>22 artefatos HTML; os <strong>7 vigentes</strong> estão em <code>referencias/sugestoes-iniciais/</code> (9 arquivos no total)</td>
+</tr>
+</tbody></table>
+<h2>Decisões posteriores ao kick-off</h2>
+<ul>
+<li><strong>04/08/2026 — Arte de exercício:</strong> o sistema de figura paramétrica (&quot;bonecos&quot; gerados por ângulos) foi <strong>descartado</strong> — não atingiu o padrão visual para produto de saúde. O MVP usa o acervo <strong>Everkinetic (CC BY-SA)</strong> com atribuição no banco e na UI; biblioteca própria fica no backlog.</li>
+</ul>
+<h2>Pendências de contexto</h2>
+<ul>
+<li>Os artefatos de <strong>referência técnica</strong> da concepção (camada de alimentação, imagem de exercício, framework de acompanhamento, camada de exigência, escada de movimento) ainda não estão na pasta local — pedir ao Ednei se forem necessários (os 7 vigentes já cobrem o planejamento).</li>
+<li>⚠️ O domínio <code>reroutehns.com.br</code> referenciado no repositório como canônico <strong>não resolve mais</strong>; o oficial é <code>www.reroute.com.br</code> (corrigir SEO).</li>
+<li>Definir os profissionais responsáveis (CRN e CREF) antes de publicar catálogos.</li>
+<li>Validação jurídica do consentimento de duas partes para a feature de áudio profissional (bloqueante do HITL 2 — feature pós-MVP).</li>
+</ul>
+</div>
+</details>
+</section>
+<section class="doc" id="prototipo">
+<div class="doc-head"><span class="doc-ico">📱</span><h2 class="doc-title">O Protótipo</h2><span class="doc-file">docs/08-prototipo.md</span></div>
+<div class="cards"><div class="card"><div class="ci">🎭</div><h4>É uma simulação guiada</h4><p>Você navega pelos olhos do <b>Renato, 41 anos, usuário de Mounjaro</b>, que entrou no beta por cupom. Todos os dados são fictícios — não há backend nem cadastro real.</p></div><div class="card"><div class="ci">🗺️</div><h4>Siga o roteiro</h4><p>Um storytelling de <b>17 capítulos</b> conduz a visita na ordem certa: cada capítulo abre a tela e explica o que ela prova. Dá para sair, explorar livre e voltar.</p></div><div class="card"><div class="ci">✨</div><h4>O momento "uau"</h4><p>No check-in, responda "Náusea" — a rota do dia muda na hora. É o recálculo acontecendo: o coração do produto.</p></div><div class="card"><div class="ci">📌</div><h4>Vitrine, não especificação</h4><p>O protótipo mostra a visão (inclusive coisas pós-MVP, como exames). Se divergir do planejamento, <b>o planejamento manda</b>. <a href="https://rnatto-gempe.github.io/reroute-app/" target="_blank" rel="noopener">Abrir a demo →</a></p></div></div>
+
+<details class="deep">
+<summary><span>📄 Documento completo (versão detalhada)</span><span class="chev">▾</span></summary>
+<div class="prose"><h1>REROUTE — O Protótipo Guiado</h1>
+<blockquote>
+<p>Demo navegável em <a href="https://rnatto-gempe.github.io/reroute-app/">https://rnatto-gempe.github.io/reroute-app/</a> — arquivo único (<code>index.html</code> do repo <code>reroute-app</code>), publicado automaticamente a cada push.</p>
+</blockquote>
+<h2>⚠️ Antes de tudo: o que você está vendo</h2>
+<p>O protótipo <strong>não é o produto</strong> — é uma <strong>simulação guiada</strong>, feita para mostrar a visão completa do REROUTE funcionando antes de existir backend. Três coisas para saber antes de abrir:</p>
+<ol>
+<li><strong>Tem uma persona.</strong> Você navega o app pelos olhos do <strong>Renato, 41 anos</strong>, que usa <strong>Mounjaro 5 mg</strong> (caneta semanal), se cadastrou na landing <code>reroute.com.br</code> e entrou no beta por cupom. Todos os dados — peso, rota, histórico, sintomas — são <strong>fictícios e coerentes com essa história</strong>.</li>
+<li><strong>Tem um storytelling para seguir.</strong> Um roteiro de <strong>17 capítulos</strong> conduz a visita na ordem certa: cada capítulo abre a tela correspondente e explica o que ela prova. É assim que o protótipo deve ser apresentado — seguindo os capítulos, não clicando aleatoriamente.</li>
+<li><strong>Nada é real.</strong> Sem backend, sem autenticação, sem persistência: a navegação é simulada dentro do próprio HTML. Serve para validar fluxo e conceito — as decisões oficiais moram no planejamento (se algo divergir, <strong>o planejamento manda</strong>).</li>
+</ol>
+<h2>Por que uma persona e um roteiro</h2>
+<p>Um protótipo de telas vazias não convence ninguém — e um app de acompanhamento só faz sentido <strong>com semanas de história dentro</strong>. A persona resolve isso: o Renato tem rota em andamento, ciclo de dose, lapsos no histórico e progresso visível, então cada conceito (a Linha, o Dial, o recálculo) aparece <strong>funcionando sobre uma vida plausível</strong>. E o roteiro garante que quem assiste entenda o <em>porquê</em> de cada tela, na ordem em que os conceitos se constroem.</p>
+<h2>Os 17 capítulos do roteiro</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Capítulo</th>
+<th>O que mostra</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>01</td>
+<td>A chegada</td>
+<td>Lista de espera → cupom → PWA (o único canal ativo hoje)</td>
+</tr>
+<tr>
+<td>02</td>
+<td>O consentimento</td>
+<td>Antes do primeiro dado, a permissão (LGPD)</td>
+</tr>
+<tr>
+<td>03</td>
+<td>As perguntas</td>
+<td>Onboarding: uma pergunta por tela, nenhuma sobre caloria</td>
+</tr>
+<tr>
+<td>04</td>
+<td>A primeira rota</td>
+<td>A Linha como centro de tudo; destino em etapas de ~2 kg</td>
+</tr>
+<tr>
+<td>05</td>
+<td>O app fala primeiro</td>
+<td>Duas notificações por dia: manhã e noite</td>
+</tr>
+<tr>
+<td>06</td>
+<td>O input diário</td>
+<td>Três perguntas de manhã (~30 segundos)</td>
+</tr>
+<tr>
+<td>07</td>
+<td>O recálculo</td>
+<td>A resposta vira outra rota, não uma cobrança</td>
+</tr>
+<tr>
+<td>08</td>
+<td>A negociação</td>
+<td>O Dial: &quot;quanto você consegue hoje?&quot; — com piso científico</td>
+</tr>
+<tr>
+<td>09</td>
+<td>Treino</td>
+<td>Recomendação, progressão e registro</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Alimentação</td>
+<td>Porções e âncoras, nunca macros</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Exames</td>
+<td>O que trava, ajusta e contextualiza (visão pós-MVP)</td>
+</tr>
+<tr>
+<td>12</td>
+<td>O profissional</td>
+<td>Dois humanos no loop — áudio da nutricionista (pós-MVP)</td>
+</tr>
+<tr>
+<td>13</td>
+<td>A caneta</td>
+<td>O ciclo de 7 dias da dose molda a semana inteira</td>
+</tr>
+<tr>
+<td>14</td>
+<td>O confronto</td>
+<td>Quando o app deixa de ser gentil (escada de exigência)</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Fechar o dia</td>
+<td>Método ROTA: reconhecer, observar, traçar, agir</td>
+</tr>
+<tr>
+<td>16</td>
+<td>A prova</td>
+<td>Uma linha que não sabe quebrar</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Os limites</td>
+<td>O que o app <strong>nunca</strong> faz</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Dá para <strong>sair do roteiro</strong> a qualquer momento e explorar livremente (tabs Rota · Evolução · Insights · Perfil) — e voltar ao capítulo de onde parou.</p>
+</blockquote>
+<h2>Como apresentar (dicas de demonstração)</h2>
+<ul>
+<li><strong>Siga os capítulos na ordem</strong> — eles constroem o argumento do produto do jeito certo.</li>
+<li><strong>O momento &quot;uau&quot;</strong>: no check-in, responda <strong>&quot;Náusea&quot;</strong> em Corpo e veja a rota do dia mudar na hora — é o recálculo acontecendo, o coração do produto.</li>
+<li><strong>No Dial (cap. 08)</strong>: arraste para baixo do plano e mostre que o número escolhido vira compromisso (&quot;Renato disse 6, amanhã o app cobra 6 — não 15&quot;).</li>
+<li>Os capítulos 11 e 12 (exames, profissional) mostram <strong>visão de futuro</strong> — deixe claro que são pós-MVP.</li>
+</ul>
+<h2>Relação com o resto da documentação</h2>
+<table>
+<thead>
+<tr>
+<th>O protótipo mostra</th>
+<th>O documento que define</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Os conceitos de UX (Linha, Dial, Espelho, humores)</td>
+<td><code>01-planejamento-mvp.md</code> (Etapas 02–05)</td>
+</tr>
+<tr>
+<td>O escopo do que entra primeiro</td>
+<td><code>01-planejamento-mvp.md</code> (Etapas 00–01)</td>
+</tr>
+<tr>
+<td>O visual</td>
+<td><code>03-identidade-visual.md</code></td>
+</tr>
+<tr>
+<td>O que vira código de verdade (motor, regras)</td>
+<td><code>02-arquitetura-tecnica.md</code></td>
+</tr>
+</tbody></table>
+<p>O protótipo evolui em paralelo (todo push na <code>main</code> republica a demo) — ele é a <strong>vitrine da visão</strong>, não a especificação. Especificação é o planejamento.</p>
+</div>
+</details>
+</section>
+<section class="doc" id="planejamento">
+<div class="doc-head"><span class="doc-ico">🗺️</span><h2 class="doc-title">Planejamento</h2><span class="doc-file">docs/01-planejamento-mvp.md</span></div>
+<div class="cards"><div class="card"><div class="ci">🎯</div><h4>A aposta</h4><p>Recalcular em vez de punir mantém as pessoas em movimento. O momento mais importante é logo depois do dia ruim.</p></div><div class="card"><div class="ci">📏</div><h4>Como medimos sucesso</h4><p>As pessoas voltam (dia 7 e dia 30), voltam rápido depois de um lapso (48h) e fazem proteína + movimento no mesmo dia. Peso não é a métrica.</p></div><div class="card"><div class="ci">🪜</div><h4>Ordem de construção</h4><p>6 etapas: primeiro o motor de regras e o loop diário (o risco). Só depois a beleza — a Linha, o Dial, a IA.</p></div><div class="card"><div class="ci">🎟️</div><h4>Como as pessoas entram</h4><p>Beta com 30–50 pessoas por cupom. O pagamento fica desenhado, mas desligado — liga depois do primeiro valor entregue.</p></div></div>
+
+<details class="deep">
+<summary><span>📄 Documento completo (versão detalhada)</span><span class="chev">▾</span></summary>
+<div class="prose"><h1>REROUTE — Planejamento do MVP</h1>
+<blockquote>
+<p>Roadmap de implementação do aplicativo REROUTE. Consolida o kick-off (30/07/2026) e os documentos de concepção (<code>referencias/sugestoes-iniciais/</code> — índice em <code>07-indice-referencias.md</code>). Harness-agnostic: qualquer agente de IA (Codex, Claude, Gemini) ou pessoa desenvolvedora executa a partir daqui.</p>
+</blockquote>
+<h2>A hipótese que o MVP testa</h2>
+<blockquote>
+<p>&quot;Um loop diário curto que <strong>recalcula o plano</strong> em vez de <strong>registrar falha</strong> mantém mais pessoas em movimento do que um app que mede aderência — e o momento de maior alavancagem é <strong>logo depois do lapso</strong>, não no dia bom.&quot;</p>
+</blockquote>
+<p><strong>Três provas</strong> (perda de peso NÃO é métrica primária — entra só como tendência semanal secundária):</p>
+<table>
+<thead>
+<tr>
+<th>Prova</th>
+<th>O que mede</th>
+<th>Alvo</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Retenção</td>
+<td>D7 e D30</td>
+<td>D7 ≥ 45% · D30 ≥ 30% (benchmark do mercado: ~30% no mês 1)</td>
+</tr>
+<tr>
+<td>Recuperação</td>
+<td>% que faz check-in em ≤48h após registrar lapso</td>
+<td>≥ 50% — métrica própria, nenhum concorrente mede</td>
+</tr>
+<tr>
+<td>Dia composto</td>
+<td>Dias com proteína + movimento juntos</td>
+<td>crescer ao longo das semanas</td>
+</tr>
+</tbody></table>
+<p><strong>Números-âncora:</strong> 3 públicos (vai começar / está usando / já parou a caneta — modos do mesmo motor, não produtos distintos) · 2 check-ins/dia de ~30s (manhã calibra, noite recalcula) · 4 pilares (proteína, água/fibra, força, caminhada) · método <strong>R·O·T·A</strong> = Reconhecer, Observar, Traçar, Agir (executado no check-out).</p>
+<h2>Princípios de execução</h2>
+<ul>
+<li><strong>Web-first é o caminho crítico; Android é aditivo.</strong> PWA em <code>app.reroute.com.br</code>, atalho na tela inicial, push — sem loja. Android (US$ 25) só depois do beta validar.</li>
+<li><strong>O motor é o produto; o LLM é a voz.</strong> Regras de recálculo são código determinístico com suíte de testes escrita <strong>antes</strong> de qualquer prompt.</li>
+<li><strong>Primeiro o que pode matar a tese, depois o que a torna encantadora</strong> — as etapas abaixo são ordenadas por risco de invalidação. Erro comum que essa ordem evita: construir a Linha bonita antes de saber se alguém faz check-in duas vezes por dia.</li>
+</ul>
+<h2>Etapas de construção</h2>
+<h3>Etapa 00 — Fundação: motor e dados (3–4 semanas)</h3>
+<p>Risco que elimina: o produto virar &quot;mais um app que chuta número&quot;.</p>
+<ul>
+<li>Repositório <code>reroute-app</code> + CI + esqueleto do projeto (engenharia: ver <code>04-boas-praticas.md</code>; infra: <code>05-setup-infraestrutura.md</code>)</li>
+<li><strong>Motor determinístico com suíte de casos derivada da matriz cruzada</strong> (estado do dia × 4 pilares — 8 estados mapeados na concepção). Regras com ID auditável (<code>SEG-01</code>, <code>CUI-01</code>, <code>SIN-01..03</code>, <code>NIV-*</code>, <code>REC-*</code>, <code>PRG-*</code>)</li>
+<li>Tabela nutricional canônica ingerida da <strong>POF/IBGE com <code>fonte_id</code> por linha</strong> (TBCA bloqueada: exige licença paga; Open Food Facts isolada por ODbL)</li>
+<li><strong>Modelo PEP</strong>: 1 PEP = porção que entrega ~25g de proteína (<code>g_por_PEP = 2500 / prot_100g</code>; ≤150g âncora, ≤400g complemento, &gt;400g não-âncora). O app mostra porções, nunca gramas — mantém o produto fora do perímetro de prescrição (Lei 8.234/1991)</li>
+<li>Catálogo de ~20 movimentos (taxonomia do free-exercise-db só campos factuais; <strong>imagens Everkinetic CC BY-SA com atribuição no banco e na UI</strong> — figura paramétrica descartada em 04/08/2026)</li>
+<li><strong>Arsenal de 18 argumentos versionado</strong> (IDs INI/LAP/EFE/PLA/MAR/SAI) — a IA só cita daqui, por ID, nunca gera número</li>
+<li>⚠️ <strong>Nada é publicado sem CRN e CREF em <code>revisado_por</code></strong></li>
+</ul>
+<p><strong>Critério:</strong> motor passa 100% da suíte · zero linha de catálogo sem procedência.</p>
+<h3>Etapa 01 — O Loop: provar a tese (4–5 semanas)</h3>
+<p>É o experimento. Se o loop cru não retém, nenhum conceito visual salva.</p>
+<ul>
+<li>Onboarding: uma pergunta por tela — altura, peso, objetivo, relação com a caneta (pretende/usa/parou) e qual (semaglutida, tirzepatida, retatrutida), nível declarado (<strong>colocação sempre um degrau abaixo</strong>), triagem de segurança e alimentar (modo cuidado)</li>
+<li>Check-in da manhã (calibra o dia) e check-out da noite com Método ROTA (clique + <strong>áudio</strong> — mesma informação, duas formas; foto fica fora)</li>
+<li>Micro-tarefa de hidratação incremental (500ml por toque) com fallback no check-out</li>
+<li>Registro de sintomas (náusea, constipação, cansaço, dor) alimentando o recálculo; dor forte → pausa + encaminhamento (regra <code>SEG-01</code>)</li>
+<li>Home mínima, <strong>propositalmente simples e funcional</strong> — sem Linha, sem dial, sem IA</li>
+<li>PWA instalável + push OneSignal (manhã/noite) + identidade visual (<code>03-identidade-visual.md</code>)</li>
+<li>Analytics desde o 1º dia (PostHog): as 3 provas mensuráveis</li>
+<li><strong>Beta com 30–50 pessoas reais via cupom</strong> (paywall desenhado e desabilitado)</li>
+</ul>
+<p><strong>Critério:</strong> D7 ≥ 45% · D30 ≥ 30% · recuperação pós-lapso ≥ 50% em 48h.</p>
+<h3>Etapa 02 — A Linha: tornar a tese visível (3 semanas)</h3>
+<p>O momento em que o app deixa de parecer um tracker.</p>
+<ul>
+<li><strong>A Linha</strong> substitui histórico/streak: dia na rota = segmento reto; dia recalculado = curva; dia sem registro = tracejado mais fino. <strong>Não existe estado em que a linha se rompa</strong> — nunca zera, todo mês adiciona comprimento. A curva vira assinatura visual única da pessoa (objeto compartilhável, sem rede social)</li>
+<li><strong>O Espelho</strong>: única comparação é com você mesmo, datada (&quot;4 semanas atrás 10 min era seu teto; hoje você fez 22 conversando&quot;). Zero ranking, zero comparação social</li>
+<li>Invariante: <strong>não existe estado vermelho no histórico</strong> — só verde (na rota) e âmbar (recalculado)</li>
+</ul>
+<p><strong>Critério:</strong> retorno à home fora do horário de check-in · D30 sobe vs coorte da Etapa 01.</p>
+<h3>Etapa 03 — O Dial e a Conversa: a camada de exigência (3 semanas)</h3>
+<p>Onde o produto para de ser gentil e passa a ser eficaz. O oposto de autoritário não é frouxo.</p>
+<ul>
+<li><strong>Dial do Possível</strong>: quando a pessoa não vai cumprir, em vez de sim/não abre um dial do plano até o <strong>piso com evidência</strong> (VILPA: 3–4 min vigorosos têm base; 1–2 min isolados não — o app não inventa benefício). Ceder tempo cobra intensidade em troca. <strong>O número escolhido vira compromisso cobrado amanhã</strong>; piso rompido 2× → o dial some e entra a Conversa</li>
+<li><strong>Escada de exigência de 6 níveis</strong> (0–5): do recálculo silencioso à pausa formal. Nomeia padrão sem eufemismo (&quot;3 das últimas 4 quartas quebraram — vamos mudar a quarta, não você&quot;). Confronto <strong>só de manhã</strong>, nunca à noite. Modo cuidado trava a escada no nível 2; zero penalidade mecânica</li>
+<li><strong>O Porquê em um toque</strong>: cada item da rota tem &quot;?&quot; que revela número, fonte, amostra e ressalva — transparência como jogada de marca para um público enganado a vida inteira</li>
+</ul>
+<p><strong>Critério:</strong> % de &quot;não consigo&quot; que vira compromisso menor (não silêncio) · cumprimento do piso negociado ≥ 70%.</p>
+<h3>Etapa 04 — A Voz: camada de IA (4 semanas)</h3>
+<p>Personalização com guarda-corpo. O LLM nunca decide conduta — escolhe palavras e interpreta linguagem.</p>
+<ul>
+<li>Interpretação de texto livre → <strong>enum validado</strong> (&quot;acordei destruída&quot; → estado do motor)</li>
+<li>Redação das mensagens a partir do <strong>plano imutável</strong> + <strong>arsenal por ID</strong> (validador descarta mensagem com número fora da lista → fallback determinístico)</li>
+<li><strong>Bandit contextual</strong> de tom e diretividade (recompensa: check-in no dia seguinte +1, piso cumprido +0,5, silêncio/desinstalação −2). Experimento sugerido: randomizar dial inicial entre 2 e 4 e comparar D30</li>
+<li>Detecção de padrão longitudinal (motor calcula, LLM narra — nunca inventa correlação)</li>
+</ul>
+<p><strong>Critério:</strong> fallback &lt; 5% · acurácia texto→enum ≥ 90% · lift do bandit sobre tom aleatório.</p>
+<h3>Etapa 05 — Os dois humores e o acervo próprio (contínuo)</h3>
+<p>Acabamento — nada aqui move retenção sozinho.</p>
+<ul>
+<li><strong>Modo partida</strong> (manhã: agir, 3 passos, âmbar, tipografia grande) vs <strong>modo chegada</strong> (noite: observar, Linha crescendo, azul profundo). Cobrança nunca aparece à noite</li>
+<li>Substituição do Everkinetic por biblioteca própria (remove share-alike) — backlog</li>
+<li>App Android (TWA na Play Store)</li>
+</ul>
+<h2>Aquisição, storytelling e paywall</h2>
+<p>A pessoa chega ao REROUTE por caminhos diferentes — e <strong>o storytelling da primeira sessão não pode ser o mesmo</strong> para todos. A concepção segmenta por relação com a caneta (vai começar / usa / parou); esta camada segmenta por <strong>origem</strong>, e as duas se cruzam no onboarding.</p>
+<table>
+<thead>
+<tr>
+<th>Origem</th>
+<th>Contexto emocional de chegada</th>
+<th>Storytelling da primeira sessão</th>
+<th>Confiança inicial</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Indicação de profissional de saúde</strong> (nutricionista/médico recomenda — futuro canal B2B)</td>
+<td>Já está em acompanhamento; chega com &quot;tarefa de casa&quot;</td>
+<td>&quot;Seu profissional cuida da estratégia; o REROUTE te ajuda a executá-la no dia a dia&quot; — o app como aliado de quem ela já confia</td>
+<td><strong>Emprestada</strong> do profissional — alta</td>
+</tr>
+<tr>
+<td><strong>Orgânico / Instagram</strong> (Reels do Ednei; hoje ~70 visitas/dia na landing)</td>
+<td>Chega da dor (efeito colateral, medo do reganho, culpa do lapso) e desconfiada — já foi enganada por promessa de emagrecimento antes</td>
+<td>A promessa da rota: &quot;errar não zera nada&quot; + <strong>O Porquê em um toque</strong> (fonte e número visíveis) como prova de que não é mais um app de dieta</td>
+<td><strong>Zero</strong> — precisa ser construída na primeira sessão</td>
+</tr>
+<tr>
+<td><strong>Boca a boca / cupom</strong> (beta)</td>
+<td>Veio por confiança em quem indicou; expectativa de exclusividade</td>
+<td>&quot;Você está entrando antes de todo mundo — sua experiência define o produto&quot; + canal direto de feedback</td>
+<td>Média — herdada da indicação</td>
+</tr>
+</tbody></table>
+<p><strong>Implicações práticas (entram na Etapa 01):</strong></p>
+<ol>
+<li><strong>Capturar a origem desde o primeiro toque</strong>: UTM na landing → parâmetro no link do app → campo <code>origem</code> no perfil (+ código do cupom identifica quem indicou). Sem isso, nunca saberemos qual narrativa converte e retém melhor.</li>
+<li><strong>Primeira tela do onboarding variando por origem</strong> (o restante do fluxo é o mesmo — muda a moldura, não o formulário).</li>
+<li><strong>Medir por coorte de origem no PostHog</strong>: D7/D30 e conversão de onboarding separados por <code>origem</code> — decisão de canal com dado, não opinião.</li>
+</ol>
+<h3>Onde fica o paywall</h3>
+<p>Decisão do kick-off ainda de pé: <strong>posição estratégica definida no design, cobrança desabilitada no beta</strong> (entrada por cupom). A direção que a evidência sugere — a validar com as coortes:</p>
+<ul>
+<li><strong>Paywall depois do primeiro valor entregue, nunca antes do onboarding.</strong> Para o lead orgânico frio, cobrar antes da primeira experiência mata a conversão (e este público já desconfia). O momento natural: <strong>depois do primeiro recálculo</strong> — quando a pessoa relata um dia ruim e vê o plano de amanhã se adaptar em vez de puni-la, ela viu a única coisa que nenhum concorrente faz.</li>
+<li><strong>Quem vem por indicação profissional tolera paywall mais cedo</strong> (confiança emprestada) — hipótese a testar por coorte.</li>
+<li><strong>Empurrar o plano anual</strong> quando a cobrança ligar: anual retém ~33% vs 17% do mensal (benchmark RevenueCat).</li>
+<li>Cuidado registrado no kick-off: quem não pagou usa menos — o beta por cupom precisa de acompanhamento próximo (contato direto do Ednei) para compensar a falta de &quot;skin in the game&quot;.</li>
+<li>Mecânica: <strong>feature flag no PostHog</strong> controla paywall on/off e variação por coorte — sem deploy para ligar/desligar.</li>
+</ul>
+<h2>Fora do MVP (registrado para não voltar toda semana)</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Gatilho para entrar</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Camada de exames (12 marcadores, travas)</td>
+<td>Pós-MVP — conjunto mínimo já sugerido: TFG/creatinina, hemoglobina, ferritina, vit. D, B12, TSH, glicemia/HbA1c</td>
+</tr>
+<tr>
+<td>Ingestão de exames (PDF/OCR/LOINC)</td>
+<td>Junto com a camada de exames; carimbar <strong>LOINC no schema desde a 1ª migration</strong> custa uma coluna e prepara o futuro</td>
+</tr>
+<tr>
+<td>Áudio da nutricionista (HITL duplo)</td>
+<td>Jurídico (consentimento de duas partes) + camada de exames</td>
+</tr>
+<tr>
+<td>Foto de refeição</td>
+<td>Precisão de estimativa ainda insuficiente</td>
+</tr>
+<tr>
+<td>Wearables / bioimpedância</td>
+<td>Tração do beta (bioimpedância 8–12 semanas transformaria &quot;massa magra protegida&quot; de proxy em medida real)</td>
+</tr>
+<tr>
+<td>WhatsApp recorrente</td>
+<td>Nunca (R$ 0,35/msg inviabiliza assinatura de R$ 8)</td>
+</tr>
+</tbody></table>
+<h2>Pendências fora do app</h2>
+<table>
+<thead>
+<tr>
+<th>Pendência</th>
+<th>Responsável</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Corrigir domínio canônico da landing (reroutehns.com.br → <a href="http://www.reroute.com.br">www.reroute.com.br</a>)</td>
+<td>Renato</td>
+</tr>
+<tr>
+<td>Resolver conversão da landing (~70 visitas/dia, 0 leads)</td>
+<td>Ednei (com apoio)</td>
+</tr>
+<tr>
+<td>E-mail: apontar SMTP do Supabase para o Resend (resolve o limite)</td>
+<td>Renato</td>
+</tr>
+<tr>
+<td>Confirmar regras atuais da Apple (US$ 99/ano + 30% IAP)</td>
+<td>Renato</td>
+</tr>
+<tr>
+<td>Definir profissionais revisores <strong>CRN e CREF</strong> (bloqueia publicação de catálogo)</td>
+<td>Ednei</td>
+</tr>
+<tr>
+<td><del>Verificar licença do Darebee</del> ✅ 04/08: All Rights Reserved — <strong>descartado</strong> como fonte</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Validar perímetro regulatório do PEP com CRN</td>
+<td>ambos</td>
+</tr>
+<tr>
+<td>Acesso à Vercel (Hobby não permite colaborador) — fluxo via GitHub</td>
+<td>ambos</td>
+</tr>
+</tbody></table>
+<h2>Ritmo de trabalho</h2>
+<ul>
+<li><strong>GitHub é a fonte da verdade</strong> (&quot;o nosso Drive&quot;): todo trabalho termina com commit e push.</li>
+<li>Encontros semanais (quinta): revisão, desbloqueio, aula prática.</li>
+<li>Ednei desenvolve com o Codex usando <code>06-prompts-codex.md</code>; o CI segura a qualidade.</li>
+<li>Renato estrutura fundações (repo, CI, motor, segurança) e ensina o fluxo.</li>
+</ul>
+</div>
+</details>
+</section>
+<section class="doc" id="perguntas">
+<div class="doc-head"><span class="doc-ico">❓</span><h2 class="doc-title">Perguntas Abertas</h2><span class="doc-file">docs/09-perguntas-abertas.md</span></div>
+<div class="cards"><div class="card"><div class="ci">🤖</div><h4>O que é IA e o que é algoritmo?</h4><p>O recálculo é <b>algoritmo testado</b> (de propósito — segurança). IA de verdade no MVP: entender áudio/texto livre e escrever as mensagens. <b>Como comunicar isso é a pergunta nº 1.</b></p></div><div class="card"><div class="ci">🏋️</div><h4>Fontes de treino</h4><p>Temos imagens estáticas licenciadas (Everkinetic), mas <b>nenhuma animação com licença clara</b>. Precisa de resposta antes de fechar a Etapa 00 — prompt de pesquisa pronto no documento.</p></div><div class="card"><div class="ci">🍗</div><h4>Fontes de alimentação</h4><p>A POF/IBGE é a base escolhida, mas <b>ninguém estruturou ainda</b> — e a TBCA (a melhor) cobra licença. Precisa de resposta antes de fechar a Etapa 00 — prompt pronto no documento.</p></div><div class="card"><div class="ci">📋</div><h4>Mais 4 em aberto</h4><p>Revisores CRN/CREF, preço e cobrança, jurídico LGPD, canal B2B. <b>Uma por semana na call de quinta.</b></p></div></div>
+
+<details class="deep">
+<summary><span>📄 Documento completo (versão detalhada)</span><span class="chev">▾</span></summary>
+<div class="prose"><h1>REROUTE — Perguntas Abertas</h1>
+<blockquote>
+<p>Decisões cruciais para o projeto dar certo que <strong>ainda não têm resposta definida</strong> — são necessidades a resolver antes de seguir, não tarefas atribuídas. Cada uma tem contexto, o que já sabemos e a limitação atual. Este documento é vivo: pergunta respondida vira decisão registrada (ADR ou planejamento) e sai daqui.</p>
+</blockquote>
+<h2>1. Onde entra IA no MVP — e o que chamamos de &quot;IA&quot;? 🔴 a mais importante</h2>
+<h3>O que já está definido tecnicamente</h3>
+<p>O limiar técnico é claro e está na arquitetura (&quot;o motor é o produto; o LLM é a voz&quot;):</p>
+<table>
+<thead>
+<tr>
+<th>Camada</th>
+<th>É o quê</th>
+<th>Exemplos no MVP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Algoritmo / automação</strong> (motor determinístico — testado, previsível, auditável)</td>
+<td><strong>Não é IA.</strong> É código com regras fixas e fonte citável</td>
+<td>Recálculo da rota (regras SEG/CUI/SIN/NIV/REC/PRG) · metas de proteína (PEP) · escada de movimento e portões de progressão · travas de segurança · notificações agendadas · degradação por sintoma</td>
+</tr>
+<tr>
+<td><strong>IA de verdade no MVP</strong> (modelos de linguagem/voz)</td>
+<td>Interpretação e comunicação</td>
+<td>Transcrição do áudio do check-out (voz → texto) · interpretação de texto livre → estado estruturado (&quot;acordei destruída&quot; → energia baixa) · redação das mensagens no tom &quot;amigo virtual&quot; (Etapa 04, sobre o plano imutável)</td>
+</tr>
+<tr>
+<td><strong>IA fora do MVP</strong></td>
+<td>Fica para depois</td>
+<td>Foto de refeição · leitura de exames (VLM) · detecção narrada de padrões longitudinais</td>
+</tr>
+</tbody></table>
+<h3>A pergunta aberta</h3>
+<p><strong>Na comunicação do produto, o que apresentamos como &quot;IA&quot;?</strong> O recálculo — o coração do produto — é algoritmo determinístico, de propósito (segurança, previsibilidade, auditoria). Mas o mercado compra &quot;IA&quot;, e a experiência da pessoa (o app &quot;entende&quot; o que ela fala e responde como um amigo) parece IA de ponta a ponta.</p>
+<ul>
+<li><strong>Risco de inflar</strong>: expectativa errada (&quot;a IA decide meu plano&quot;), fragilidade regulatória (IA decidindo saúde é exatamente o que NÃO fazemos — e é nossa defesa), e perda de confiança se a pessoa perceber o exagero.</li>
+<li><strong>Risco de esconder</strong>: perder o apelo de mercado num nicho onde &quot;IA&quot; vende, e subvender o que de fato existe (a camada de linguagem é IA real).</li>
+<li><strong>Um caminho possível</strong> (a discutir): comunicar como <em>&quot;acompanhamento inteligente&quot;</em> — a IA conversa com você; as regras de saúde são ciência revisada por profissionais, não palpite de robô. Isso transforma o limiar em argumento de venda em vez de constrangimento.</li>
+</ul>
+<p><strong>Como se decide:</strong> discussão de posicionamento na call, com a fronteira técnica validada. <strong>Onde registrar:</strong> ADR + guia de copy da landing.</p>
+<hr>
+<h2>2. De onde vêm os exercícios (e as animações) do treino? — necessário antes de fechar a Etapa 00</h2>
+<h3>O que já exploramos</h3>
+<table>
+<thead>
+<tr>
+<th>Fonte</th>
+<th>Serve para</th>
+<th>Limitação</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>free-exercise-db (GitHub)</td>
+<td>Taxonomia (nomes, músculos, mecânica)</td>
+<td><strong>Imagens com procedência quebrada</strong> — não usar as imagens</td>
+</tr>
+<tr>
+<td>Everkinetic (CC BY-SA)</td>
+<td><strong>Imagens estáticas do MVP</strong>, com atribuição</td>
+<td>Estáticas (sem animação); adaptar obriga a compartilhar a arte derivada</td>
+</tr>
+<tr>
+<td>wger</td>
+<td>Conferência técnica de nomenclatura</td>
+<td>Código AGPL + dados share-alike — não embarcar</td>
+</tr>
+<tr>
+<td>Darebee</td>
+<td>2.700 treinos prontos, planos por nível</td>
+<td>❌ <strong>Verificado em 04/08/2026: descartado.</strong> &quot;© All Rights Reserved — materiais únicos, com copyright e exclusivos do darebee.com&quot;. Sem licença aberta; uso vetado sem permissão expressa. É non-profit — um contato pedindo parceria é possível, mas não contamos com isso</td>
+</tr>
+<tr>
+<td>Mixamo (Adobe)</td>
+<td>Renderizar biblioteca própria (v2+)</td>
+<td>Serviço em abandono — baixar e versionar antes de depender</td>
+</tr>
+<tr>
+<td>Figura paramétrica (&quot;bonecos&quot;)</td>
+<td>—</td>
+<td><strong>Descartada</strong> (não atingiu padrão visual)</td>
+</tr>
+<tr>
+<td>Guia de Atividade Física (Min. Saúde) + Compendium 2024</td>
+<td>Âncora normativa + intensidade (MET)</td>
+<td>Nenhuma — são as referências citáveis</td>
+</tr>
+</tbody></table>
+<h3>Limitação atual (honesta)</h3>
+<p>Temos taxonomia limpa e <strong>imagens estáticas licenciadas</strong> (Everkinetic) para ~20 movimentos. <strong>Não temos animações/GIFs/vídeos com licença comercial clara.</strong> E nenhum catálogo publica sem revisão CREF.</p>
+<h3>O que precisa ser respondido antes de seguir</h3>
+<p>Existe fonte de exercícios com <strong>animação</strong> (GIF/vídeo/ilustração animada) e licença comercial clara — ou o MVP vai de imagem estática mesmo? Prompt de pesquisa pronto (ChatGPT/Codex, modo pesquisa):</p>
+<pre><code>Preciso de bancos de exercícios físicos com ANIMAÇÕES (GIF, vídeo ou ilustração
+animada) para usar num aplicativo comercial de emagrecimento no Brasil.
+Requisitos: licença que permita uso comercial sem obrigar a liberar nosso
+material (evitar share-alike); exercícios de peso corporal e elástico para
+iniciantes; ideal se tiver nomes de músculos e nível.
+Para cada fonte encontrada me diga: nome, link, tipo de licença (com link da
+licença), o que exatamente posso usar, o que é proibido, e se tem custo.
+Não inclua o Darebee — já verificamos: é &quot;All Rights Reserved&quot;, descartado.
+Formato: tabela comparativa + sua recomendação final.
+</code></pre>
+<hr>
+<h2>3. De onde vêm os dados de alimentação (alimentos, porções, calorias)? — necessário antes de fechar a Etapa 00</h2>
+<h3>O que já exploramos</h3>
+<table>
+<thead>
+<tr>
+<th>Fonte</th>
+<th>Serve para</th>
+<th>Limitação</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>POF/IBGE</strong> (Tabelas de Composição Nutricional)</td>
+<td><strong>Fonte primária escolhida</strong> — pública, preparações brasileiras reais</td>
+<td>Precisa <strong>baixar, estruturar e auditar</strong> — ninguém fez ainda; o catálogo semente de 20 alimentos é protótipo não auditado</td>
+</tr>
+<tr>
+<td>TBCA (USP)</td>
+<td>A melhor base brasileira (5.700+ alimentos)</td>
+<td><strong>Uso em ferramenta exige licença paga</strong> — bloqueada; possível negociação comercial futura</td>
+</tr>
+<tr>
+<td>USDA FoodData Central</td>
+<td>Preencher lacunas (suplementos, importados)</td>
+<td>Matriz alimentar americana (divergência de 5–10%)</td>
+</tr>
+<tr>
+<td>Open Food Facts</td>
+<td>Industrializados por código de barras</td>
+<td>Licença ODbL — só isolada via API, nunca misturar na base própria</td>
+</tr>
+</tbody></table>
+<h3>Limitação atual (honesta)</h3>
+<p>A decisão de produto é mostrar <strong>porções (modelo PEP), nunca calorias</strong> — mas a base por trás precisa dos dados por 100g de qualquer jeito. Hoje <strong>não temos a POF estruturada</strong> nem revisor CRN definido. Sem isso, a orientação alimentar do MVP fica no genérico (proteína/água/fibra sem catálogo).</p>
+<h3>O que precisa ser respondido antes de seguir</h3>
+<p>Quantos alimentos o MVP precisa cobrir para as âncoras de proteína do público-alvo (50? 200?)? A POF estruturada cobre? Vale iniciar conversa comercial com a TBCA? Prompt de pesquisa pronto:</p>
+<pre><code>Quero montar a base de alimentos de um app de emagrecimento brasileiro.
+Já sei que: a POF/IBGE tem tabelas públicas de composição nutricional
+(inclusive versão &quot;estruturada para banco de dados&quot;), a TBCA da USP é a melhor
+mas cobra licença para uso em ferramenta, e a USDA é domínio público mas
+americana.
+Me ajude a: (1) achar o link de download da POF estruturada e me explicar o
+formato dos arquivos; (2) listar outras bases brasileiras públicas que eu não
+citei, com licença de cada uma; (3) estimar quantos alimentos um app focado em
+PROTEÍNA para quem usa caneta de emagrecimento precisa cobrir no mínimo.
+Formato: passo a passo + tabela de fontes + recomendação.
+</code></pre>
+<hr>
+<h2>4. Outras perguntas em aberto (curtas, mas bloqueiam)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Pergunta</th>
+<th>Por que importa</th>
+<th>Bloqueia o quê</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>4.1</td>
+<td><strong>Quem são os revisores CRN e CREF?</strong></td>
+<td>Nenhum catálogo de saúde publica sem <code>revisado_por</code></td>
+<td>Etapa 00 (catálogos)</td>
+</tr>
+<tr>
+<td>4.2</td>
+<td><strong>Preço e cobrança</strong> — R$ 8 se sustenta? Anual desde o início?</td>
+<td>Define a conta de viabilidade inteira (inclusive custo de push/LLM por usuário)</td>
+<td>Ligar o paywall</td>
+</tr>
+<tr>
+<td>4.3</td>
+<td><strong>Jurídico do dado de saúde</strong> — quem redige a política de privacidade e o consentimento LGPD do app?</td>
+<td>Dado de saúde é dado sensível; consentimento precisa ser específico e destacado</td>
+<td>Abrir o beta</td>
+</tr>
+<tr>
+<td>4.4</td>
+<td><strong>Canal B2B (clínicas/nutricionistas)</strong> — quando começa a conversa?</td>
+<td>O storytelling de indicação profissional depende disso; cedo demais dispersa o MVP</td>
+<td>Pós-beta</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Como usar este documento</h2>
+<ul>
+<li>Na call de quinta: escolher <strong>uma pergunta por semana</strong> para fechar — não todas de uma vez.</li>
+<li>Pergunta respondida → vira ADR (decisão estrutural) ou entrada no planejamento → <strong>sai daqui</strong>.</li>
+<li>Pesquisa rodada → o resultado entra como anexo em <code>referencias/</code> e a decisão volta para a call.</li>
+</ul>
+</div>
+</details>
+</section>
+<section class="doc" id="arquitetura">
+<div class="doc-head"><span class="doc-ico">🏗️</span><h2 class="doc-title">Arquitetura</h2><span class="doc-file">docs/02-arquitetura-tecnica.md</span></div>
+<div class="cards"><div class="card"><div class="ci">📱</div><h4>Onde roda</h4><p>No navegador do celular, como atalho na tela inicial (PWA). Sem loja de aplicativos, sem aprovação de ninguém.</p></div><div class="card"><div class="ci">⚖️</div><h4>Quem decide o quê</h4><p>Um motor de regras testadas decide o plano do dia. A IA só escolhe as palavras — nunca inventa número ou meta.</p></div><div class="card"><div class="ci">🔐</div><h4>Onde ficam os dados</h4><p>No Supabase, com trava por pessoa no próprio banco (LGPD). Cada um só vê o que é seu.</p></div><div class="card"><div class="ci">🔔</div><h4>Como o app te encontra</h4><p>Notificação de manhã (plano do dia) e de noite (como foi) — via OneSignal, sem custo.</p></div></div>
+<div class="diagram"><svg viewBox="0 0 980 730" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arquitetura técnica do REROUTE">
+  <style>
+    text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,Arial,sans-serif}
+    .t{fill:#ffffff;font-size:13px;font-weight:700}
+    .st{fill:#ffffff;font-size:11.5px;font-weight:700}
+    .b{fill:rgba(226,232,240,.82);font-size:10.5px}
+    .lb{fill:#9fffc2;font-size:9.5px}
+    .lane{fill:rgba(226,232,240,.6);font-size:10px;font-style:italic}
+    .box{fill:#0b1220;stroke:rgba(255,255,255,.14);stroke-width:1;rx:14}
+    .sub{fill:#111827;stroke:rgba(255,255,255,.12);stroke-width:1}
+    .arrow{stroke:#22d3ee;stroke-width:1.6;fill:none;marker-end:url(#ah)}
+    .arrowg{stroke:#22c55e;stroke-width:1.6;fill:none;marker-end:url(#ahg)}
+    .arrowm{stroke:rgba(226,232,240,.55);stroke-width:1.4;fill:none;marker-end:url(#ahm)}
+  </style>
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/></marker>
+    <marker id="ahg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#22c55e"/></marker>
+    <marker id="ahm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="rgba(226,232,240,.55)"/></marker>
+    <linearGradient id="gbc" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1687ff"/><stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+  </defs>
+
+  <!-- fundo -->
+  <rect x="0" y="0" width="980" height="730" rx="18" fill="#060b14"/>
+
+  <!-- push OneSignal -> Pessoa (curva no topo) -->
+  <path class="arrow" d="M810,46 C560,-10 300,-8 118,48"/>
+  <text class="lb" x="430" y="16" text-anchor="middle">push: manhã · noite · lembretes de água</text>
+
+  <!-- PESSOA -->
+  <rect class="box" x="20" y="50" width="180" height="170" rx="14"/>
+  <rect x="20" y="50" width="180" height="3" rx="1.5" fill="#9fffc2"/>
+  <text class="t" x="35" y="78">Pessoa</text>
+  <text class="b" x="35" y="100">Celular · navegador</text>
+  <text class="b" x="35" y="118">PWA: atalho na tela inicial</text>
+  <text class="b" x="35" y="136">iOS: atalho · Android: TWA</text>
+  <text class="b" x="35" y="154">Recebe push e abre o app</text>
+  <text class="b" x="35" y="172">2 toques/dia (~30s cada)</text>
+  <text class="b" x="35" y="190">check-in ☀ · check-out ☾</text>
+
+  <!-- CLOUDFLARE -->
+  <rect class="box" x="240" y="75" width="130" height="120" rx="14"/>
+  <rect x="240" y="75" width="130" height="3" rx="1.5" fill="#22d3ee"/>
+  <text class="t" x="255" y="103">Cloudflare</text>
+  <text class="b" x="255" y="125">DNS · SSL</text>
+  <text class="b" x="255" y="143">WAF / proteção</text>
+  <text class="b" x="255" y="161">Turnstile</text>
+  <text class="b" x="255" y="179">(plano free)</text>
+
+  <!-- setas pessoa -> cloudflare -> vercel -->
+  <path class="arrow" d="M200,135 L238,135"/>
+  <path class="arrow" d="M370,135 L408,135"/>
+
+  <!-- VERCEL -->
+  <rect class="box" x="410" y="30" width="350" height="330" rx="16"/>
+  <rect x="410" y="30" width="350" height="3" rx="1.5" fill="url(#gbc)"/>
+  <text class="t" x="428" y="58">Vercel · app.reroute.com.br</text>
+  <text class="b" x="428" y="76">Next.js + TypeScript · PWA (manifest + service worker)</text>
+
+  <rect class="sub" x="425" y="92" width="155" height="118" rx="10"/>
+  <text class="st" x="437" y="112">UI (React)</text>
+  <text class="b" x="437" y="130">uma tarefa por vez</text>
+  <text class="b" x="437" y="146">check-in da manhã</text>
+  <text class="b" x="437" y="162">check-out ROTA (noite)</text>
+  <text class="b" x="437" y="178">A Linha · Dial · Espelho</text>
+  <text class="b" x="437" y="194">hidratação incremental</text>
+
+  <rect class="sub" x="595" y="92" width="155" height="118" rx="10"/>
+  <text class="st" x="607" y="112">API Routes</text>
+  <text class="b" x="607" y="130">sessão (Supabase Auth)</text>
+  <text class="b" x="607" y="146">check-ins · sintomas</text>
+  <text class="b" x="607" y="162">rate limit · Turnstile</text>
+  <text class="b" x="607" y="178">agenda notificações</text>
+
+  <rect class="sub" x="425" y="222" width="155" height="128" rx="10"/>
+  <rect x="425" y="222" width="155" height="2.5" rx="1" fill="#22c55e"/>
+  <text class="st" x="437" y="243">Motor determinístico</text>
+  <text class="b" x="437" y="261">resolver(checkin) — puro</text>
+  <text class="b" x="437" y="277">SEG·CUI·SIN·NIV·REC·PRG</text>
+  <text class="b" x="437" y="293">PEP · escada N0–N4</text>
+  <text class="b" x="437" y="309">precedência de travas</text>
+  <text class="b" x="437" y="325">suíte de testes = 100%</text>
+  <text class="b" x="437" y="341">decide O QUÊ</text>
+
+  <rect class="sub" x="595" y="222" width="155" height="128" rx="10"/>
+  <rect x="595" y="222" width="155" height="2.5" rx="1" fill="#1687ff"/>
+  <text class="st" x="607" y="243">Voz (LLM)</text>
+  <text class="b" x="607" y="261">recebe plano imutável</text>
+  <text class="b" x="607" y="277">arsenal por ID (18 args)</text>
+  <text class="b" x="607" y="293">bandit de tom</text>
+  <text class="b" x="607" y="309">validador → fallback</text>
+  <text class="b" x="607" y="325">texto livre → enum</text>
+  <text class="b" x="607" y="341">decide COMO DIZER</text>
+
+  <path class="arrowg" d="M580,286 L593,286"/>
+
+  <!-- SERVIÇOS (coluna direita) -->
+  <rect class="box" x="810" y="30" width="150" height="80" rx="14"/>
+  <rect x="810" y="30" width="150" height="3" rx="1.5" fill="#22d3ee"/>
+  <text class="st" x="823" y="54">OneSignal</text>
+  <text class="b" x="823" y="72">web push ilimitado</text>
+  <text class="b" x="823" y="88">free tier · serve o TWA</text>
+
+  <rect class="box" x="810" y="130" width="150" height="110" rx="14"/>
+  <rect x="810" y="130" width="150" height="3" rx="1.5" fill="#22d3ee"/>
+  <text class="st" x="823" y="154">PostHog</text>
+  <text class="b" x="823" y="172">D7/D30 · pós-lapso 48h</text>
+  <text class="b" x="823" y="188">dias compostos</text>
+  <text class="b" x="823" y="204">feature flags (paywall)</text>
+  <text class="b" x="823" y="220">coortes por origem</text>
+
+  <rect class="box" x="810" y="260" width="150" height="75" rx="14"/>
+  <rect x="810" y="260" width="150" height="3" rx="1.5" fill="#22d3ee"/>
+  <text class="st" x="823" y="284">Sentry</text>
+  <text class="b" x="823" y="302">erros front + back</text>
+  <text class="b" x="823" y="318">release por commit</text>
+
+  <rect class="box" x="810" y="400" width="150" height="80" rx="14"/>
+  <rect x="810" y="400" width="150" height="3" rx="1.5" fill="#1687ff"/>
+  <text class="st" x="823" y="424">OpenRouter (IA)</text>
+  <text class="b" x="823" y="442">qualquer modelo, 1 chave</text>
+  <text class="b" x="823" y="458">teto de gasto · guardrails</text>
+  <text class="b" x="823" y="474">nunca decide regra</text>
+
+  <!-- setas vercel -> serviços -->
+  <path class="arrow" d="M760,70 L808,70"/>
+  <text class="lb" x="784" y="63" text-anchor="middle">agenda</text>
+  <path class="arrow" d="M760,185 L808,185"/>
+  <text class="lb" x="784" y="178" text-anchor="middle">eventos</text>
+  <path class="arrow" d="M760,297 L808,297"/>
+  <text class="lb" x="784" y="290" text-anchor="middle">erros</text>
+  <path class="arrow" d="M750,330 C790,352 798,375 808,408"/>
+
+  <!-- SUPABASE -->
+  <rect class="box" x="410" y="400" width="350" height="120" rx="16"/>
+  <rect x="410" y="400" width="350" height="3" rx="1.5" fill="#22c55e"/>
+  <text class="t" x="428" y="428">Supabase · Postgres + Auth</text>
+  <text class="b" x="428" y="448">RLS em todas as tabelas (dado de saúde · LGPD)</text>
+  <text class="b" x="428" y="466">perfil · rota · dia · check-in/out · sintoma · hidratação</text>
+  <text class="b" x="428" y="482">exercício (CREF) · alimento (POF, fonte_id) · arsenal (CRN)</text>
+  <text class="b" x="428" y="500">migrations versionadas no repositório · projeto separado do site</text>
+
+  <path class="arrowg" d="M585,360 L585,398"/>
+  <text class="lb" x="597" y="382">SQL · RLS</text>
+
+  <!-- nota gate analytics -->
+  <text class="lane" x="200" y="385">gate por ambiente: analytics e telemetria</text>
+  <text class="lane" x="200" y="400">só ligam em produção (função pura testável)</text>
+
+  <!-- ENTREGA CONTÍNUA -->
+  <rect x="20" y="555" width="940" height="155" rx="16" fill="none" stroke="rgba(255,255,255,.18)" stroke-dasharray="6 5"/>
+  <text class="lane" x="40" y="580">Entrega contínua — GitHub é a fonte da verdade ("o nosso Drive")</text>
+
+  <rect class="box" x="40" y="598" width="220" height="95" rx="12"/>
+  <text class="st" x="53" y="620">GitHub · reroute-app</text>
+  <text class="b" x="53" y="638">privado · AGENTS.md + docs/</text>
+  <text class="b" x="53" y="654">branch → PR → squash merge</text>
+  <text class="b" x="53" y="670">Dependabot: alertas, sem PRs</text>
+
+  <rect class="box" x="300" y="598" width="250" height="95" rx="12"/>
+  <text class="st" x="313" y="620">GitHub Actions (CI)</text>
+  <text class="b" x="313" y="638">quality: lint · types · test · build</text>
+  <text class="b" x="313" y="654">security: Gitleaks · Semgrep</text>
+  <text class="b" x="313" y="670">CI vermelho = não sobe</text>
+
+  <rect class="box" x="590" y="598" width="170" height="95" rx="12"/>
+  <text class="st" x="603" y="620">Deploy Vercel</text>
+  <text class="b" x="603" y="638">merge na main publica</text>
+  <text class="b" x="603" y="654">envs no painel</text>
+  <text class="b" x="603" y="670">(nunca no código)</text>
+
+  <rect class="box" x="800" y="598" width="140" height="95" rx="12"/>
+  <text class="st" x="813" y="620">GitHub Pages</text>
+  <text class="b" x="813" y="638">demo pública</text>
+  <text class="b" x="813" y="654">só index.html</text>
+  <text class="b" x="813" y="670">docs/ nunca sai</text>
+
+  <path class="arrowm" d="M260,645 L298,645"/>
+  <path class="arrowm" d="M550,645 L588,645"/>
+  <path class="arrowm" d="M550,612 C660,582 720,582 798,614"/>
+</svg>
+</div>
+<details class="deep">
+<summary><span>📄 Documento completo (versão detalhada)</span><span class="chev">▾</span></summary>
+<div class="prose"><h1>REROUTE — Arquitetura Técnica do App MVP</h1>
+<blockquote>
+<p>Proposta de arquitetura para o aplicativo REROUTE (web-first/PWA). Harness-agnostic: serve de guia para qualquer agente de IA ou pessoa desenvolvedora.</p>
+</blockquote>
+<h2>Visão geral</h2>
+<p></p>
+<p>O desenho tem duas camadas: <strong>runtime</strong> (a pessoa → Cloudflare → app na Vercel → Supabase e serviços) e <strong>entrega contínua</strong> (GitHub → CI → deploy). A separação Motor/Voz dentro da Vercel é a regra mais importante do produto: o motor decide <em>o quê</em>, o LLM decide <em>como dizer</em>.</p>
+<h2>Decisões e justificativas</h2>
+<h3>1. Web-first (PWA), não app nativo</h3>
+<p>Decisão do kick-off. A pessoa acessa <code>app.reroute.com.br</code>, adiciona atalho na tela inicial e recebe notificações — sem loja, sem aprovação, testável no boca a boca desde o primeiro dia. O Android (TWA — o mesmo PWA empacotado, US$ 25 taxa única) entra <strong>depois</strong> que o beta web validar a experiência. iOS continua via atalho (Apple: US$ 99/ano + 30% de comissão em compras no app — regra a reconfirmar).</p>
+<h3>2. Next.js + TypeScript</h3>
+<ul>
+<li>O protótipo local do Ednei já era Next.js — o Codex tem contexto e fluência total no framework.</li>
+<li>Deploy nativo na Vercel (infra que já usam, plano Hobby).</li>
+<li>TypeScript <code>strict</code> desde o início: erros aparecem no editor/CI, não em produção.</li>
+</ul>
+<h3>3. Supabase (Postgres + Auth + RLS)</h3>
+<p>Já é a base da landing e do portal — reduzir número de fornecedores é decisão consciente.</p>
+<ul>
+<li><strong>Auth</strong>: e-mail/senha ou magic link.</li>
+<li><strong>RLS (Row Level Security) desde a primeira tabela</strong>: cada pessoa só lê os próprios dados. Dado de saúde é sensível (LGPD) — a trava fica no banco, não só no código.</li>
+<li>Migrations versionadas no repositório (<code>supabase/migrations/</code>), nunca alteração manual no painel.</li>
+</ul>
+<h3>4. Motor de rota: código determinístico, isolado e puro</h3>
+<p><strong>&quot;O motor é o produto; o LLM é a voz.&quot;</strong> O recálculo de rota é um módulo TypeScript <strong>puro</strong> (sem banco, sem rede), com suíte de testes escrita <strong>antes</strong> de qualquer prompt:</p>
+<ul>
+<li>Regras com fonte citável (E1–E6 da camada de exercício): força 2–3×/semana é piso; volume antes de intensidade; repetição antes de dificuldade; <strong>toda sessão tem versão mínima</strong> (náusea/sono ruim degradam para ~5 min, nunca para zero); cuidados GLP-1 (hidratação, hipoglicemia, tontura); sem corrida no MVP.</li>
+<li>Precedência de fontes: trava de segurança &gt; modo cuidado &gt; diretriz profissional validada &gt; preferência da pessoa &gt; padrão do app.</li>
+<li>Entrada: estado do dia (check-in/check-out, sintomas). Saída: plano do dia seguinte + explicação do porquê.</li>
+</ul>
+<h3>5. LLM apenas como camada de comunicação — via OpenRouter</h3>
+<p>O tom de &quot;amigo virtual&quot; (decisão do Ednei) é gerado por LLM <strong>sobre</strong> a saída do motor: recebe o plano já calculado e o transforma em mensagem acolhedora. Atrás de uma interface própria (<code>lib/voz/</code>) para trocar de modelo sem tocar no produto.</p>
+<p><strong>Toda chamada de IA sai pelo OpenRouter</strong> (gateway de IA — decisão de 04/08/2026):</p>
+<ul>
+<li><strong>Um endpoint, qualquer modelo</strong> — trocar de modelo (ou usar modelos diferentes por tarefa: transcrição, interpretação, redação) é configuração, não refactor.</li>
+<li><strong>Teto de gasto no painel</strong> — crédito pré-pago com limite; sem surpresa de fatura.</li>
+<li><strong>Guardrails e observabilidade de IA num lugar só</strong> — logs de chamadas, custo por requisição, políticas por chave.</li>
+<li><strong>Fallback de provedor</strong> — se um modelo/provedor cair, roteia para outro sem deploy.</li>
+</ul>
+<p><strong>Contrato de execução</strong> (da concepção — este é o desenho a implementar na Etapa 04):</p>
+<pre><code class="language-js">const plano = motor.resolver(checkin);        // determinístico, testado, imutável
+const args  = arsenal.elegiveis(plano, hist); // só argumentos com ID revisado
+const tom   = bandit.escolher(perfil, hist);  // &#39;dado&#39; | &#39;espelho&#39; | &#39;nenhum&#39;
+const msg   = await llm({
+  plano_imutavel: plano,
+  argumentos_permitidos: args,   // só pode citar destes, por id
+  tom, historia: memoria.padroes,
+  regras: [
+    &#39;Nunca gere número ausente de argumentos_permitidos&#39;,
+    &#39;Nunca contradiga plano_imutavel&#39;,
+    &#39;Lapso é evento, nunca identidade&#39;,
+    &#39;Se modo_cuidado, nenhuma meta numérica na mensagem&#39;
+  ]
+});
+if (!validar(msg, plano, args)) return plano.texto_fallback; // determinístico
+</code></pre>
+<p><strong>Proibido ao LLM:</strong> gerar número, dose ou meta; citar estatística fora do arsenal (só por <code>arg_id</code>); ter voz na regra de alarme clínico (<code>SEG-01</code> — única camada onde nem a redação é dele).</p>
+<blockquote>
+<p>O mapa completo de <strong>o que é IA × o que é algoritmo no MVP</strong> — e a pergunta aberta de como comunicar esse limiar no produto — está em <code>09-perguntas-abertas.md</code> (pergunta nº 1).</p>
+</blockquote>
+<h3>6. Notificações: web push via OneSignal</h3>
+<p>Validado na call: free tier com push ilimitado, mesma integração serve web e app futuro, e a mesma ferramenta dispara campanhas para a base. WhatsApp descartado como canal recorrente (R$ 0,35/msg ≈ R$ 10,50/mês por pessoa — inviável com assinatura de R$ 8).</p>
+<h3>7. Dados: modelo inicial</h3>
+<table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>Conteúdo</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>perfil</code></td>
+<td>altura, peso, objetivo, relação com medicação, medicamento, nível declarado</td>
+</tr>
+<tr>
+<td><code>rota</code></td>
+<td>meta ativa, etapa atual (~2 kg por etapa), estado</td>
+</tr>
+<tr>
+<td><code>dia</code></td>
+<td>plano do dia, tarefas geradas, versão (planejada/mínima)</td>
+</tr>
+<tr>
+<td><code>checkin</code> / <code>checkout</code></td>
+<td>respostas da manhã e da noite, modalidade (clique/áudio)</td>
+</tr>
+<tr>
+<td><code>sintoma</code></td>
+<td>tipo, intensidade, dia — alimenta o recálculo</td>
+</tr>
+<tr>
+<td><code>hidratacao</code></td>
+<td>marcação incremental (500ml por toque)</td>
+</tr>
+<tr>
+<td><code>exercicio</code></td>
+<td>catálogo curado (~20), com <code>revisado_por</code> (CREF), <code>taxonomia_ref</code>, <code>regride_para</code>/<code>progride_para</code></td>
+</tr>
+<tr>
+<td><code>alimento</code></td>
+<td>tabela canônica da POF/IBGE com <code>fonte_id</code> por linha; classificação PEP (âncora/complemento/não-âncora)</td>
+</tr>
+<tr>
+<td><code>arsenal</code></td>
+<td>os 18 argumentos citáveis por ID (<code>INI-01</code>…<code>SAI-03</code>), com fonte, ressalva e <code>revisado_por</code> (CRN)</td>
+</tr>
+</tbody></table>
+<p>Progressão de exercício mora <strong>nos dados</strong>, não no código (<code>regride_para</code>/<code>progride_para</code>). O motor expõe funções puras como <code>resolver(checkin)</code> e <code>porcoes(peso, fator)</code> — as fórmulas do PEP (<code>g_por_PEP = 2500/prot_100g</code>, <code>peps = max(3, round(peso*fator/25))</code>) já estão especificadas e simuladas na concepção.</p>
+<blockquote>
+<p>🔮 <strong>Preparação barata para o futuro:</strong> quando a camada de exames entrar (pós-MVP), carimbar <strong>LOINC</strong> em cada marcador desde a primeira migration (custa uma coluna) — alinha o vocabulário com a RNDS/FHIR e transforma futura parceria com laboratório em integração, não tradução.</p>
+</blockquote>
+<h3>8. Repositórios (decisão do kick-off: separar)</h3>
+<table>
+<thead>
+<tr>
+<th>Repo</th>
+<th>Conteúdo</th>
+<th>Deploy</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>edneictba/reroute-site</code></td>
+<td>Landing + portal do investidor (existente)</td>
+<td>Vercel (2 projetos)</td>
+</tr>
+<tr>
+<td><code>rnatto-gempe/reroute-app</code></td>
+<td>O aplicativo (privado; criado em 04/08/2026 com protótipo de UI + documentação)</td>
+<td>Demo: GitHub Pages · App: Vercel (<code>app.reroute.com.br</code>) quando o esqueleto entrar</td>
+</tr>
+</tbody></table>
+<h3>9. Observabilidade e analytics (detalhes em <code>05-setup-infraestrutura.md</code>)</h3>
+<ul>
+<li><strong>PostHog</strong> — analytics de produto: funil de onboarding, retenção D7/D30, recuperação pós-lapso, dias compostos. Open source, free tier generoso, session replay incluído.</li>
+<li><strong>Sentry</strong> — erros de frontend e backend com stack trace.</li>
+<li><strong>Gate de ambiente</strong>: analytics só liga em produção (função pura testável decide <code>enabled</code>); dev e testes nunca enviam dados.</li>
+</ul>
+<h3>10. Segurança (mínimo do MVP)</h3>
+<ul>
+<li>RLS em todas as tabelas; service role key só no servidor.</li>
+<li>Segredos em variáveis de ambiente (Vercel/GitHub Secrets); <code>.env.example</code> versionado, <code>.env</code> nunca.</li>
+<li>Cloudflare Turnstile nos formulários públicos (o site já usa).</li>
+<li>Rate limiting nas rotas de API públicas (padrão já existente no <code>reroute-site</code>).</li>
+<li>CI com detecção de segredos (Gitleaks) e SAST (Semgrep) — ver <code>04-boas-praticas.md</code>.</li>
+<li>Escalonamento de emergência: sintoma grave → orientar procurar atendimento (SAMU 192), sem diagnóstico.</li>
+</ul>
+<h2>O que fica explicitamente para depois</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Gatilho para entrar</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>App Android (TWA na Play Store)</td>
+<td>Beta web validado</td>
+</tr>
+<tr>
+<td>Camada de exames (travas por marcador)</td>
+<td>Pós-MVP; spec em <code>referencias/sugestoes-iniciais/</code></td>
+</tr>
+<tr>
+<td>Áudio da nutricionista (HITL duplo)</td>
+<td>Depende de jurídico + camada de exames</td>
+</tr>
+<tr>
+<td>Foto de refeição</td>
+<td>Precisão da IA ainda insuficiente (teste periódico)</td>
+</tr>
+<tr>
+<td>Wearables / Apple Watch</td>
+<td>Tração do MVP</td>
+</tr>
+<tr>
+<td>Self-hosting de analytics</td>
+<td>Volume que justifique sair dos free tiers</td>
+</tr>
+</tbody></table>
+</div>
+</details>
+</section>
+<section class="doc" id="identidade">
+<div class="doc-head"><span class="doc-ico">🎨</span><h2 class="doc-title">Identidade Visual</h2><span class="doc-file">docs/03-identidade-visual.md</span></div>
+<div class="cards"><div class="card"><div class="ci">🌑</div><h4>O visual</h4><p>Tema escuro, azul → ciano para ação e rota, verde/menta para progresso. Cantos bem arredondados.</p></div><div class="card"><div class="ci">1️⃣</div><h4>Uma coisa por vez</h4><p>Cada tela pede uma única decisão. Lista longa de tarefas gera ansiedade — e ansiedade gera abandono.</p></div><div class="card"><div class="ci">💬</div><h4>O tom</h4><p>Sem culpa, sem "recomeçar do zero". O erro não quebra nada — e a interface não tem onde quebrar.</p></div></div>
+
+<details class="deep">
+<summary><span>📄 Documento completo (versão detalhada)</span><span class="chev">▾</span></summary>
+<div class="prose"><h1>REROUTE — Identidade Visual</h1>
+<blockquote>
+<p>Guia extraído da landing page oficial (<code>reroute-site</code>, atualizada em 02/08/2026 e em produção em <a href="https://www.reroute.com.br">https://www.reroute.com.br</a>). Serve como fonte da verdade para a identidade visual da aplicação (app MVP), garantindo consistência entre landing, portal e produto.</p>
+</blockquote>
+<h2>Conceito</h2>
+<p>O REROUTE se apresenta como um <strong>Human Navigation System (HNS)</strong>: um GPS para objetivos humanos. A metáfora central é <strong>navegação</strong> — quando a vida muda, o sistema <strong>recalcula a rota</strong> em vez de punir o erro. A identidade visual traduz isso com:</p>
+<ul>
+<li><strong>Fundo escuro profundo</strong> (tema dark-first, remete a painel de navegação/cockpit)</li>
+<li><strong>Gradientes azul → ciano</strong> (movimento, rota, tecnologia)</li>
+<li><strong>Verde/menta como cor de progresso</strong> (chegada, sucesso, saúde)</li>
+<li><strong>Cantos bem arredondados</strong> (acolhimento, sem agressividade)</li>
+</ul>
+<h2>Tokens de cor</h2>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Valor</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--bg</code></td>
+<td><code>#020617</code></td>
+<td>Fundo principal (azul-marinho quase preto)</td>
+</tr>
+<tr>
+<td><code>--bg2</code></td>
+<td><code>#07111f</code></td>
+<td>Fundo secundário / gradientes de seção</td>
+</tr>
+<tr>
+<td><code>--panel</code></td>
+<td><code>#0b1220</code></td>
+<td>Cartões e painéis</td>
+</tr>
+<tr>
+<td><code>--panel2</code></td>
+<td><code>#111827</code></td>
+<td>Painéis elevados / hover</td>
+</tr>
+<tr>
+<td><code>--white</code></td>
+<td><code>#ffffff</code></td>
+<td>Texto principal</td>
+</tr>
+<tr>
+<td><code>--muted</code></td>
+<td><code>rgba(226,232,240,.82)</code></td>
+<td>Texto secundário</td>
+</tr>
+<tr>
+<td><code>--soft</code></td>
+<td><code>rgba(255,255,255,.08)</code></td>
+<td>Superfícies sutis (chips, badges)</td>
+</tr>
+<tr>
+<td><code>--line</code></td>
+<td><code>rgba(255,255,255,.12)</code></td>
+<td>Bordas e divisores</td>
+</tr>
+<tr>
+<td><code>--blue</code></td>
+<td><code>#1687ff</code></td>
+<td>Cor primária de marca / CTAs</td>
+</tr>
+<tr>
+<td><code>--cyan</code></td>
+<td><code>#22d3ee</code></td>
+<td>Cor secundária / destaque em gradientes</td>
+</tr>
+<tr>
+<td><code>--green</code></td>
+<td><code>#22c55e</code></td>
+<td>Sucesso, progresso, confirmação</td>
+</tr>
+<tr>
+<td><code>--mint</code></td>
+<td><code>#9fffc2</code></td>
+<td>Realce suave de progresso/positivo</td>
+</tr>
+</tbody></table>
+<h2>Gradientes característicos</h2>
+<ul>
+<li><strong>CTA / marca:</strong> <code>linear-gradient(135deg, var(--blue), var(--cyan))</code></li>
+<li><strong>Seções escuras:</strong> radial azul no topo (<code>radial-gradient(circle at 75% 10%, rgba(22,135,255,.35), …)</code>) sobre <code>#020617</code></li>
+<li><strong>Painéis:</strong> <code>linear-gradient(145deg, rgba(255,255,255,.07), …)</code> sobre <code>--panel</code> (efeito vidro sutil)</li>
+<li><strong>Fundo de página:</strong> <code>linear-gradient(180deg, #020617, #07111f 58%, #020617)</code></li>
+</ul>
+<h2>Tipografia e forma</h2>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Fonte</td>
+<td>System stack: <code>-apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, Inter, Arial, sans-serif</code></td>
+</tr>
+<tr>
+<td>Largura máxima de conteúdo</td>
+<td><code>1180px</code> (<code>--max</code>)</td>
+</tr>
+<tr>
+<td>Raio de borda padrão</td>
+<td><code>28px</code> (<code>--radius</code>) — cartões e botões bem arredondados</td>
+</tr>
+<tr>
+<td>Espaçamento de seção</td>
+<td><code>110px</code> vertical</td>
+</tr>
+</tbody></table>
+<h2>Tom de voz (copy)</h2>
+<p>Extraído da LP em produção:</p>
+<ul>
+<li><strong>Metáfora de rota em tudo:</strong> &quot;Se o seu destino é emagrecer, o REROUTE traça uma rota personalizada para a sua realidade.&quot;</li>
+<li><strong>Sem culpa, sem recomeço do zero:</strong> quando a vida muda, o plano se adapta — nunca penaliza.</li>
+<li><strong>Português direto, segunda pessoa,</strong> foco na realidade da pessoa (sono ruim, rotina corrida, medicação GLP-1).</li>
+<li><strong>CTAs de teste gratuito:</strong> &quot;Quero testar gratuitamente&quot;, &quot;Cadastre-se gratuitamente&quot;.</li>
+<li><strong>Cautela clínica:</strong> apoia quem usa medicação, mas nunca substitui orientação médica.</li>
+</ul>
+<h2>Diretrizes para o app MVP</h2>
+<ol>
+<li><strong>Dark-first.</strong> O app nasce com o mesmo tema escuro da LP. Se houver modo claro futuramente, derivar dos mesmos tokens.</li>
+<li><strong>Reutilizar os tokens acima como design tokens</strong> (CSS variables / Tailwind theme). Não inventar novas cores sem atualizar este guia.</li>
+<li><strong>Progresso sempre em verde/menta</strong>, rota e ação em azul/ciano.</li>
+<li><strong>Uma tarefa por vez</strong> na interface (decisão do kick-off, inspirada no app Fabulous): telas simples, um foco por tela, reduzindo ansiedade e aumentando conversão.</li>
+<li><strong>Indicadores percentuais claros</strong> de progresso/regresso alinhados às metas definidas no onboarding.</li>
+<li><strong>Componentes com <code>border-radius</code> generoso (24–28px)</strong> e bordas <code>rgba(255,255,255,.12)</code>.</li>
+<li><strong>Logo:</strong> matriz em <code>reroute-site/assets/images/logo-reroute-hns.png</code>, com variações otimizadas 320/640 em PNG e WebP.</li>
+</ol>
+<h2>Pendências de identidade / SEO detectadas</h2>
+<ul>
+<li>⚠️ O repositório ainda referencia <code>https://reroutehns.com.br</code> como URL canônica (<code>index.html</code>, <code>robots.txt</code>, <code>sitemap.xml</code>), mas esse domínio <strong>não resolve mais</strong>. O domínio oficial é <code>https://www.reroute.com.br</code>. Corrigir canonical, sitemap e robots.</li>
+<li>Os guias <code>.codex/02_BRAND_GUIDE.md</code> e <code>.codex/05_DESIGN_SYSTEM.md</code> do repositório estão <strong>vazios</strong> — este documento pode ser usado para preenchê-los.</li>
+</ul>
+</div>
+</details>
+</section>
+<section class="doc" id="praticas">
+<div class="doc-head"><span class="doc-ico">✅</span><h2 class="doc-title">Boas Práticas</h2><span class="doc-file">docs/04-boas-praticas.md</span></div>
+<div class="cards"><div class="card"><div class="ci">☁️</div><h4>GitHub é o nosso Drive</h4><p>Todo trabalho termina com "commita e sobe". O que não está no GitHub não existe.</p></div><div class="card"><div class="ci">🤖</div><h4>Robôs de qualidade</h4><p>A cada subida de código, verificações automáticas rodam. Tem erro? Nem chega em produção.</p></div><div class="card"><div class="ci">🧪</div><h4>Teste antes do código</h4><p>Toda regra de saúde nasce com teste. Todo bug corrigido ganha um teste que o impede de voltar.</p></div><div class="card"><div class="ci">🚫</div><h4>6 princípios que bloqueiam</h4><p>Regras inegociáveis (segurança, revisão profissional, dados) — se um PR viola, não entra.</p></div></div>
+
+<details class="deep">
+<summary><span>📄 Documento completo (versão detalhada)</span><span class="chev">▾</span></summary>
+<div class="prose"><h1>REROUTE — Boas Práticas de Desenvolvimento</h1>
+<blockquote>
+<p>Práticas de engenharia para o <code>reroute-app</code> (e, no que couber, para o <code>reroute-site</code>). Adaptadas de um projeto de produção maduro (Marketing OS/StartSe), enxugadas para a realidade de um MVP tocado com agentes de IA (Codex). Harness-agnostic: valem para qualquer agente ou pessoa.</p>
+</blockquote>
+<h2>Princípios não-negociáveis</h2>
+<p>Curtos, verificáveis, e todo PR responde a eles. Violação <strong>bloqueia</strong> o merge.</p>
+<ol>
+<li><strong>O motor é o produto; o LLM é a voz.</strong> Regra de saúde/recálculo é código determinístico com teste. LLM nunca decide número, meta ou trava.</li>
+<li><strong>Nada de saúde sem fonte e sem revisor.</strong> Todo item de catálogo (exercício, orientação alimentar) tem fonte citável, texto de autoria própria e <code>revisado_por</code> (CREF/CRN) preenchido antes de publicar.</li>
+<li><strong>Trava de segurança é teto, nunca é sobrescrita.</strong> Nenhuma preferência de usuário ou diretriz desativa uma trava. Conflitos ficam visíveis e pendentes — nunca resolvidos em silêncio.</li>
+<li><strong>RLS no banco, autorização no servidor.</strong> Cada pessoa só acessa os próprios dados. Esconder botão na UI não é segurança.</li>
+<li><strong>O erro não quebra nada.</strong> Nem para a pessoa usuária (lapso → recálculo, nunca punição; toda sessão tem versão mínima), nem no código (falha degrada com mensagem clara, nunca tela branca).</li>
+<li><strong>GitHub é a fonte da verdade.</strong> Todo trabalho termina com commit e push. Nada importante vive só na máquina local (&quot;é o nosso Drive&quot;).</li>
+</ol>
+<h2>Fluxo de trabalho (obrigatório)</h2>
+<p><strong>Toda implementação é validada localmente antes de subir. Produção nunca é ambiente de teste.</strong></p>
+<ol>
+<li>Criar branch: <code>feat/...</code>, <code>fix/...</code>, <code>chore/...</code>, <code>docs/...</code></li>
+<li><strong>Teste antes do código</strong> (TDD: vermelho → verde → refatora) para lógica de domínio — no mínimo, todo módulo do motor de rota</li>
+<li>Validar local: <code>npm run lint &amp;&amp; npm run test &amp;&amp; npm run build</code> verdes <strong>na máquina</strong> — não delegar a primeira validação ao CI</li>
+<li>Commit no padrão Conventional Commits: <code>feat(checkout): registrar sintoma no check-out da noite</code></li>
+<li>Push + Pull Request → CI verde → merge (squash)</li>
+<li>Merge na <code>main</code> = deploy automático (Vercel)</li>
+</ol>
+<p><strong>Regra de desistência</strong> (para sessões com agente): se o CI/teste ficar vermelho e não resolver em ~2 tentativas, deixe nota no item, <strong>não faça merge quebrado</strong>, passe para o próximo item.</p>
+<p><strong>Todo bug em produção ganha teste de regressão</strong>: primeiro o teste que reproduz a falha (vermelho), depois o fix. O PR cita o teste.</p>
+<h2>Qualidade automatizada (o &quot;gate&quot; antes de produção)</h2>
+<p>Decisão do kick-off: &quot;ferramentas dentro do projeto que validam a cada subida — se não estiver correto, nem sobe&quot;. Na prática:</p>
+<h3>Local (Husky — três ganchos de uma linha)</h3>
+<table>
+<thead>
+<tr>
+<th>Gancho</th>
+<th>Faz</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>pre-commit</code></td>
+<td><code>lint-staged</code> (ESLint --fix + Prettier nos arquivos alterados)</td>
+</tr>
+<tr>
+<td><code>commit-msg</code></td>
+<td><code>commitlint</code> (valida o padrão da mensagem)</td>
+</tr>
+<tr>
+<td><code>pre-push</code></td>
+<td><code>lint</code> + <code>test</code> completos</td>
+</tr>
+</tbody></table>
+<h3>CI (GitHub Actions)</h3>
+<p><strong><code>ci.yml</code></strong> — job <code>quality</code> sequencial em todo PR e push na <code>main</code>:</p>
+<pre><code>install (lockfile congelado) → lint → format:check → typecheck → test → build → audit de dependências (--prod, nível high)
+</code></pre>
+<ul>
+<li><code>concurrency</code> com <code>cancel-in-progress</code> (push novo cancela o CI antigo)</li>
+<li><code>permissions: contents: read</code> no topo (privilégio mínimo)</li>
+<li>Actions pinadas por SHA com a versão em comentário</li>
+</ul>
+<p><strong><code>security.yml</code></strong> — em PR, push na main e semanalmente:</p>
+<ul>
+<li><strong>Gitleaks</strong> (segredos vazados; versão fixa; varre o histórico)</li>
+<li><strong>Semgrep</strong> (SAST — padrões inseguros em TS/React; falha só em <code>error</code>)</li>
+<li>Resultado postado como comentário único no PR (marcador HTML oculto, atualizado a cada push — nunca duplica)</li>
+</ul>
+<p><strong>Dependabot — política do projeto: alertas sim, PRs automáticos não.</strong> Os <em>Dependabot alerts</em> (gratuitos, inclusive em repo privado) ficam ativados na aba Security e avisam quando uma dependência tem vulnerabilidade conhecida. Os PRs automáticos de atualização ficam <strong>desativados</strong> (<code>open-pull-requests-limit: 0</code> no <code>dependabot.yml</code>) — atualização de dependência entra na rotina semanal com revisão humana, não como ruído de PR. Para reativar no futuro, basta subir o limite.</p>
+<h3>Proteção da <code>main</code></h3>
+<ul>
+<li>Sem push direto: tudo via PR</li>
+<li>CI verde obrigatório para merge</li>
+<li>Squash merge (histórico limpo, 1 commit por entrega)</li>
+</ul>
+<h2>Padrões de código</h2>
+<ul>
+<li><strong>TypeScript <code>strict</code></strong> + <code>noUncheckedIndexedAccess</code>, <code>noUnusedLocals</code>, <code>noUnusedParameters</code></li>
+<li><strong>ESLint</strong> com <code>--max-warnings=0</code> (aviso é erro) + <strong>Prettier</strong> (formatação nunca é debate)</li>
+<li>Testes: <strong>Vitest</strong> para unidade (motor de rota ~100% de cobertura), Testing Library para componentes; e2e (Playwright) só em marcos</li>
+<li>Testes <strong>não dependem de serviço externo</strong>: repositórios injetáveis, fetch mockado — nunca exigir Supabase no ar para rodar <code>npm test</code></li>
+<li>Envelope de resposta padrão nas APIs: <code>{ data, meta }</code> — erro sempre estruturado</li>
+</ul>
+<h2>Documentação viva no repositório</h2>
+<table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Papel</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>AGENTS.md</code> (raiz)</td>
+<td>Manual operacional para <strong>qualquer agente de IA</strong> (Codex, Claude, Gemini) e qualquer pessoa: o que é o projeto, princípios, comandos, workflow, armadilhas conhecidas. Padrão aberto lido automaticamente pelo Codex.</td>
+</tr>
+<tr>
+<td><code>README.md</code></td>
+<td>Visão geral + como rodar em 5 minutos</td>
+</tr>
+<tr>
+<td><code>docs/ROADMAP.md</code></td>
+<td>Plano executável com checkboxes, &quot;O PADRÃO&quot; (receita passo a passo apontando uma feature de referência) e o fluxo por item</td>
+</tr>
+<tr>
+<td><code>docs/adr/NNNN-titulo.md</code></td>
+<td><strong>Toda decisão estrutural vira ADR</strong>: <code>Status · Data · Contexto · Decisão · Consequências</code></td>
+</tr>
+<tr>
+<td>Seção &quot;Armadilhas conhecidas&quot; no <code>AGENTS.md</code></td>
+<td>Cresce a cada incidente — é o que impede o agente de repetir o erro do mês passado</td>
+</tr>
+</tbody></table>
+<p><strong>Template de PR</strong> (<code>.github/pull_request_template.md</code>):</p>
+<ul>
+<li>O que muda</li>
+<li>Teste que cobre (escrito antes da mudança — TDD)</li>
+<li>Princípios respeitados (checkbox por princípio, com N/A)</li>
+<li>Checklist: lint/test verdes localmente · ADR atualizado se houve decisão estrutural</li>
+</ul>
+<h2>Segredos e configuração</h2>
+<ul>
+<li><code>.env</code> <strong>nunca</strong> no Git; <code>.env.example</code> sempre atualizado, com comentário por variável explicando o efeito de deixá-la vazia</li>
+<li>Segredos de produção: painel da Vercel + GitHub Secrets</li>
+<li>Convenção: <code>SCREAMING_SNAKE_CASE</code> com prefixo por domínio (<code>SUPABASE_*</code>, <code>ONESIGNAL_*</code>, <code>POSTHOG_*</code>)</li>
+<li>Gitleaks no CI garante que segredo commitado por engano é pego antes do merge</li>
+</ul>
+<h2>Observabilidade como Definition of Done</h2>
+<p><strong>Toda feature nasce com evento de analytics e tratamento de erro. Não é &quot;depois&quot;.</strong></p>
+<ul>
+<li>Page views automáticos + eventos nomeados (<code>checkout_concluido</code>, <code>lapso_recuperado</code>) — de preferência declarativos (<code>data-track=&quot;evento&quot;</code>)</li>
+<li>Erros capturados com contexto (Sentry)</li>
+<li><strong>Gate por ambiente numa função pura testável</strong>: analytics/telemetria só ligam em produção; dev e testes nunca enviam dados</li>
+<li>Detalhes de ferramentas e setup: <code>05-setup-infraestrutura.md</code></li>
+</ul>
+<h2>Aplicação no <code>reroute-site</code> (repositório existente)</h2>
+<p>Retrofit mínimo, em ordem de retorno:</p>
+<ol>
+<li><code>AGENTS.md</code> na raiz (o repo tem <code>.codex/*.md</code> <strong>vazios</strong> — consolidar num só arquivo real)</li>
+<li><code>ci.yml</code> com o job <code>quality</code> usando os scripts que <strong>já existem</strong> (<code>npm run lint</code>, smoke tests, <code>npm run build</code>)</li>
+<li>Proteção da <code>main</code> + template de PR</li>
+<li>Corrigir domínio canônico (reroutehns.com.br → <a href="http://www.reroute.com.br">www.reroute.com.br</a>)</li>
+<li><code>security.yml</code> (Gitleaks + Semgrep) e <code>dependabot.yml</code></li>
+</ol>
+</div>
+</details>
+</section>
+<section class="doc" id="infra">
+<div class="doc-head"><span class="doc-ico">⚙️</span><h2 class="doc-title">Infraestrutura</h2><span class="doc-file">docs/05-setup-infraestrutura.md</span></div>
+<div class="cards"><div class="card"><div class="ci">💸</div><h4>Custo: R$ 0/mês</h4><p>9 serviços no plano gratuito (fora o domínio, ~R$ 40/ano). Só escala custo quando escalar gente.</p></div><div class="card"><div class="ci">🌐</div><h4>Cloudflare na frente</h4><p>O domínio passa a ser protegido e gerenciado num painel só — DNS, segurança e o anti-spam do formulário.</p></div><div class="card"><div class="ci">📊</div><h4>Medir e avisar</h4><p>PostHog mede o comportamento (quem volta, onde desiste); Sentry avisa na hora quando algo quebra.</p></div><div class="card"><div class="ci">📋</div><h4>Passo a passo</h4><p>Cada serviço com ordem certa, o porquê e quem faz — tabela no fim do documento.</p></div></div>
+
+<details class="deep">
+<summary><span>📄 Documento completo (versão detalhada)</span><span class="chev">▾</span></summary>
+<div class="prose"><h1>REROUTE — Setup de Infraestrutura (passo a passo)</h1>
+<blockquote>
+<p>Tudo que precisa ser configurado, na ordem certa, com o porquê de cada coisa. Serviços com free tier generoso e/ou open source — custo mensal alvo do MVP: <strong>R$ 0</strong> (fora domínio e assinaturas de IA).</p>
+</blockquote>
+<h2>Mapa de serviços</h2>
+<table>
+<thead>
+<tr>
+<th>Serviço</th>
+<th>Papel</th>
+<th>Custo MVP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GitHub</td>
+<td>Código (fonte da verdade) + CI</td>
+<td>R$ 0</td>
+</tr>
+<tr>
+<td>Vercel</td>
+<td>Hospedagem (landing, portal, app)</td>
+<td>R$ 0 (Hobby)</td>
+</tr>
+<tr>
+<td>Supabase</td>
+<td>Banco, autenticação, storage</td>
+<td>R$ 0 (free tier)</td>
+</tr>
+<tr>
+<td>Cloudflare</td>
+<td>DNS, proteção, Turnstile, cache</td>
+<td>R$ 0</td>
+</tr>
+<tr>
+<td>Resend</td>
+<td>E-mail transacional</td>
+<td>R$ 0 (3k/mês)</td>
+</tr>
+<tr>
+<td>OneSignal</td>
+<td>Notificações push (web + app futuro)</td>
+<td>R$ 0 (push ilimitado)</td>
+</tr>
+<tr>
+<td>PostHog</td>
+<td>Analytics de produto (open source)</td>
+<td>R$ 0 (1M eventos/mês)</td>
+</tr>
+<tr>
+<td>Sentry</td>
+<td>Monitoramento de erros (open source)</td>
+<td>R$ 0 (5k erros/mês)</td>
+</tr>
+<tr>
+<td>OpenRouter</td>
+<td>Gateway de IA (qualquer modelo, 1 chave)</td>
+<td>Pré-pago com <strong>teto definido</strong></td>
+</tr>
+<tr>
+<td>Registro.br</td>
+<td>Domínio reroute.com.br</td>
+<td>~R$ 40/ano</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>1. GitHub (fonte da verdade)</h2>
+<p><strong>Já existe:</strong> <code>github.com/edneictba/reroute-site</code> com deploy contínuo para a Vercel.</p>
+<p><strong>Feito em 04/08/2026:</strong> repositório <strong><code>rnatto-gempe/reroute-app</code></strong> criado (privado), com protótipo de UI (demo via GitHub Pages), documentação de planejamento e convite de colaborador enviado ao Ednei (<code>edneictba</code>).</p>
+<p><strong>Falta:</strong></p>
+<ol>
+<li>Ednei aceitar o convite de colaborador.</li>
+<li>Proteger a <code>main</code>: <code>Settings → Branches → Add branch protection rule</code> → marcar <em>Require a pull request before merging</em> e <em>Require status checks to pass</em> (selecionar o CI quando o esqueleto do app entrar).</li>
+<li>Segredos do CI: <code>Settings → Secrets and variables → Actions</code> (adicionar conforme os workflows pedirem).</li>
+<li>(Futuro) Transferir o repositório para a conta do Ednei, se fizer sentido societariamente.</li>
+</ol>
+<blockquote>
+<p>⚠️ <strong>O Pages da demo é público mesmo com repo privado.</strong> Por isso o deploy do Pages publica somente a demo (<code>index.html</code>), nunca <code>docs/</code> — e nenhum segredo ou dado sensível pode ser commitado.</p>
+</blockquote>
+<blockquote>
+<p>💡 <strong>Regra de ouro:</strong> todo trabalho termina com commit e push. Peça ao Codex: <em>&quot;commita e sobe para o GitHub&quot;</em>. <code>node_modules</code> e <code>.next</code> nunca entram no repositório (o <code>.gitignore</code> cuida disso).</p>
+</blockquote>
+<h2>2. Cloudflare (DNS + proteção)</h2>
+<p>Hoje o domínio aponta do Registro.br direto para a Vercel. Colocar o Cloudflare na frente dá: DNS rápido com painel único, proteção contra bots/ataques (WAF), cache, analytics de tráfego — e o <strong>Turnstile</strong> (anti-spam do formulário, que o site já usa) passa a morar na mesma conta.</p>
+<ol>
+<li>Criar conta em cloudflare.com (plano <strong>Free</strong>).</li>
+<li><code>Add a site</code> → <code>reroute.com.br</code> → o Cloudflare importa os registros DNS existentes automaticamente (conferir: <code>www</code>, <code>portal</code>, raiz, e os registros de e-mail).</li>
+<li>O Cloudflare mostra <strong>2 nameservers</strong> (ex.: <code>ana.ns.cloudflare.com</code>).</li>
+<li>No <strong>Registro.br</strong> → domínio → <code>Alterar servidores DNS</code> → substituir pelos nameservers do Cloudflare. Propagação: até 24h, geralmente minutos.</li>
+<li>Em <code>SSL/TLS</code>, deixar modo <strong>Full (strict)</strong>.</li>
+<li>Registros apontando para a Vercel: manter <code>CNAME</code> → <code>cname.vercel-dns.com</code> (raiz, <code>www</code>, <code>portal</code> e futuramente <code>app</code>). Se a Vercel reclamar de certificado, colocar o registro em modo <strong>DNS only</strong> (nuvem cinza) — a Vercel emite o certificado dela.</li>
+<li><strong>Turnstile</strong>: <code>Turnstile → Add site</code> → registrar <code>reroute.com.br</code> (e depois <code>app.reroute.com.br</code>) → copiar site key/secret para as variáveis de ambiente (o site já usa <code>NEXT_PUBLIC_TURNSTILE_SITE_KEY</code>/<code>TURNSTILE_SECRET_KEY</code>).</li>
+</ol>
+<blockquote>
+<p>⚠️ Depois da migração, testar: site, portal, envio do formulário e recebimento do e-mail de boas-vindas.</p>
+</blockquote>
+<h2>3. Supabase (banco + auth)</h2>
+<p><strong>Já existe:</strong> projeto usado pela landing (tabela <code>leads</code>) e portal.</p>
+<p><strong>Fazer para o app:</strong></p>
+<ol>
+<li>Criar <strong>projeto separado</strong> para o <code>reroute-app</code> (isola dado de saúde do dado de marketing; free tier permite 2 projetos).</li>
+<li>Toda tabela nasce com <strong>RLS habilitado</strong> e policy explícita — dado de saúde é sensível (LGPD).</li>
+<li>Migrations sempre versionadas no repositório (<code>supabase/migrations/</code>) — nunca mudança manual no painel.</li>
+<li><strong>Resolver o limite de e-mail:</strong> o Supabase Auth por padrão envia e-mails pelo SMTP embutido, com limite baixo (~2–4/hora). Em <code>Authentication → SMTP Settings</code>, configurar SMTP customizado apontando para o <strong>Resend</strong> (host <code>smtp.resend.com</code>) — o repositório já tem conta Resend configurada (<code>boasvindas@email.reroute.com.br</code>). Isso elimina o limite que o Ednei relatou.</li>
+</ol>
+<h2>4. Vercel (hospedagem)</h2>
+<p><strong>Já existe:</strong> 2 projetos (landing + portal) apontando para o mesmo repo, deploy contínuo, plano Hobby.</p>
+<p><strong>Fazer:</strong></p>
+<ol>
+<li>Criar projeto novo importando o repo <code>reroute-app</code>.</li>
+<li>Domínio: <code>app.reroute.com.br</code> (criar o CNAME no Cloudflare).</li>
+<li>Variáveis de ambiente no painel (<code>Settings → Environment Variables</code>): Supabase, OneSignal, PostHog, Sentry, Turnstile — espelhando o <code>.env.example</code> do repo.</li>
+<li>⚠️ <strong>Plano Hobby não permite colaborador</strong> (força upgrade para Pro). Fluxo combinado: Renato trabalha via GitHub; o deploy é automático no merge. Ninguém precisa de acesso à Vercel para desenvolver.</li>
+</ol>
+<h2>5. Resend (e-mail)</h2>
+<p><strong>Já existe:</strong> domínio <code>email.reroute.com.br</code> configurado no repo da landing.</p>
+<p><strong>Conferir/fazer:</strong></p>
+<ol>
+<li>Domínio verificado no painel do Resend (registros DKIM/SPF — que agora moram no Cloudflare).</li>
+<li>Usar o mesmo Resend como SMTP do Supabase Auth (passo 3.4).</li>
+<li>Free tier: 3.000 e-mails/mês — suficiente para o beta.</li>
+</ol>
+<h2>6. OneSignal (push)</h2>
+<ol>
+<li>Criar conta e app &quot;REROUTE&quot; → escolher <strong>Web Push</strong>.</li>
+<li>Configurar o site <code>app.reroute.com.br</code> (o OneSignal gera o service worker a colocar no projeto).</li>
+<li>Guardar <code>App ID</code> (frontend) e <code>REST API Key</code> (backend, para disparos agendados: manhã/noite).</li>
+<li>Free tier: push ilimitado. A mesma conta servirá o app Android no futuro e campanhas para a base.</li>
+</ol>
+<blockquote>
+<p>📱 Web push funciona em Android direto; no iOS exige o site <strong>instalado como PWA</strong> (atalho na tela inicial, iOS 16.4+) — mais um motivo para o fluxo de &quot;adicionar à tela inicial&quot; ser caprichado no onboarding.</p>
+</blockquote>
+<h2>7. PostHog (analytics de produto)</h2>
+<p>Open source, free tier de 1M eventos/mês, com session replay e feature flags inclusos.</p>
+<ol>
+<li>Criar conta em posthog.com (região <strong>EU</strong> ou US) → novo projeto &quot;reroute-app&quot;.</li>
+<li>Instalar o SDK JS no app; ativar autocapture + eventos nomeados.</li>
+<li>Eventos mínimos do MVP: <code>onboarding_iniciado</code>, <code>onboarding_concluido</code>, <code>checkin_manha</code>, <code>checkout_noite</code>, <code>sintoma_registrado</code>, <code>lapso_recuperado</code>, <code>tarefa_concluida</code>, <code>agua_registrada</code>.</li>
+<li>Dashboards: <strong>retenção D7/D30</strong> (nativo), funil do onboarding, e as métricas do MVP (recuperação pós-lapso em 48h, dias compostos).</li>
+<li><strong>Gate de ambiente:</strong> analytics só liga em produção (ver <code>04-boas-praticas.md</code>).</li>
+<li>Bônus: <strong>feature flags</strong> do PostHog podem controlar o paywall desabilitado e o acesso por cupom do beta.</li>
+</ol>
+<blockquote>
+<p>Alternativa 100% self-hosted no futuro: PostHog self-hosted, ou a dupla SigNoz (telemetria técnica/OpenTelemetry) + OpenPanel (analytics) que usamos em outro projeto. Para o MVP, o cloud free tier vence: zero servidor para manter.</p>
+</blockquote>
+<h3>7.1 PostHog no fluxo do agente de IA (MCP + CLI)</h3>
+<p><strong>MCP</strong> (<a href="https://posthog.com/docs/model-context-protocol/codex">docs</a>) — conecta o Codex direto ao PostHog. O agente passa a consultar analytics, investigar erros e gerenciar feature flags de dentro da conversa (útil para &quot;quantas pessoas concluíram o onboarding esta semana?&quot; sem abrir painel):</p>
+<pre><code class="language-bash">codex mcp add posthog --url https://mcp.posthog.com/mcp
+# ou, com wizard: npx @posthog/wizard mcp add
+</code></pre>
+<p>Autenticação por OAuth nativo — na primeira chamada abre o login do PostHog (detecta a região US/EU sozinho).</p>
+<p><strong>CLI</strong> (<a href="https://posthog.com/docs/cli">docs</a>) — para o que o MCP não cobre, principalmente <strong>automação em build/CI</strong>: upload de source maps (stack traces legíveis em produção), symbol sets e acesso à API em scripts:</p>
+<pre><code class="language-bash">npm install -g @posthog/cli@latest
+posthog-cli login          # abre o navegador e guarda o token
+posthog-cli sourcemap ...  # no pipeline de build
+</code></pre>
+<p>Em CI/agentes sem navegador, autenticar por variáveis de ambiente: <code>POSTHOG_CLI_HOST</code>, <code>POSTHOG_CLI_PROJECT_ID</code>, <code>POSTHOG_CLI_API_KEY</code>. O comando <code>posthog-cli api</code> expõe a API completa para o agente executar configurações que o MCP não permita.</p>
+<blockquote>
+<p><strong>Divisão de papéis:</strong> MCP = o agente consulta e opera no fluxo da conversa. CLI = build/CI e configurações via API. ⚠️ Regra de sempre: revisar as chamadas do MCP antes de aprovar (dados de produto saem por ali) — e chaves do CLI nunca no repositório.</p>
+</blockquote>
+<h2>8. Sentry (erros)</h2>
+<ol>
+<li>Criar conta em sentry.io → projeto Next.js.</li>
+<li>Instalar via wizard (<code>npx @sentry/wizard@latest -i nextjs</code>) — captura erros de frontend e backend com stack trace e release.</li>
+<li>Alertas por e-mail em erro novo. Free tier: 5k erros/mês.</li>
+<li>Alternativa open source self-hosted no futuro: GlitchTip (compatível com o SDK do Sentry).</li>
+</ol>
+<h3>8.1 Sentry no fluxo do agente de IA (MCP + CLI)</h3>
+<p><strong>MCP</strong> (<a href="https://mcp.sentry.dev/">mcp.sentry.dev</a>) — o agente investiga erros de produção de dentro da conversa (&quot;qual o erro mais frequente desde o último deploy?&quot;) e chega à causa com o contexto do stack trace:</p>
+<pre><code class="language-bash">codex mcp add sentry --url https://mcp.sentry.dev/mcp
+</code></pre>
+<p>Ou editando <code>~/.codex/config.toml</code>:</p>
+<pre><code class="language-toml">[mcp_servers.sentry]
+url = &quot;https://mcp.sentry.dev/mcp&quot;
+</code></pre>
+<p>Na primeira execução do Codex, abre o fluxo OAuth para conectar à conta Sentry.</p>
+<p><strong>CLI</strong> (<a href="https://docs.sentry.io/cli/">docs</a>) — para build/CI e configurações via API: criação de releases, upload de source maps, notificação de deploys e associação de commits (liga o erro ao commit que o causou):</p>
+<pre><code class="language-bash">npm install -g @sentry/cli
+sentry-cli login                    # ou SENTRY_AUTH_TOKEN em CI/agentes
+sentry-cli releases new &lt;versao&gt;    # no pipeline de deploy
+sentry-cli sourcemaps upload ...
+</code></pre>
+<blockquote>
+<p><strong>Divisão de papéis:</strong> MCP = investigar/triagem no fluxo da conversa. CLI = releases e source maps no pipeline (o wizard do Next.js já configura boa parte disso automaticamente). Token do CLI em GitHub Secrets, nunca no código.</p>
+</blockquote>
+<h2>9. OpenRouter (gateway de IA)</h2>
+<p>Toda chamada de IA do app (transcrição do áudio, interpretação de texto, redação das mensagens) sai por <strong>uma única chave do OpenRouter</strong> — que roteia para qualquer modelo do mercado.</p>
+<ol>
+<li>Criar conta em openrouter.ai.</li>
+<li>Comprar <strong>crédito pré-pago</strong> (começar pequeno: US$ 10–20).</li>
+<li>Em <code>Settings → Limits</code>, definir o <strong>teto de gasto</strong> — é isso que garante zero surpresa de fatura.</li>
+<li>Criar uma <strong>API key por ambiente</strong> (uma para produção, outra para desenvolvimento), cada uma com seu limite. Guardar no cofre de credenciais.</li>
+<li>No app, a chave vive em variável de ambiente (<code>OPENROUTER_API_KEY</code>) — o código chama a interface própria (<code>lib/voz/</code>), nunca o provedor direto.</li>
+</ol>
+<p><strong>Por que gateway em vez de conta direto no provedor:</strong></p>
+<ul>
+<li>Trocar de modelo (ou usar um modelo barato para transcrição e um melhor para redação) é <strong>configuração, não código</strong>.</li>
+<li><strong>Custo e logs de todas as chamadas num painel só</strong> — dá para ver custo por usuário-dia, que é uma métrica do MVP.</li>
+<li>Fallback automático se um provedor cair.</li>
+<li>Boas práticas de IA (limites por chave, políticas) aplicadas no gateway, não espalhadas no código.</li>
+</ul>
+<h2>10. Monitoramento de uptime (opcional, 5 min)</h2>
+<ul>
+<li><strong>UptimeRobot</strong> (free, 50 monitores): monitorar <code>www.reroute.com.br</code> e <code>app.reroute.com.br</code>, alerta por e-mail se cair.</li>
+<li>Alternativa open source (Uptime Kuma) exige servidor próprio — não vale para o MVP.</li>
+</ul>
+<hr>
+<h2>Ordem de execução sugerida</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Ação</th>
+<th>Depende de</th>
+<th>Quem</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Criar repo <code>reroute-app</code> + colaborador + proteção da main</td>
+<td>—</td>
+<td>Ednei (guiado)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Migrar DNS para Cloudflare</td>
+<td>—</td>
+<td>Ednei + Renato</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Corrigir domínio canônico da landing (reroutehns.com.br → <a href="http://www.reroute.com.br">www.reroute.com.br</a>)</td>
+<td>—</td>
+<td>Renato</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Supabase: projeto do app + SMTP via Resend</td>
+<td>2</td>
+<td>Renato</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Projeto Vercel do app + <code>app.reroute.com.br</code></td>
+<td>1, 2</td>
+<td>Ednei (guiado)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>CI (<code>ci.yml</code> + <code>security.yml</code>) nos dois repos</td>
+<td>1</td>
+<td>Renato</td>
+</tr>
+<tr>
+<td>7</td>
+<td>PostHog + Sentry no esqueleto do app</td>
+<td>1</td>
+<td>Renato</td>
+</tr>
+<tr>
+<td>8</td>
+<td>OneSignal (web push)</td>
+<td>5</td>
+<td>Renato</td>
+</tr>
+<tr>
+<td>9</td>
+<td>UptimeRobot</td>
+<td>5</td>
+<td>Ednei</td>
+</tr>
+</tbody></table>
+</div>
+</details>
+</section>
+<section class="doc" id="prompts">
+<div class="doc-head"><span class="doc-ico">🤖</span><h2 class="doc-title">Prompts (Codex)</h2><span class="doc-file">docs/06-prompts-codex.md</span></div>
+<div class="cards"><div class="card"><div class="ci">📋</div><h4>10 prompts prontos</h4><p>Copiar, ajustar o que está [entre colchetes] e colar no Codex. Do entender o projeto ao corrigir bug.</p></div><div class="card"><div class="ci">🔌</div><h4>Pluguinhos (MCPs)</h4><p>Dois comandos conectam o Codex ao PostHog e ao Sentry — aí dá para perguntar "qual erro mais acontece?" na conversa.</p></div><div class="card"><div class="ci">🏁</div><h4>Ritual de saída</h4><p>Toda sessão termina igual: "verifica o que está pendente, commita e sobe pro GitHub".</p></div></div>
+
+<details class="deep">
+<summary><span>📄 Documento completo (versão detalhada)</span><span class="chev">▾</span></summary>
+<div class="prose"><h1>REROUTE — Prompts prontos para o Codex</h1>
+<blockquote>
+<p>Prompts para o Ednei copiar e colar no Codex (funcionam igual em Claude, Gemini ou qualquer agente — a documentação do projeto é o contexto, não a ferramenta). Ambiente: <strong>Windows</strong>. Regra de ouro em todos: <strong>terminar com commit e push — o GitHub é o nosso Drive.</strong></p>
+</blockquote>
+<h2>Como usar</h2>
+<ol>
+<li>Abra o Codex <strong>na pasta do projeto</strong> (ex.: <code>reroute-app</code>).</li>
+<li>Copie o prompt, ajuste o que está <code>[entre colchetes]</code> e cole.</li>
+<li>Ao final de qualquer sessão de trabalho, use o Prompt 8 (commit e push).</li>
+<li>Se o Codex travar num erro por mais de 2 tentativas, pare, anote e traga para a call semanal — não force merge de coisa quebrada.</li>
+</ol>
+<hr>
+<h2>1. Entender o projeto (primeiro prompt de qualquer sessão)</h2>
+<pre><code>Leia o arquivo AGENTS.md na raiz deste repositório e os documentos da pasta docs/.
+Depois me explique, em português simples:
+1. O que é este projeto e em que fase estamos
+2. Quais são os princípios que nunca podemos violar
+3. O que está planejado para a fase atual (docs/ROADMAP.md)
+4. Que comandos eu uso para rodar o projeto e os testes aqui no meu Windows
+Não mude nenhum arquivo ainda — só me explique.
+</code></pre>
+<h2>2. Explorar a documentação da consultoria</h2>
+<pre><code>Leia a pasta docs/ deste repositório. Quero entender [o planejamento do MVP /
+a arquitetura / as boas práticas / o que falta configurar de infraestrutura].
+Me dê um resumo em tópicos e depois me diga: qual é a menor próxima ação
+que eu consigo fazer hoje, sozinho, em menos de 1 hora?
+</code></pre>
+<h2>2.5 Trabalhar numa missão (O FLUXO PRINCIPAL do dia a dia)</h2>
+<pre><code>Abra docs/missoes.json e me mostre as missões com status &quot;todo&quot; que são minhas
+(dono Ednei). Vou trabalhar na missão [M-XX].
+Siga o protocolo de missões do AGENTS.md À RISCA:
+1. Mude o status dela para &quot;doing&quot;, adicione uma nota datada com o plano,
+   atualize o campo atualizado_em, commit e push AGORA (antes de trabalhar)
+2. Execute a missão
+3. Ao terminar: status &quot;done&quot;, nota datada do que foi feito, commit e push
+Se travar, mantenha &quot;doing&quot; com uma nota do bloqueio e me avise.
+</code></pre>
+<blockquote>
+<p>É assim que o Renato acompanha o projeto pela página de documentação — a
+missão movida ANTES do trabalho é o que mantém o painel dizendo a verdade.</p>
+</blockquote>
+<h2>3. Trabalhar num item do roadmap (o fluxo padrão)</h2>
+<pre><code>Abra docs/ROADMAP.md e localize o item [nome do item, ex.: &quot;check-out da noite&quot;].
+Siga o fluxo do projeto descrito no AGENTS.md:
+1. Crie uma branch com o prefixo certo (feat/, fix/, chore/)
+2. Escreva PRIMEIRO o teste que prova que a funcionalidade funciona
+3. Implemente até o teste passar
+4. Rode lint, testes e build localmente e me mostre o resultado
+5. Faça commit no padrão do projeto e suba a branch para o GitHub
+6. Abra um Pull Request descrevendo o que muda e qual teste cobre
+Se algo falhar duas vezes seguidas, pare e me explique o problema em
+português simples antes de continuar.
+</code></pre>
+<h2>4. Corrigir um bug</h2>
+<pre><code>Encontrei um problema: [descreva o que aconteceu, onde e o que era esperado.
+Cole a mensagem de erro ou print se tiver].
+Siga a regra do projeto para bugs (AGENTS.md):
+1. Escreva primeiro um teste que reproduz o erro (ele deve falhar)
+2. Corrija o código até o teste passar
+3. Rode toda a suíte de testes para garantir que nada mais quebrou
+4. Commit + push + Pull Request citando o teste de regressão
+</code></pre>
+<h2>5. Entender o que mudou (depois que o Renato trabalhou)</h2>
+<pre><code>Rode git pull para atualizar o projeto. Depois me mostre o que mudou desde
+[ontem / a última semana]: liste os commits novos e me explique em português
+simples o que cada um fez e por quê. Se algum documento em docs/ mudou,
+me resuma a mudança.
+</code></pre>
+<h2>6. Verificar qualidade antes de subir</h2>
+<pre><code>Antes de subir qualquer coisa, rode a validação completa do projeto:
+lint, formatação, typecheck, testes e build — os comandos estão no AGENTS.md.
+Me mostre o resultado de cada um. Se algo estiver vermelho, explique o que é
+e proponha a correção antes de commitar.
+</code></pre>
+<h2>7. Registrar uma decisão (ADR)</h2>
+<pre><code>Decidimos hoje que [descreva a decisão, ex.: &quot;as notificações serão via
+OneSignal e não WhatsApp, porque o custo por mensagem inviabiliza a assinatura&quot;].
+Crie um ADR em docs/adr/ seguindo o formato dos existentes
+(Status, Data, Contexto, Decisão, Consequências), com o próximo número
+da sequência. Depois commit e push.
+</code></pre>
+<h2>8. Encerrar a sessão (sempre!)</h2>
+<pre><code>Terminamos por hoje. Verifique com git status se há alguma alteração pendente.
+Se houver, me explique o que está pendente, faça commit no padrão do projeto
+e suba para o GitHub. Me confirme que o repositório remoto está atualizado.
+</code></pre>
+<h2>9. Aprender (aula particular com o Codex)</h2>
+<pre><code>Me explique como funciona [o service worker do PWA / a RLS do Supabase /
+o motor de recálculo / o CI no GitHub Actions] NESTE projeto.
+Sou iniciante em programação: use analogias simples, aponte os arquivos
+envolvidos e me mostre o caminho que o dado percorre. Não mude nada.
+</code></pre>
+<h2>10. Landing page: melhorar conversão (repo reroute-site)</h2>
+<pre><code>Leia o AGENTS.md e o README.md deste repositório (reroute-site).
+Hoje temos ~70 visitas/dia e quase nenhuma conversão em lead.
+Analise a página [index.html / conheca] e me proponha 3 hipóteses de melhoria
+de conversão, ordenadas por esforço. Para cada uma: o que muda, por que deve
+funcionar e como vamos medir. Só implemente depois que eu escolher uma.
+</code></pre>
+<hr>
+<h2>Conectar o Codex às ferramentas (os &quot;pluguinhos&quot; / MCPs)</h2>
+<p>Rode uma vez no terminal (cada comando abre um login no navegador na primeira vez que usar):</p>
+<pre><code>codex mcp add posthog --url https://mcp.posthog.com/mcp
+codex mcp add sentry --url https://mcp.sentry.dev/mcp
+</code></pre>
+<p>Com isso o Codex passa a ver os dados reais do projeto, e prompts assim funcionam:</p>
+<pre><code>Consulte o PostHog: quantas pessoas concluíram o onboarding nos últimos 7 dias,
+e em qual tela estamos perdendo mais gente? Me explique em português simples.
+</code></pre>
+<pre><code>Consulte o Sentry: qual é o erro mais frequente em produção desde o último deploy?
+Investigue a causa no código e proponha a correção seguindo a regra de bugs
+do AGENTS.md (teste de regressão primeiro).
+</code></pre>
+<blockquote>
+<p>Dica: para configurações que o plugin não alcança, peça ao Codex para usar o <strong>CLI</strong>
+da ferramenta (<code>posthog-cli</code> / <code>sentry-cli</code>) — os detalhes estão em
+<code>05-setup-infraestrutura.md</code>, seções 7.1 e 8.1. Regra de ouro: revise o que o
+Codex vai executar antes de aprovar, e nenhuma chave/token entra no repositório.</p>
+</blockquote>
+<h2>Vocabulário rápido (cola)</h2>
+<table>
+<thead>
+<tr>
+<th>Termo</th>
+<th>Tradução</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Repositório (repo)</td>
+<td>A pasta do projeto no GitHub — o nosso &quot;Drive&quot;</td>
+</tr>
+<tr>
+<td>Commit</td>
+<td>Salvar uma versão com uma mensagem do que mudou</td>
+</tr>
+<tr>
+<td>Push</td>
+<td>Enviar os commits para o GitHub</td>
+</tr>
+<tr>
+<td>Branch</td>
+<td>Cópia de trabalho para mexer sem afetar o oficial (<code>main</code>)</td>
+</tr>
+<tr>
+<td>Pull Request (PR)</td>
+<td>Pedido para juntar sua branch na <code>main</code>, com revisão</td>
+</tr>
+<tr>
+<td>CI</td>
+<td>Robô do GitHub que valida o código a cada subida — se estiver errado, nem sobe</td>
+</tr>
+<tr>
+<td>Lint</td>
+<td>Verificador de erros e padrão de escrita do código</td>
+</tr>
+<tr>
+<td>Deploy</td>
+<td>Publicar — no nosso caso, automático quando entra na <code>main</code></td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>Os &quot;pluguinhos&quot; que conectam o Codex a ferramentas (GitHub etc.)</td>
+</tr>
+<tr>
+<td>PWA</td>
+<td>Site que se instala como app (atalho na tela inicial + notificações)</td>
+</tr>
+</tbody></table>
+</div>
+</details>
+</section>
+<section class="doc" id="referencias">
+<div class="doc-head"><span class="doc-ico">📚</span><h2 class="doc-title">Referências</h2><span class="doc-file">docs/07-indice-referencias.md</span></div>
+<div class="cards"><div class="card"><div class="ci">📚</div><h4>9 documentos da concepção</h4><p>Pesquisa de mercado, motor de regras, conceitos de tela, exames, áudio da nutricionista — o que vale de cada um.</p></div><div class="card"><div class="ci">🗑️</div><h4>O que foi descartado</h4><p>Os "bonecos" de exercício gerados por código saíram. O MVP usa um acervo pronto e licenciado (Everkinetic).</p></div><div class="card"><div class="ci">⚖️</div><h4>Decisão transversal</h4><p>Nada de saúde publica sem revisor profissional (CRN/CREF) e sem fonte citável.</p></div></div>
+
+<details class="deep">
+<summary><span>📄 Documento completo (versão detalhada)</span><span class="chev">▾</span></summary>
+<div class="prose"><h1>REROUTE — Índice das Referências de Concepção</h1>
+<blockquote>
+<p>Mapa dos artefatos em <code>referencias/sugestoes-iniciais/</code> (9 de 22 arquivos da concepção — todos os <strong>7 vigentes</strong> estão presentes). Cada um é um HTML autocontido, aberto direto no navegador. Este índice diz o que tem em cada um e o que ainda vale.</p>
+</blockquote>
+<h2>Vigentes (base do planejamento)</h2>
+<table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>O que contém</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>reroute-00-indice.html</code></td>
+<td>Capa navegável dos 22 artefatos, classificação vigente/referência/iteração, mapa tema → arquivo</td>
+<td>Vigente</td>
+</tr>
+<tr>
+<td><code>reroute-pesquisa-mercado.html</code></td>
+<td>Mercado BR (R$ 11→20 bi), 9 concorrentes com gap, 4 gaps de oportunidade, posicionamento validado pilar a pilar, decisão de métrica (perda de peso NÃO é métrica primária)</td>
+<td>Vigente — fundação do <code>00-contexto-e-visao.md</code></td>
+</tr>
+<tr>
+<td><code>reroute-documentacao.html</code></td>
+<td><strong>O documento central</strong>: hipótese testável e 3 provas; catálogo de 11 fontes de dados com licenças; modelo PEP; escada de movimento N0–N4; matriz cruzada (estado do dia × 4 pilares); arsenal de 18 argumentos por ID; arquitetura estático vs IA com contrato de execução; limiar do piso (VILPA); camada de exigência (escada de 6 níveis); <strong>5 simuladores executáveis do motor determinístico</strong></td>
+<td>Vigente — base das Etapas 00–04</td>
+</tr>
+<tr>
+<td><code>reroute-proposta-app.html</code></td>
+<td>Os 6 conceitos de UX (A Linha, Dial do Possível, O Porquê em um toque, dois humores, O Espelho, A Conversa) + <strong>plano de construção em 5 etapas por risco de invalidação</strong> (adotado no <code>01-planejamento-mvp.md</code>)</td>
+<td>Vigente</td>
+</tr>
+<tr>
+<td><code>reroute-app-ui-v3.html</code></td>
+<td>Demo navegável final na identidade oficial: tabs Rota/Evolução/Insights/Perfil, check-in/check-out, registro de caneta, áudio da nutricionista, ingestão de exames; 35 ícones SVG, 5 gráficos SVG</td>
+<td>Vigente — referência de UI</td>
+</tr>
+<tr>
+<td><code>reroute-camada-exames.html</code></td>
+<td>12 marcadores classificados (trava/ajusta/contextualiza/sinaliza), gate crítico TFG→proteína (KDIGO), pipeline de 5 passos com confirmação humana, limites LGPD</td>
+<td>Vigente — <strong>pós-MVP</strong></td>
+</tr>
+<tr>
+<td><code>reroute-ingestao-exames.html</code></td>
+<td>Engenharia de entrada de exames: hierarquia PDF nativo &gt; escaneado &gt; foto, cascata de roteamento, templates por laboratório, <strong>7 validações</strong>, caminho LOINC/RNDS, <strong>stack sugerida</strong> (PyMuPDF/pdfplumber/pdf.js, OpenCV, VLM com saída validada por schema)</td>
+<td>Vigente — <strong>pós-MVP</strong></td>
+</tr>
+<tr>
+<td><code>reroute-spec-audio-hitl.html</code></td>
+<td>Spec do áudio da nutricionista com validação humana em duas camadas (HITL), 3 estados de confiança, resolução de conflito com trava, pendência jurídica bloqueante</td>
+<td>Vigente — <strong>pós-MVP</strong></td>
+</tr>
+</tbody></table>
+<h2>Referência técnica (parcialmente superada)</h2>
+<table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>O que contém</th>
+<th>Atenção</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>reroute-camada-exercicio.html</code></td>
+<td>Fontes e licenças de dados de exercício, fato vs obra (PI), pipeline de ingestão, schema SQL do catálogo, 3 instrumentos de avaliação, regras E1–E6 do motor</td>
+<td>⚠️ <strong>§03 e §04 (figura paramétrica/&quot;bonecos&quot;) estão SUPERADAS e descartadas</strong> (decisão reafirmada em 04/08/2026). Vale: §01, §02, §05, §06, §07. Arte do MVP: <strong>Everkinetic (CC BY-SA)</strong> com atribuição</td>
+</tr>
+</tbody></table>
+<h2>Não presentes na pasta local</h2>
+<p>Referência técnica: camada de alimentação (nº 06), imagem de exercício (nº 08), framework de acompanhamento (nº 09), camada de exigência (nº 10), escada de movimento (nº 11) — o conteúdo essencial deles está resumido dentro do <code>reroute-documentacao.html</code>. As 9 iterações históricas (nº 14–21) também não estão — dispensáveis.</p>
+<h2>Decisões transversais extraídas das referências</h2>
+<ol>
+<li><strong>Testes antes do código, em tudo</strong>: suíte do motor a partir da matriz cruzada; validações de ingestão antes do parser; gates de exame como casos de teste antes do OCR.</li>
+<li><strong>Nada publica sem revisor</strong>: CRN (nutrição/arsenal), CREF (exercício), médico (regras de exame).</li>
+<li><strong>Licenças auditadas</strong>: POF/IBGE primária (TBCA paga — bloqueada; Open Food Facts isolada por ODbL); taxonomia do free-exercise-db sem imagens; Everkinetic com atribuição em banco e UI; wger só conferência (AGPL); Mixamo baixar e versionar antes de depender.</li>
+<li><strong>A faixa do laudo é a verdade operacional</strong> (exames): nunca tabela própria de normalidade, nunca diagnóstico.</li>
+<li><strong>Extrair, confirmar, descartar o arquivo</strong> (áudio e laudo): dado sensível não fica armazenado além das diretrizes estruturadas confirmadas.</li>
+<li><strong>Fragilidade conhecida</strong>: o estudo &quot;13% peso / 3% músculo&quot; é o número mais frágil do arsenal — verificar na fonte antes de usar em marketing.</li>
+</ol>
+</div>
+</details>
+</section>
+<footer>REROUTE · material de trabalho da consultoria · gerado em 04/08/2026</footer>
+</div></main>
+</div>
+<script id="missoes-embed" type="application/json">
+{
+  "atualizado_em": "2026-08-04",
+  "protocolo": "Antes de trabalhar numa missão: mude o status para 'doing', escreva uma nota do que vai fazer, commit e push. Ao terminar: status 'done', nota do que foi feito, commit e push. Nunca trabalhe sem a missão marcada — é assim que o acompanhamento funciona.",
+  "fases": [
+    {
+      "id": "F0",
+      "titulo": "Fundações da consultoria",
+      "janela": "concluída",
+      "missoes": [
+        { "id": "M-01", "titulo": "Criar o repositório reroute-app com documentação completa", "dono": "Renato", "status": "done", "resumo": "Repo privado com AGENTS.md, docs/, roadmap e este painel de missões.", "done_quando": "Repo no ar com docs navegáveis", "notas": ["04/08: repo criado, renomeado de reroute-mvp, estrutura completa"] },
+        { "id": "M-02", "titulo": "Pipeline de segurança no CI", "dono": "Renato", "status": "done", "resumo": "Gitleaks (segredos) + Semgrep (código inseguro) em todo push. Dependabot só com alertas, sem PRs automáticos.", "done_quando": "Workflows verdes", "notas": ["04/08: rodando verde"] },
+        { "id": "M-03", "titulo": "Demo e documentação publicadas no GitHub Pages", "dono": "Renato", "status": "done", "resumo": "Protótipo guiado em / e este hub em /docs/ — públicos com noindex.", "done_quando": "As duas URLs respondendo", "notas": ["04/08: no ar"] },
+        { "id": "M-04", "titulo": "Convidar Ednei como colaborador do repositório", "dono": "Renato", "status": "done", "resumo": "Convite com permissão de escrita enviado para edneictba.", "done_quando": "Convite enviado", "notas": ["04/08: enviado"] }
+      ]
+    },
+    {
+      "id": "FA",
+      "titulo": "Contas e acessos",
+      "janela": "agosto · 1ª quinzena",
+      "missoes": [
+        { "id": "M-05", "titulo": "Aceitar o convite do GitHub", "dono": "Ednei", "status": "todo", "resumo": "Abrir o e-mail/notificação do GitHub e aceitar o convite do repositório reroute-app.", "done_quando": "Ednei consegue abrir o repo logado", "notas": [] },
+        { "id": "M-06", "titulo": "Definir o canal seguro de credenciais", "dono": "Ednei + Renato", "status": "todo", "resumo": "Escolher um gerenciador de senhas (ex.: Bitwarden, 1Password) com cofre compartilhado. Chave e senha NUNCA por WhatsApp/e-mail em texto puro.", "done_quando": "Cofre compartilhado criado com a 1ª credencial dentro", "notas": [] },
+        { "id": "M-07", "titulo": "Criar conta Cloudflare e migrar o DNS", "dono": "Ednei (guiado)", "status": "todo", "resumo": "Conta free, adicionar reroute.com.br, trocar os nameservers no Registro.br. Guia passo a passo na seção Infraestrutura.", "done_quando": "Site, portal e e-mail funcionando atrás do Cloudflare", "notas": [] },
+        { "id": "M-08", "titulo": "Criar conta OpenRouter com limite de gasto", "dono": "Ednei (guiado)", "status": "todo", "resumo": "O gateway de IA do projeto: uma chave para qualquer modelo. Configurar crédito pré-pago e LIMITE de gasto para não ter surpresa.", "done_quando": "Chave criada, teto de gasto definido, credencial no cofre", "notas": [] },
+        { "id": "M-09", "titulo": "Criar conta PostHog e convidar Renato", "dono": "Ednei (guiado)", "status": "todo", "resumo": "Projeto 'reroute-app' no plano free. É onde veremos se as pessoas voltam.", "done_quando": "Projeto criado + Renato com acesso", "notas": [] },
+        { "id": "M-10", "titulo": "Criar conta Sentry e convidar Renato", "dono": "Ednei (guiado)", "status": "todo", "resumo": "Projeto Next.js no plano free. É o alarme de erros em produção.", "done_quando": "Projeto criado + Renato com acesso", "notas": [] },
+        { "id": "M-11", "titulo": "Criar conta OneSignal", "dono": "Ednei (guiado)", "status": "todo", "resumo": "App 'REROUTE' com Web Push. É por onde as notificações de manhã e noite saem.", "done_quando": "App criado, chaves no cofre", "notas": [] },
+        { "id": "M-12", "titulo": "Criar o projeto Supabase do app e convidar Renato", "dono": "Ednei (guiado)", "status": "todo", "resumo": "Projeto separado do site (dado de saúde isolado). Convite pelo painel: Settings → Team.", "done_quando": "Projeto criado + Renato com acesso", "notas": [] },
+        { "id": "M-13", "titulo": "Criar o projeto Vercel do app", "dono": "Ednei (guiado)", "status": "todo", "resumo": "Importar o repo reroute-app e apontar o domínio app.reroute.com.br (CNAME no Cloudflare).", "done_quando": "URL do app respondendo com o esqueleto", "notas": [] }
+      ]
+    },
+    {
+      "id": "FB",
+      "titulo": "Etapa 00 — Fundação: motor e dados",
+      "janela": "agosto → início de setembro",
+      "missoes": [
+        { "id": "M-14", "titulo": "Esqueleto do app (Next.js + qualidade)", "dono": "Renato", "status": "todo", "resumo": "Projeto Next.js + TypeScript strict + testes + Husky. O CI de qualidade passa a bloquear merge.", "done_quando": "npm run lint/test/build verdes no CI e proteção da main ligada", "notas": [] },
+        { "id": "M-15", "titulo": "Suíte de testes do motor (antes do motor!)", "dono": "Renato", "status": "todo", "resumo": "Os casos de teste derivados da matriz cruzada (8 estados do dia × 4 pilares). O motor é o produto.", "done_quando": "Suíte escrita e vermelha", "notas": [] },
+        { "id": "M-16", "titulo": "Motor determinístico passando 100%", "dono": "Renato + Codex", "status": "todo", "resumo": "resolver(checkin) com as regras auditáveis (SEG, CUI, SIN, NIV, REC, PRG) + modelo PEP.", "done_quando": "100% da suíte verde", "notas": [] },
+        { "id": "M-17", "titulo": "Definir os revisores CRN e CREF", "dono": "Ednei", "status": "todo", "resumo": "Um(a) nutricionista (CRN) e um(a) profissional de educação física (CREF) para revisar os catálogos. Sem isso, nada de saúde publica.", "done_quando": "Nomes e registros definidos e de acordo", "notas": [] },
+        { "id": "M-18", "titulo": "Pesquisa: fontes de exercícios com animação", "dono": "a definir", "status": "todo", "resumo": "Pergunta aberta que bloqueia o catálogo — prompt de pesquisa pronto na seção Perguntas Abertas. Darebee já verificado e descartado (All Rights Reserved).", "done_quando": "Tabela comparativa de fontes entregue na call", "notas": ["04/08: Darebee verificado — © todos os direitos reservados, fora como fonte"] },
+        { "id": "M-19", "titulo": "Pesquisa: bases públicas de alimentação (POF)", "dono": "a definir", "status": "todo", "resumo": "Pergunta aberta que bloqueia a base de alimentos — prompt pronto na seção Perguntas Abertas: achar a POF estruturada e estimar a cobertura mínima.", "done_quando": "Fontes + recomendação entregues na call", "notas": [] },
+        { "id": "M-20", "titulo": "Catálogo de ~20 movimentos com revisão CREF", "dono": "Renato + Codex", "status": "todo", "resumo": "Taxonomia limpa, texto na voz REROUTE, imagens licenciadas com atribuição. Depende de M-17 e M-18.", "done_quando": "Catálogo no banco com revisado_por preenchido", "notas": [] },
+        { "id": "M-21", "titulo": "Base de alimentos (POF) + arsenal com revisão CRN", "dono": "Renato + Codex", "status": "todo", "resumo": "POF estruturada com fonte por linha + os 18 argumentos citáveis versionados. Depende de M-17 e M-19.", "done_quando": "Base no banco com fonte_id e revisado_por", "notas": [] }
+      ]
+    },
+    {
+      "id": "FC",
+      "titulo": "Etapa 01 — O Loop: provar a tese",
+      "janela": "setembro",
+      "missoes": [
+        { "id": "M-22", "titulo": "Login e onboarding (uma pergunta por tela)", "dono": "Renato + Codex", "status": "todo", "resumo": "Cadastro, altura/peso/objetivo/relação com a caneta, triagem de segurança, captura de origem (UTM/cupom).", "done_quando": "Do link ao onboarding completo no celular, sem instrução", "notas": [] },
+        { "id": "M-23", "titulo": "Check-in da manhã", "dono": "Ednei + Codex", "status": "todo", "resumo": "As 3 perguntas rápidas e o plano do dia. Primeira missão de código do Ednei, com o prompt de missão.", "done_quando": "Check-in salvo mudando a rota do dia", "notas": [] },
+        { "id": "M-24", "titulo": "Check-out da noite (clique + áudio)", "dono": "Renato + Codex", "status": "todo", "resumo": "Método ROTA, relato de sintomas, recálculo do dia seguinte. Áudio transcrito via OpenRouter.", "done_quando": "Lapso relatado hoje muda o plano de amanhã, de forma explicável", "notas": [] },
+        { "id": "M-25", "titulo": "Hidratação incremental", "dono": "Ednei + Codex", "status": "todo", "resumo": "500ml por toque, plano de distribuição no dia, fallback no check-out.", "done_quando": "Registro incremental funcionando", "notas": [] },
+        { "id": "M-26", "titulo": "PWA instalável + push (OneSignal)", "dono": "Renato", "status": "todo", "resumo": "Atalho na tela testado em Android e iPhone + notificações de manhã e noite.", "done_quando": "Quem não abre o app recebe os dois toques diários", "notas": [] },
+        { "id": "M-27", "titulo": "Medição ligada (PostHog + Sentry)", "dono": "Renato", "status": "todo", "resumo": "As 3 provas do MVP medidas desde o 1º usuário: retenção D7/D30, recuperação pós-lapso 48h, dias compostos.", "done_quando": "Dashboard respondendo 'as pessoas voltam depois de um lapso?'", "notas": [] },
+        { "id": "M-28", "titulo": "Tela de cupom + paywall desenhado (desligado)", "dono": "Renato + Codex", "status": "todo", "resumo": "Entrada do beta por cupom identificando quem indicou; cobrança desenhada e desabilitada via feature flag.", "done_quando": "Cupom funcionando; flag do paywall no PostHog", "notas": [] },
+        { "id": "M-29", "titulo": "Recrutar 30–50 pessoas para o beta", "dono": "Ednei", "status": "todo", "resumo": "Instagram + lista de espera da landing. Contato próximo (o beta não paga — o acompanhamento compensa).", "done_quando": "30+ pessoas com cupom ativado", "notas": [] },
+        { "id": "M-30", "titulo": "Beta no ar + primeira leitura das métricas", "dono": "ambos", "status": "todo", "resumo": "Alvos: D7 ≥ 45%, D30 ≥ 30%, recuperação pós-lapso ≥ 50% em 48h. Se o loop cru não retém, paramos e investigamos.", "done_quando": "4 semanas de dados analisadas na call", "notas": [] }
+      ]
+    },
+    {
+      "id": "FD",
+      "titulo": "Decisões em paralelo",
+      "janela": "agosto → setembro",
+      "missoes": [
+        { "id": "M-31", "titulo": "Decidir a comunicação IA × algoritmo", "dono": "Ednei + Renato", "status": "todo", "resumo": "A pergunta nº 1 da seção Perguntas Abertas: o que chamamos de IA no produto e no marketing.", "done_quando": "Decisão registrada em ADR + refletida na copy", "notas": [] },
+        { "id": "M-32", "titulo": "Corrigir o domínio canônico da landing", "dono": "Renato", "status": "todo", "resumo": "index.html, robots.txt e sitemap.xml ainda apontam reroutehns.com.br (morto). Trocar para www.reroute.com.br.", "done_quando": "SEO apontando para o domínio certo", "notas": [] },
+        { "id": "M-33", "titulo": "E-mail sem limite: SMTP do Supabase via Resend", "dono": "Renato", "status": "todo", "resumo": "Resolver o limite de e-mails que o Ednei relatou apontando o SMTP do Supabase para o Resend já configurado.", "done_quando": "E-mail de cadastro chegando sem esbarrar em limite", "notas": [] },
+        { "id": "M-34", "titulo": "Jurídico: política de privacidade e consentimento LGPD", "dono": "Ednei (contratar) + Renato (requisitos)", "status": "todo", "resumo": "Dado de saúde exige consentimento específico e destacado. Precisa antes do beta abrir.", "done_quando": "Textos prontos e tela de consentimento aprovada", "notas": [] },
+        { "id": "M-35", "titulo": "Definir preço e momento da cobrança", "dono": "Ednei", "status": "todo", "resumo": "R$ 8/mês se sustenta? Anual desde o início? Decidir com os dados do beta na mão.", "done_quando": "Decisão registrada + paywall configurado", "notas": [] }
+      ]
+    },
+    {
+      "id": "FE",
+      "titulo": "Etapas 02–05 — Diferencial e escala",
+      "janela": "outubro em diante",
+      "missoes": [
+        { "id": "M-36", "titulo": "Etapa 02: A Linha + O Espelho", "dono": "a definir", "status": "todo", "resumo": "A jornada vira o desenho que nunca quebra + comparação só com você mesmo. O app deixa de parecer um tracker.", "done_quando": "Retorno à home fora do horário de check-in sobe; D30 sobe vs Etapa 01", "notas": [] },
+        { "id": "M-37", "titulo": "Etapa 03: O Dial + A Conversa + O Porquê", "dono": "a definir", "status": "todo", "resumo": "Negociação com piso científico, escada de exigência de 6 níveis, fonte visível em cada item.", "done_quando": "Piso negociado cumprido ≥ 70%", "notas": [] },
+        { "id": "M-38", "titulo": "Etapa 04: A Voz (IA via OpenRouter)", "dono": "a definir", "status": "todo", "resumo": "Texto livre → estado, mensagens no tom amigo sobre o plano imutável, validador com fallback, bandit de tom.", "done_quando": "Fallback < 5% · interpretação ≥ 90% de acerto", "notas": [] },
+        { "id": "M-39", "titulo": "Etapa 05: Dois humores + app Android", "dono": "a definir", "status": "todo", "resumo": "App de manhã ≠ app de noite; TWA na Play Store (US$ 25); biblioteca de arte própria.", "done_quando": "App na loja + A/B dos humores rodando", "notas": [] }
+      ]
+    }
+  ]
+}
+
+</script>
+<script>
+const LBL={todo:'a fazer',doing:'fazendo',done:'feito'};
+function renderMissoes(data){
+  const all=data.fases.flatMap(f=>f.missoes);
+  const n=s=>all.filter(m=>m.status===s).length;
+  document.getElementById('mi-resumo').innerHTML=
+    '<span class="mi-stat"><b>'+n('done')+'</b>feitas</span>'+
+    '<span class="mi-stat" style="border-color:rgba(34,211,238,.4)"><b>'+n('doing')+'</b>fazendo</span>'+
+    '<span class="mi-stat"><b>'+n('todo')+'</b>a fazer</span>'+
+    '<span class="mi-upd">atualizado em '+data.atualizado_em+' · fonte: docs/missoes.json</span>';
+  document.getElementById('mi-board').innerHTML=data.fases.map(f=>{
+    const done=f.missoes.filter(m=>m.status==='done').length,tot=f.missoes.length;
+    return '<div class="fase"><div class="fase-h"><h3>'+f.titulo+'</h3>'+
+      '<span class="fj">🗓 '+f.janela+'</span><span class="fp">'+done+'/'+tot+'</span></div>'+
+      '<div class="fbar"><i style="width:'+(tot?Math.round(done/tot*100):0)+'%"></i></div>'+
+      f.missoes.map(m=>{
+        const nota=m.notas&&m.notas.length?m.notas[m.notas.length-1]:'';
+        return '<div class="mrow '+m.status+'"><span class="chip '+m.status+'">'+LBL[m.status]+'</span>'+
+        '<span class="mt"><span class="mid">'+m.id+'</span>'+m.titulo+'<span class="mdono">'+m.dono+'</span></span>'+
+        '<span class="md">'+m.resumo+' <span class="dq">· pronto quando: '+m.done_quando+'</span></span>'+
+        (nota?'<span class="mn">🗒 '+nota+'</span>':'')+'</div>';
+      }).join('')+'</div>';
+  }).join('');
+}
+(function(){
+  const embed=JSON.parse(document.getElementById('missoes-embed').textContent);
+  renderMissoes(embed);
+  if(location.protocol!=='file:'){
+    fetch('missoes.json',{cache:'no-store'}).then(r=>r.ok?r.json():null)
+      .then(d=>{if(d)renderMissoes(d)}).catch(()=>{});
+  }
+})();
+const items=[...document.querySelectorAll('.nav-item')];
+const secs=[...document.querySelectorAll('.doc')];
+const byId=Object.fromEntries(items.map(i=>[i.dataset.target,i]));
+const obs=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){items.forEach(i=>i.classList.remove('active'));
+    (byId[e.target.id]||{}).classList&&byId[e.target.id].classList.add('active');}});
+},{rootMargin:'-15% 0px -75% 0px'});
+secs.forEach(s=>obs.observe(s));
+window.addEventListener('beforeprint',()=>document.querySelectorAll('details').forEach(d=>d.open=true));
+</script>
+</body>
+</html>
