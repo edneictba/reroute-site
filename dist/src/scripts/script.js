@@ -840,6 +840,7 @@ form?.addEventListener('submit', async (event) => {
       throw new Error('registration_failed');
     }
 
+    window.REROUTE_MARKETING?.trackLead();
     form.reset();
     internationalPhoneInput?.setSelectedCountry('br');
 

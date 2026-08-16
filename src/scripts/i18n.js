@@ -219,7 +219,8 @@ const translations = {
     'footer.linksAria': 'Links jurídicos',
     'footer.privacy': 'Política de Privacidade',
     'footer.terms': 'Termos de Uso',
-    'footer.notice': 'Aviso Legal'
+    'footer.notice': 'Aviso Legal',
+    'footer.cookies': 'Preferências de cookies'
   },
   es: {
     'meta.title': 'REROUTE | Pérdida de peso con una ruta personalizada',
@@ -310,7 +311,7 @@ const translations = {
     'footer.copyright': '© 2026 REROUTE - Tecnologia de Navegação Humana Ltda.<br>Todos los derechos reservados.', 'footer.ip': 'Propiedad intelectual',
     'footer.ipBody1': 'Todo el contenido de este sitio, incluida su metodología, identidad visual, arquitectura conceptual, software, textos, logotipos, imágenes y demás materiales, es propiedad intelectual de REROUTE – Tecnologia de Navegação Humana Ltda.',
     'footer.ipBody2': 'Se prohíbe su reproducción, adaptación o distribución sin autorización previa por escrito.', 'footer.legalAria': 'Información legal', 'footer.brands': 'Marcas', 'footer.rota': 'Método ROTA™', 'footer.linksAria': 'Enlaces legales',
-    'footer.privacy': 'Política de Privacidad', 'footer.terms': 'Términos de Uso', 'footer.notice': 'Aviso Legal'
+    'footer.privacy': 'Política de Privacidad', 'footer.terms': 'Términos de Uso', 'footer.notice': 'Aviso Legal', 'footer.cookies': 'Preferencias de cookies'
   },
   en: {
     'meta.title': 'REROUTE | Weight loss with a personalized route',
@@ -401,7 +402,7 @@ const translations = {
     'footer.copyright': '© 2026 REROUTE - Tecnologia de Navegação Humana Ltda.<br>All rights reserved.', 'footer.ip': 'Intellectual property',
     'footer.ipBody1': 'All content on this website, including its methodology, visual identity, conceptual architecture, software, copy, logos, images, and other materials, is the intellectual property of REROUTE – Tecnologia de Navegação Humana Ltda.',
     'footer.ipBody2': 'Reproduction, adaptation, or distribution without prior written authorization is prohibited.', 'footer.legalAria': 'Legal information', 'footer.brands': 'Trademarks', 'footer.rota': 'ROTA Method™', 'footer.linksAria': 'Legal links',
-    'footer.privacy': 'Privacy Policy', 'footer.terms': 'Terms of Use', 'footer.notice': 'Legal Notice'
+    'footer.privacy': 'Privacy Policy', 'footer.terms': 'Terms of Use', 'footer.notice': 'Legal Notice', 'footer.cookies': 'Cookie preferences'
   }
 };
 
@@ -443,7 +444,7 @@ const textBindings = [
   ['[data-demo-previous]', 'demo.previous'], ['[data-demo-next]', 'demo.next'], ['[data-demo-cta]', 'demo.cta'],
   ['.footer-brand p:nth-of-type(2)', 'footer.founded'], ['.footer-location', 'footer.location'], ['.footer-brand p:nth-of-type(3)', 'footer.creators'],
   ['.footer-legal h2', 'footer.ip'], ['.footer-legal p:nth-of-type(1)', 'footer.ipBody1'], ['.footer-legal p:nth-of-type(2)', 'footer.ipBody2'],
-  ['.footer-links h2', 'footer.brands'], ['.footer-links li:nth-child(4)', 'footer.rota'], ['.legal-links a:nth-child(1)', 'footer.privacy'], ['.legal-links a:nth-child(2)', 'footer.terms'], ['.legal-links a:nth-child(3)', 'footer.notice']
+  ['.footer-links h2', 'footer.brands'], ['.footer-links li:nth-child(4)', 'footer.rota'], ['.legal-links a:nth-child(1)', 'footer.privacy'], ['.legal-links a:nth-child(2)', 'footer.terms'], ['.legal-links a:nth-child(3)', 'footer.notice'], ['[data-cookie-preferences]', 'footer.cookies']
 ];
 
 const htmlBindings = [

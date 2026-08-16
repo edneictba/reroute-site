@@ -54,6 +54,7 @@ const publicSourceEntries = [
   'src/scripts/i18n.js',
   'src/scripts/script.js',
   'src/scripts/analytics.js',
+  'src/scripts/meta-pixel-consent.js',
   'src/styles/style.css'
 ];
 
