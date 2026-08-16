@@ -7,6 +7,7 @@
   const VALID_STATUSES = new Set(['accepted', 'rejected']);
   const META_SCRIPT_ID = 'reroute-meta-pixel';
   const META_SCRIPT_URL = 'https://connect.facebook.net/en_US/fbevents.js';
+  const INITIALIZED_PIXELS_KEY = '__rerouteInitializedPixels';
   const copy = {
     pt: {
       title: 'Preferências de cookies',
@@ -86,12 +87,23 @@
     window._fbq = fbq;
   };
 
+  const initializePixelOnce = () => {
+    const initializedPixels = window.fbq[INITIALIZED_PIXELS_KEY] instanceof Set
+      ? window.fbq[INITIALIZED_PIXELS_KEY]
+      : new Set();
+    window.fbq[INITIALIZED_PIXELS_KEY] = initializedPixels;
+    if (initializedPixels.has(PIXEL_ID)) return false;
+    window.fbq('init', PIXEL_ID);
+    initializedPixels.add(PIXEL_ID);
+    return true;
+  };
+
   const enablePixel = () => {
     if (pixelEnabled || readConsent()?.status !== 'accepted') return false;
     pixelEnabled = true;
     initializeFbq();
     window.fbq('consent', 'grant');
-    window.fbq('init', PIXEL_ID);
+    initializePixelOnce();
 
     if (!document.getElementById(META_SCRIPT_ID)) {
       const script = document.createElement('script');
@@ -110,8 +122,8 @@
 
   const disablePixel = () => {
     pixelEnabled = false;
+    pageViewTracked = false;
     if (window.fbq) window.fbq('consent', 'revoke');
-    document.getElementById(META_SCRIPT_ID)?.remove();
     expireMetaCookies();
   };
 
