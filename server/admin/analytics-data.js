@@ -31,11 +31,22 @@ const classifyOrigin = (row) => {
 const classifyCta = (row) => {
   const name = String(row.event_data?.name || '').toLowerCase();
   const target = String(row.event_data?.target || '').toLowerCase();
-  if (name.includes('hero_') || name.includes('quero testar gratuitamente')) return 'CTA Hero';
+  if (name.includes('hero_teste_gratuito') || name.includes('quero testar gratuitamente')) return 'CTA Hero';
   if (name.includes('história') || name.includes('historia')) return 'CTA História';
   if (name.includes('como_funciona') || name.includes('veja como funciona')) return 'CTA Como Funciona';
-  if (target === '#comecar' || name.includes('participar do teste') || name === 'começar') return 'CTA Final';
+  if (target === '#comecar' || target === '/#comecar' || name === 'começar') return 'CTA Final';
   return null;
+};
+
+const isConversionCta = (row) => {
+  const name = String(row.event_data?.name || '').toLowerCase();
+  const target = String(row.event_data?.target || '').toLowerCase();
+  return target === '#comecar'
+    || target === '/#comecar'
+    || name.includes('hero_teste_gratuito')
+    || name.includes('quero testar gratuitamente')
+    || name.includes('cadastre-se gratuitamente')
+    || name.includes('experimentar gratuitamente');
 };
 
 const secondsBetween = (start, end) => Math.max(
@@ -70,14 +81,38 @@ const buildJourneyDiagnosis = ({ visitors, registrations, eventVisitors }) => {
 const aggregateEventDetails = (rows) => {
   const pageViews = rows.filter((row) => row.event_name === 'page_view');
   const visitorIds = new Set(pageViews.map((row) => row.visitor_id));
-  const registrations = new Set(rows.filter((row) => row.event_name === 'form_submit').map((row) => row.visitor_id));
-  const eventVisitors = Object.fromEntries(
-    ['cta_click', 'form_open', 'form_start', 'form_submit'].map((eventName) => [
-      eventName,
-      new Set(rows.filter((row) => row.event_name === eventName).map((row) => row.visitor_id)).size
-    ])
-  );
-
+  const journeyByVisitor = new Map();
+  for (const row of [...rows].sort((left, right) => new Date(left.occurred_at) - new Date(right.occurred_at))) {
+    const journey = journeyByVisitor.get(row.visitor_id) || {
+      visited: false,
+      sawCta: false,
+      clickedCta: false,
+      openedForm: false,
+      startedForm: false,
+      submittedForm: false
+    };
+    if (row.event_name === 'page_view') {
+      journey.visited = true;
+      journey.sawCta = true;
+    } else if (row.event_name === 'cta_click' && journey.sawCta && isConversionCta(row)) {
+      journey.clickedCta = true;
+    } else if (row.event_name === 'form_open' && journey.clickedCta) {
+      journey.openedForm = true;
+    } else if (row.event_name === 'form_start' && journey.openedForm) {
+      journey.startedForm = true;
+    } else if (row.event_name === 'form_submit' && journey.openedForm) {
+      journey.submittedForm = true;
+    }
+    journeyByVisitor.set(row.visitor_id, journey);
+  }
+  const journeyCounts = {
+    visitors: [...journeyByVisitor.values()].filter((journey) => journey.visited).length,
+    sawCta: [...journeyByVisitor.values()].filter((journey) => journey.sawCta).length,
+    clickedCta: [...journeyByVisitor.values()].filter((journey) => journey.clickedCta).length,
+    openedForm: [...journeyByVisitor.values()].filter((journey) => journey.openedForm).length,
+    startedForm: [...journeyByVisitor.values()].filter((journey) => journey.startedForm).length,
+    submittedForm: [...journeyByVisitor.values()].filter((journey) => journey.submittedForm).length
+  };
   const originNames = ['Facebook', 'Instagram', 'LinkedIn', 'Google', 'Direto', 'ChatGPT', 'Outros'];
   const origins = new Map(originNames.map((name) => [name, { visits: 0, registrations: 0 }]));
   for (const row of pageViews) origins.get(classifyOrigin(row)).visits += 1;
@@ -146,11 +181,31 @@ const aggregateEventDetails = (rows) => {
     : 0;
 
   return {
+    metrics: {
+      uniqueVisitors: journeyCounts.visitors,
+      conversionRate: percentage(journeyCounts.submittedForm, journeyCounts.visitors)
+    },
+    funnel: [
+      { name: 'Visitante único', value: journeyCounts.visitors },
+      { name: 'Viu CTA', value: journeyCounts.sawCta },
+      { name: 'Clicou no CTA', value: journeyCounts.clickedCta },
+      { name: 'Formulário aberto', value: journeyCounts.openedForm },
+      { name: 'Cadastro enviado', value: journeyCounts.submittedForm }
+    ],
     diagnosis: {
-      visitors: visitorIds.size,
-      registrations: registrations.size,
-      conversionRate: percentage(registrations.size, visitorIds.size),
-      message: buildJourneyDiagnosis({ visitors: visitorIds.size, registrations: registrations.size, eventVisitors })
+      visitors: journeyCounts.visitors,
+      registrations: journeyCounts.submittedForm,
+      conversionRate: percentage(journeyCounts.submittedForm, journeyCounts.visitors),
+      message: buildJourneyDiagnosis({
+        visitors: journeyCounts.visitors,
+        registrations: journeyCounts.submittedForm,
+        eventVisitors: {
+          cta_click: journeyCounts.clickedCta,
+          form_open: journeyCounts.openedForm,
+          form_start: journeyCounts.startedForm,
+          form_submit: journeyCounts.submittedForm
+        }
+      })
     },
     originConversion: originNames.map((name) => ({
       name,
@@ -179,16 +234,36 @@ const aggregateEventDetails = (rows) => {
 
 const getAnalyticsEventDetails = async (safeDays, fetchImpl) => {
   const since = new Date(Date.now() - safeDays * 24 * 60 * 60 * 1000).toISOString();
-  const params = new URLSearchParams({
+  const pageSize = 1000;
+  const buildParams = (offset) => new URLSearchParams({
     select: ANALYTICS_EVENT_SELECT,
     occurred_at: `gte.${since}`,
     order: 'occurred_at.asc',
-    limit: '10000'
+    limit: String(pageSize),
+    offset: String(offset)
   });
-  const response = await serviceRoleRequest(`/rest/v1/analytics_events?${params}`, { method: 'GET' }, fetchImpl);
-  if (!response.ok) return null;
-  const rows = await response.json();
-  return Array.isArray(rows) ? aggregateEventDetails(rows) : null;
+  const fetchPage = async (offset, count = false) => {
+    const response = await serviceRoleRequest(`/rest/v1/analytics_events?${buildParams(offset)}`, {
+      method: 'GET',
+      headers: count ? { Prefer: 'count=exact' } : {}
+    }, fetchImpl);
+    if (!response.ok) return null;
+    const pageRows = await response.json();
+    return {
+      rows: Array.isArray(pageRows) ? pageRows : [],
+      total: Number.parseInt(String(response.headers?.get?.('content-range') || '').split('/')[1], 10)
+    };
+  };
+
+  const firstPage = await fetchPage(0, true);
+  if (!firstPage) return null;
+  const total = Number.isFinite(firstPage.total) ? firstPage.total : firstPage.rows.length;
+  const offsets = [];
+  for (let offset = pageSize; offset < total; offset += pageSize) offsets.push(offset);
+  const remainingPages = await Promise.all(offsets.map((offset) => fetchPage(offset)));
+  if (remainingPages.some((page) => !page)) return null;
+  const rows = [firstPage, ...remainingPages].flatMap((page) => page.rows);
+  return aggregateEventDetails(rows);
 };
 
 const getAnalyticsDashboard = async ({ days = 30 } = {}, fetchImpl = fetch) => {
@@ -201,7 +276,11 @@ const getAnalyticsDashboard = async ({ days = 30 } = {}, fetchImpl = fetch) => {
     if (!response.ok) return null;
     const dashboard = await response.json();
     const details = await getAnalyticsEventDetails(safeDays, fetchImpl).catch(() => null);
-    return details ? { ...dashboard, ...details } : dashboard;
+    return details ? {
+      ...dashboard,
+      ...details,
+      metrics: { ...dashboard.metrics, ...details.metrics }
+    } : dashboard;
   } catch {
     return null;
   }
