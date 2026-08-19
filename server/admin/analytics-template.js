@@ -40,7 +40,8 @@ const renderAdminAnalytics = () => renderAdminLayout({
     <section class="metric-grid" aria-label="Resumo de Analytics">
       <article class="metric-card"><span>Visitas</span><strong id="metricVisits">—</strong></article>
       <article class="metric-card"><span>Visitantes únicos</span><strong id="metricVisitors">—</strong></article>
-      <article class="metric-card"><span>Cadastros enviados</span><strong id="metricSubmits">—</strong></article>
+      <article class="metric-card"><span>Total de cadastros</span><strong id="metricTotalRegistrations">—</strong></article>
+      <article class="metric-card"><span>Envios do formulário no período</span><strong id="metricSubmits">—</strong></article>
       <article class="metric-card"><span>Taxa de conversão</span><strong id="metricConversion">—</strong></article>
     </section>
 

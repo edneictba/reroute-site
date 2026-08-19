@@ -276,11 +276,16 @@ const getAnalyticsDashboard = async ({ days = 30 } = {}, fetchImpl = fetch) => {
     if (!response.ok) return null;
     const dashboard = await response.json();
     const details = await getAnalyticsEventDetails(safeDays, fetchImpl).catch(() => null);
+    const leadsData = await getDashboardData({ page: 1, pageSize: 25 }, fetchImpl).catch(() => null);
+    const totalRegistrations = Number(leadsData?.metrics?.total) || 0;
     return details ? {
       ...dashboard,
       ...details,
-      metrics: { ...dashboard.metrics, ...details.metrics }
-    } : dashboard;
+      metrics: { ...dashboard.metrics, ...details.metrics, totalRegistrations }
+    } : {
+      ...dashboard,
+      metrics: { ...dashboard.metrics, totalRegistrations }
+    };
   } catch {
     return null;
   }
