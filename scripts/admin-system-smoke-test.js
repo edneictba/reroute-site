@@ -123,7 +123,8 @@ const run = async () => {
           pagination: { page: 2, pageSize: 10, total: 2, totalPages: 1 }
         });
       }
-      if (url.endsWith('/rpc/export_admin_leads')) {
+      if (new URL(url).pathname.endsWith('/rpc/export_admin_leads')) {
+        if (Number(new URL(url).searchParams.get('offset')) > 0) return jsonResponse(true, []);
         return jsonResponse(true, [{ name: '=HYPERLINK("evil")', email: 'lead@example.com', whatsapp: '+5511999999999', created_at: '2026-07-22T12:00:00Z' }]);
       }
       throw new Error(`Fetch inesperado: ${url}`);

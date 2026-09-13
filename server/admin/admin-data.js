@@ -26,15 +26,21 @@ const getDashboardData = async ({ search = '', page = 1, pageSize = 25 }, fetchI
 
 const getExportRows = async (fetchImpl = fetch) => {
   try {
-    const response = await serviceRoleRequest('/rest/v1/rpc/export_admin_leads', {
-      method: 'POST',
-      body: '{}'
-    }, fetchImpl);
-    if (!response.ok) {
-      return null;
+    const rows = [];
+    const batchSize = 1000;
+    while (true) {
+      const response = await serviceRoleRequest(
+        `/rest/v1/rpc/export_admin_leads?limit=${batchSize}&offset=${rows.length}&order=created_at.desc,email.asc`,
+        { method: 'POST', body: '{}' },
+        fetchImpl
+      );
+      if (!response.ok) return null;
+      const batch = await response.json();
+      if (!Array.isArray(batch)) return null;
+      if (batch.length === 0) return rows;
+      // Advance by the actual count, even if PostgREST caps batches below our limit.
+      rows.push(...batch);
     }
-    const rows = await response.json();
-    return Array.isArray(rows) ? rows : null;
   } catch {
     return null;
   }
