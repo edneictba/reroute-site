@@ -52,12 +52,20 @@
       "destination": "/api/admin-data?action=export"
     },
     {
+      "source": "/api/admin/feedbacks",
+      "destination": "/api/admin-data?action=feedbacks"
+    },
+    {
       "source": "/admin/leads",
       "destination": "/api/admin-pages?page=leads"
     },
     {
       "source": "/admin/analytics",
       "destination": "/api/admin-pages?page=analytics"
+    },
+    {
+      "source": "/admin/feedbacks",
+      "destination": "/api/admin-pages?page=feedbacks"
     },
     {
       "source": "/admin/configuracoes",

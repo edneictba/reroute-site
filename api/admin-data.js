@@ -4,7 +4,8 @@ const handlers = {
   analytics: require('../server/admin/handlers/analytics'),
   dashboard: require('../server/admin/handlers/dashboard'),
   export: require('../server/admin/handlers/export'),
-  leads: require('../server/admin/handlers/leads')
+  leads: require('../server/admin/handlers/leads'),
+  feedbacks: require('../server/admin/handlers/feedbacks')
 };
 
 module.exports = async function handler(req, res) {

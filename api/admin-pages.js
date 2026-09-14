@@ -4,6 +4,7 @@ const handlers = {
   analytics: require('../server/admin/handlers/page-analytics'),
   dashboard: require('../server/admin/handlers/page-dashboard'),
   leads: require('../server/admin/handlers/page-leads'),
+  feedbacks: require('../server/admin/handlers/page-feedbacks'),
   settings: require('../server/admin/handlers/page-settings')
 };
 

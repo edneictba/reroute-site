@@ -51,12 +51,14 @@ const apiRoutes = new Map([
   ['/api/admin/leads', withRouteParameter(adminDataHandler, 'action', 'leads')],
   ['/api/admin/analytics', withRouteParameter(adminDataHandler, 'action', 'analytics')],
   ['/api/admin/export', withRouteParameter(adminDataHandler, 'action', 'export')],
+  ['/api/admin/feedbacks', withRouteParameter(adminDataHandler, 'action', 'feedbacks')],
   ['/api/analytics', require('../api/analytics')],
   ['/api/register-lead', require('../api/register-lead')]
 ]);
 const adminPageHandler = withRouteParameter(adminPagesHandler, 'page', 'dashboard');
 const adminLeadsPageHandler = withRouteParameter(adminPagesHandler, 'page', 'leads');
 const adminAnalyticsPageHandler = withRouteParameter(adminPagesHandler, 'page', 'analytics');
+const adminFeedbacksPageHandler = withRouteParameter(adminPagesHandler, 'page', 'feedbacks');
 const adminSettingsPageHandler = withRouteParameter(adminPagesHandler, 'page', 'settings');
 
 const contentTypes = {
@@ -118,7 +120,7 @@ const server = http.createServer(async (req, res) => {
 
   try {
     if (apiRoutes.has(pathname)) {
-      if (req.method === 'POST' && String(req.headers['content-type'] || '').toLowerCase().startsWith('application/json')) {
+      if (['POST', 'PATCH'].includes(req.method) && String(req.headers['content-type'] || '').toLowerCase().startsWith('application/json')) {
         req.body = await readJsonBody(req);
       }
       await apiRoutes.get(pathname)(req, res);
@@ -131,6 +133,9 @@ const server = http.createServer(async (req, res) => {
     if (pathname === '/admin/analytics') {
       await adminAnalyticsPageHandler(req, res);
       return;
+    }
+    if (pathname === '/admin/feedbacks') {
+      await adminFeedbacksPageHandler(req, res); return;
     }
     if (pathname === '/admin/configuracoes') {
       await adminSettingsPageHandler(req, res);
