@@ -3,6 +3,18 @@ const toggle = document.querySelector('[data-menu-toggle]');
 const links = document.querySelector('[data-nav-links]');
 const getTranslation = (key, fallback = '') => window.rerouteI18n?.t(key) || fallback;
 
+// Carry only acquisition parameters to the verified app origin.
+const acquisitionParams = new URLSearchParams(window.location.search);
+document.querySelectorAll('[data-app-access]').forEach((link) => {
+  const destination = new URL(link.href);
+  if (destination.origin !== 'https://app.reroute.com.br') return;
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid'].forEach((key) => {
+    const value = acquisitionParams.get(key);
+    if (value) destination.searchParams.set(key, value);
+  });
+  link.href = destination.href;
+});
+
 const setMenuState = (open) => {
   links?.classList.toggle('open', open);
   toggle?.classList.toggle('active', open);
@@ -473,7 +485,7 @@ const initInteractiveDemo = () => {
   });
 
   ctaButton?.addEventListener('click', () => {
-    const formSection = document.getElementById('comecar');
+    const formSection = document.getElementById('cadastro-topo');
     const firstField = document.getElementById('nome');
     closeDemoModal({ returnFocus: false });
     formSection?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });

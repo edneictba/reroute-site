@@ -4,6 +4,7 @@ const elements = {
   visits: document.getElementById('metricVisits'),
   visitors: document.getElementById('metricVisitors'),
   submits: document.getElementById('metricSubmits'),
+  totalRegistrations: document.getElementById('metricTotalRegistrations'),
   conversion: document.getElementById('metricConversion'),
   funnel: document.getElementById('funnelList'),
   traffic: document.getElementById('trafficList'),
@@ -191,6 +192,7 @@ const loadAnalytics = async () => {
     elements.visits.textContent = formatNumber(metrics.visits);
     elements.visitors.textContent = formatNumber(metrics.uniqueVisitors);
     elements.submits.textContent = formatNumber(submitStep?.value);
+    elements.totalRegistrations.textContent = formatNumber(metrics.totalRegistrations);
     elements.conversion.textContent = `${Number(metrics.conversionRate || 0).toLocaleString('pt-BR', {
       minimumFractionDigits: 0,
       maximumFractionDigits: 2
@@ -215,7 +217,7 @@ const loadAnalytics = async () => {
     elements.averageFormOpenTime.textContent = formatDuration(averageTimes?.formOpen);
     elements.averageRegistrationTime.textContent = formatDuration(averageTimes?.registration);
     renderList(elements.events, topEvents, { labelMap: eventLabels });
-    elements.status.textContent = `Métricas dos últimos ${payload.data.periodDays} dias.`;
+    elements.status.textContent = `Métricas dos últimos ${payload.data.periodDays} dias. Total de cadastros reflete todos os registros de leads.`;
   } catch {
     elements.status.textContent = 'Não foi possível carregar as métricas. Tente novamente.';
   }
