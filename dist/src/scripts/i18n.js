@@ -9,6 +9,7 @@ const translations = {
     'evolution.kicker': 'Visão e próximos passos',
     'meta.title': 'REROUTE | Emagrecer é o objetivo. Organização é a rota.',
     'meta.description': 'Conheça o REROUTE, Human Navigation System com foco inicial em emagrecimento. Comece a experiência inicial gratuita ou entre na sua conta.',
+    'meta.socialDescription': 'O REROUTE organiza sua rota de emagrecimento. Cadastre-se gratuitamente e acompanhe a liberação dos próximos acessos.',
     'language.label': 'Selecionar idioma',
     'language.menu': 'Idiomas disponíveis',
     'nav.aria': 'Navegação principal',
@@ -242,6 +243,7 @@ const translations = {
     'evolution.kicker': 'Visión y próximos pasos',
     'meta.title': 'REROUTE | Perder peso es el objetivo. Organizarse es el camino.',
     'meta.description': 'Conoce REROUTE, un Human Navigation System enfocado inicialmente en perder peso. Comienza la experiencia inicial gratuita o entra en tu cuenta.',
+    'meta.socialDescription': 'REROUTE organiza tu ruta de pérdida de peso. Regístrate gratis y acompaña la liberación de los próximos accesos.',
     'language.label': 'Seleccionar idioma', 'language.menu': 'Idiomas disponibles',
     'nav.aria': 'Navegación principal', 'nav.home': 'Inicio de REROUTE', 'nav.audience': 'Para quién es', 'nav.why': 'Por qué existe', 'nav.history': 'Historia', 'nav.how': 'Cómo funciona', 'nav.start': 'Comenzar gratis', 'nav.open': 'Abrir menú', 'nav.close': 'Cerrar menú',
     'hero.eyebrow': 'LOS PRIMEROS ACCESOS YA SE ESTÁN LIBERANDO',
@@ -340,6 +342,7 @@ const translations = {
     'evolution.kicker': 'Vision and next steps',
     'meta.title': 'REROUTE | Weight loss is the goal. Organization is the route.',
     'meta.description': 'Meet REROUTE, a Human Navigation System with an initial focus on weight loss. Start the free initial experience or sign in.',
+    'meta.socialDescription': 'REROUTE organizes your weight-loss route. Sign up for free and follow the release of the next access batches.',
     'language.label': 'Select language', 'language.menu': 'Available languages',
     'nav.aria': 'Main navigation', 'nav.home': 'REROUTE home', 'nav.audience': 'Who it is for', 'nav.why': 'Why it exists', 'nav.history': 'Story', 'nav.how': 'How it works', 'nav.start': 'Start for free', 'nav.open': 'Open menu', 'nav.close': 'Close menu',
     'hero.eyebrow': 'THE FIRST ACCESS BATCHES ARE NOW BEING RELEASED',
@@ -580,7 +583,7 @@ const applyLanguage = (language, { persist = true } = {}) => {
   document.querySelectorAll('[data-i18n]').forEach((element) => { element.textContent = translate(element.dataset.i18n); });
   document.querySelectorAll('[data-i18n-aria-label]').forEach((element) => { element.setAttribute('aria-label', translate(element.dataset.i18nAriaLabel)); });
   ['og:title', 'twitter:title'].forEach((name) => document.querySelector(`meta[property="${name}"], meta[name="${name}"]`)?.setAttribute('content', document.title));
-  ['og:description', 'twitter:description'].forEach((name) => document.querySelector(`meta[property="${name}"], meta[name="${name}"]`)?.setAttribute('content', translate(`${pageKey}meta.description`)));
+  ['og:description', 'twitter:description'].forEach((name) => document.querySelector(`meta[property="${name}"], meta[name="${name}"]`)?.setAttribute('content', translate(`${pageKey}meta.socialDescription`)));
   document.querySelector('meta[property="og:locale"]')?.setAttribute('content', { pt: 'pt_BR', en: 'en_US', es: 'es_ES' }[currentLanguage]);
   updateTourAccessibility();
 
