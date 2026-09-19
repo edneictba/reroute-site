@@ -154,8 +154,9 @@ html.i18n-pending body{visibility:hidden}
   .acquisition-page .hero{padding-top:40px}
 }
 @media(max-width:860px){.acquisition-page .nav{grid-template-columns:minmax(0,1fr) auto;gap:8px}.acquisition-page .nav-cta{max-width:155px;white-space:normal;text-align:center}.acquisition-page .brand img{max-width:100%}.acquisition-page .hero{padding-top:40px}}
+@media(max-width:860px){.acquisition-page .hero-grid{grid-template-columns:minmax(0,1fr);gap:38px}.acquisition-page .hero-content,.acquisition-page .hero-visual{min-width:0;width:100%}.acquisition-page .hero h1{width:100%;max-width:none;overflow-wrap:normal;word-break:normal}.acquisition-page .hero-lead,.acquisition-page .hero-note{max-width:none}.acquisition-page .hero-visual{grid-column:auto;grid-row:auto}.acquisition-page .phone-frame{max-width:100%}}
 .acquisition-page .hero{min-height:auto}
-.acquisition-page .hero-grid{grid-template-columns:minmax(0,1fr) minmax(360px,.78fr);align-items:start}
+.acquisition-page .hero-grid{align-items:start}
 .acquisition-page .hero-visual{grid-column:auto;grid-row:auto}
 .signup-artwork{display:flex;align-items:center;justify-content:center;min-width:0}
 .signup-artwork img{display:block;width:100%;height:auto;max-height:760px;object-fit:contain;object-position:center}
