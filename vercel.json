@@ -48,6 +48,10 @@
       "destination": "/api/admin-data?action=analytics"
     },
     {
+      "source": "/api/admin/app-analytics",
+      "destination": "/api/admin-data?action=app-analytics"
+    },
+    {
       "source": "/api/admin/export",
       "destination": "/api/admin-data?action=export"
     },

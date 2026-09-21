@@ -5,7 +5,7 @@ const renderAdminAnalytics = () => renderAdminLayout({
   title: 'Analytics',
   brandLabel: 'Admin Analytics',
   styles: ['/assets/admin/admin-analytics.css?v=20260802-journey-diagnostics'],
-  scripts: ['/assets/admin/admin-analytics.js?v=20260802-journey-diagnostics'],
+  scripts: ['/assets/admin/admin-analytics.js?v=20260802-journey-diagnostics', '/assets/admin/admin-app-analytics.js?v=20260921-app-monitoring'],
   content: `
     <section class="admin-intro">
       <div>
@@ -103,6 +103,30 @@ const renderAdminAnalytics = () => renderAdminLayout({
         <div class="card-heading"><div><span class="admin-kicker">COMPORTAMENTO</span><h2>Eventos mais frequentes</h2></div></div>
         <div class="analytics-list" id="eventList"></div>
       </article>
+    </section>
+
+    <section class="admin-card" aria-labelledby="appAnalyticsTitle" style="margin-top:32px">
+      <div class="card-heading">
+        <div><span class="admin-kicker">APP</span><h2 id="appAnalyticsTitle">Uso</h2></div>
+      </div>
+      <div id="appAnalyticsStatus" class="table-status" role="status" aria-live="polite">Carregando dados do App…</div>
+      <div class="metric-grid">
+        <article class="metric-card"><span>Usuários ativos</span><strong id="appActiveUsers">—</strong></article>
+        <article class="metric-card"><span>Acessaram o App</span><strong id="appUsers">—</strong></article>
+        <article class="metric-card"><span>Logins concluídos</span><strong id="appLogins">—</strong></article>
+        <article class="metric-card"><span>Onboardings concluídos</span><strong id="appOnboardings">—</strong></article>
+      </div>
+      <div class="analytics-grid" style="margin-top:24px">
+        <article class="admin-card"><div class="card-heading"><div><span class="admin-kicker">APP</span><h2>Telas mais acessadas</h2></div></div><div class="analytics-list" id="appScreens"></div></article>
+        <article class="admin-card"><div class="card-heading"><div><span class="admin-kicker">APP</span><h2>Uso diário</h2></div></div><div class="analytics-list" id="appDaily"></div></article>
+      </div>
+    </section>
+
+    <section class="admin-card" aria-labelledby="appStabilityTitle" style="margin-top:24px">
+      <div class="card-heading"><div><span class="admin-kicker">APP</span><h2 id="appStabilityTitle">Estabilidade</h2></div></div>
+      <div id="appStabilityStatus" class="table-status" role="status" aria-live="polite">Carregando estabilidade…</div>
+      <div class="metric-grid"><article class="metric-card"><span>Issues não resolvidas</span><strong id="sentryUnresolved">—</strong></article></div>
+      <div class="analytics-list" id="sentryIssues" style="margin-top:18px"></div>
     </section>`
 });
 

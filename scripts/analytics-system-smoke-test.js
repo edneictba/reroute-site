@@ -66,10 +66,17 @@ assert.ok(
 assert.doesNotMatch(collector, /whatsappE164|nameInput|emailInput/);
 assert.match(build, /src\/scripts\/analytics\.js/);
 assert.ok(vercel.rewrites.some((rewrite) => rewrite.source === '/admin/analytics'));
+assert.ok(vercel.rewrites.some((rewrite) => (
+  rewrite.source === '/api/admin/app-analytics'
+  && rewrite.destination === '/api/admin-data?action=app-analytics'
+)));
 
 const adminPage = renderAdminAnalytics();
 assert.match(adminPage, /Analytics \| REROUTE Admin/);
 assert.match(adminPage, /\/assets\/admin\/admin-analytics\.js/);
+assert.match(adminPage, /admin-app-analytics\.js/);
+assert.match(adminPage, /appActiveUsers/);
+assert.match(adminPage, /sentryUnresolved/);
 assert.doesNotMatch(adminPage, /<script[^>]*>[^<]+<\/script>/i);
 
 const createRes = () => ({

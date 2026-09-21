@@ -2,6 +2,7 @@ const { genericError, json } = require('../server/admin/admin-response');
 
 const handlers = {
   analytics: require('../server/admin/handlers/analytics'),
+  'app-analytics': require('../server/admin/handlers/app-analytics'),
   dashboard: require('../server/admin/handlers/dashboard'),
   export: require('../server/admin/handlers/export'),
   leads: require('../server/admin/handlers/leads'),
