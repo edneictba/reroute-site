@@ -122,6 +122,31 @@ const renderAdminAnalytics = () => renderAdminLayout({
       </div>
     </section>
 
+    <section class="admin-card" aria-labelledby="appUsersTitle" style="margin-top:24px">
+      <div class="card-heading"><div><span class="admin-kicker">APP</span><h2 id="appUsersTitle">Usuários</h2></div></div>
+      <div id="appUsersStatus" class="table-status" role="status" aria-live="polite">Carregando dados operacionais…</div>
+      <div class="metric-grid">
+        <article class="metric-card"><span>Contas cadastradas</span><strong id="supabaseRegisteredAccounts">—</strong></article>
+        <article class="metric-card"><span>Novas contas</span><strong id="supabaseNewAccounts">—</strong></article>
+        <article class="metric-card"><span>Perfis</span><strong id="supabaseProfiles">—</strong></article>
+        <article class="metric-card"><span>Onboarding concluído</span><strong id="supabaseOnboardingCompleted">—</strong></article>
+        <article class="metric-card"><span>Perfil pendente</span><strong id="supabasePendingProfiles">—</strong></article>
+        <article class="metric-card"><span>Contas sem perfil</span><strong id="supabaseAccountsWithoutProfile">—</strong></article>
+        <article class="metric-card"><span>Conclusão entre perfis</span><strong id="supabaseProfileCompletionRate">—</strong></article>
+      </div>
+    </section>
+
+    <section class="admin-card" aria-labelledby="appJourneyTitle" style="margin-top:24px">
+      <div class="card-heading"><div><span class="admin-kicker">APP</span><h2 id="appJourneyTitle">Jornada</h2></div></div>
+      <div id="appJourneyStatus" class="table-status" role="status" aria-live="polite">Carregando jornada…</div>
+      <div class="metric-grid">
+        <article class="metric-card"><span>Usuários com check-in</span><strong id="supabaseCheckinUsers">—</strong></article>
+        <article class="metric-card"><span>Check-ins</span><strong id="supabaseCheckins">—</strong></article>
+        <article class="metric-card"><span>Usuários com dia fechado</span><strong id="supabaseCheckoutUsers">—</strong></article>
+        <article class="metric-card"><span>Dias fechados</span><strong id="supabaseCheckouts">—</strong></article>
+      </div>
+    </section>
+
     <section class="admin-card" aria-labelledby="appStabilityTitle" style="margin-top:24px">
       <div class="card-heading"><div><span class="admin-kicker">APP</span><h2 id="appStabilityTitle">Estabilidade</h2></div></div>
       <div id="appStabilityStatus" class="table-status" role="status" aria-live="polite">Carregando estabilidade…</div>

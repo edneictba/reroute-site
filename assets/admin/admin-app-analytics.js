@@ -19,6 +19,29 @@
     node.textContent = `${title}: ${value}`;
     return node;
   };
+  const setValue = (id, value, suffix = '') => {
+    const node = byId(id);
+    if (node) node.textContent = value === null || value === undefined ? '—' : `${number(value)}${suffix}`;
+  };
+
+  const renderSupabase = (source) => {
+    if (!source) return;
+    const users = source.users || {};
+    const journey = source.journey || {};
+    setValue('supabaseRegisteredAccounts', users.registeredAccounts);
+    setValue('supabaseNewAccounts', users.newAccounts);
+    setValue('supabaseProfiles', users.profiles);
+    setValue('supabaseOnboardingCompleted', users.onboardingCompleted);
+    setValue('supabasePendingProfiles', users.pendingProfiles);
+    setValue('supabaseAccountsWithoutProfile', users.accountsWithoutProfile);
+    setValue('supabaseProfileCompletionRate', users.profileCompletionRate, '%');
+    setValue('supabaseCheckinUsers', journey.checkinUsers);
+    setValue('supabaseCheckins', journey.checkins);
+    setValue('supabaseCheckoutUsers', journey.checkoutUsers);
+    setValue('supabaseCheckouts', journey.checkouts);
+    if (byId('appUsersStatus')) byId('appUsersStatus').textContent = source.status === 'ok' ? 'Dados operacionais carregados.' : 'Parte dos dados operacionais está indisponível.';
+    if (byId('appJourneyStatus')) byId('appJourneyStatus').textContent = journey.status === 'ok' ? 'Jornada carregada.' : 'Parte da jornada está indisponível.';
+  };
 
   const load = async () => {
     const days = byId('analyticsPeriod')?.value || '30';
@@ -32,7 +55,8 @@
       }
       const payload = await response.json();
       if (!response.ok || payload.success !== true) throw new Error('app_analytics_failed');
-      const { posthog, sentry } = payload.data.app;
+      const { supabase, posthog, sentry } = payload.data.app;
+      renderSupabase(supabase);
       const sourceStatus = [];
       if (posthog) {
         byId('appActiveUsers').textContent = number(posthog.metrics.activeUsers);
