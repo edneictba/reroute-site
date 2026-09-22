@@ -50,6 +50,7 @@ const apiRoutes = new Map([
   ['/api/admin/dashboard', withRouteParameter(adminDataHandler, 'action', 'dashboard')],
   ['/api/admin/leads', withRouteParameter(adminDataHandler, 'action', 'leads')],
   ['/api/admin/analytics', withRouteParameter(adminDataHandler, 'action', 'analytics')],
+  ['/api/admin/users', withRouteParameter(adminDataHandler, 'action', 'users')],
   ['/api/admin/export', withRouteParameter(adminDataHandler, 'action', 'export')],
   ['/api/admin/feedbacks', withRouteParameter(adminDataHandler, 'action', 'feedbacks')],
   ['/api/analytics', require('../api/analytics')],
@@ -58,6 +59,7 @@ const apiRoutes = new Map([
 const adminPageHandler = withRouteParameter(adminPagesHandler, 'page', 'dashboard');
 const adminLeadsPageHandler = withRouteParameter(adminPagesHandler, 'page', 'leads');
 const adminAnalyticsPageHandler = withRouteParameter(adminPagesHandler, 'page', 'analytics');
+const adminUsersPageHandler = withRouteParameter(adminPagesHandler, 'page', 'users');
 const adminFeedbacksPageHandler = withRouteParameter(adminPagesHandler, 'page', 'feedbacks');
 const adminSettingsPageHandler = withRouteParameter(adminPagesHandler, 'page', 'settings');
 
@@ -132,6 +134,10 @@ const server = http.createServer(async (req, res) => {
     }
     if (pathname === '/admin/analytics') {
       await adminAnalyticsPageHandler(req, res);
+      return;
+    }
+    if (pathname === '/admin/users') {
+      await adminUsersPageHandler(req, res);
       return;
     }
     if (pathname === '/admin/feedbacks') {

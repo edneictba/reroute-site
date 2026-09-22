@@ -2,6 +2,7 @@ const navigationItems = [
   { key: 'dashboard', href: '/admin', label: 'Dashboard' },
   { key: 'leads', href: '/admin/leads', label: 'Leads' },
   { key: 'analytics', href: '/admin/analytics', label: 'Analytics' },
+  { key: 'users', href: '/admin/users', label: 'Usuários' },
   { key: 'feedbacks', href: '/admin/feedbacks', label: 'Feedbacks' },
   { key: 'settings', href: '/admin/configuracoes', label: 'Configurações' }
 ];

@@ -52,6 +52,10 @@
       "destination": "/api/admin-data?action=app-analytics"
     },
     {
+      "source": "/api/admin/users",
+      "destination": "/api/admin-data?action=users"
+    },
+    {
       "source": "/api/admin/export",
       "destination": "/api/admin-data?action=export"
     },
@@ -66,6 +70,10 @@
     {
       "source": "/admin/analytics",
       "destination": "/api/admin-pages?page=analytics"
+    },
+    {
+      "source": "/admin/users",
+      "destination": "/api/admin-pages?page=users"
     },
     {
       "source": "/admin/feedbacks",

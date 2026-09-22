@@ -6,6 +6,7 @@ const handlers = {
   leads: require('../server/admin/handlers/page-leads'),
   feedbacks: require('../server/admin/handlers/page-feedbacks'),
   settings: require('../server/admin/handlers/page-settings')
+  ,users: require('../server/admin/handlers/page-users')
 };
 
 module.exports = async function handler(req, res) {
