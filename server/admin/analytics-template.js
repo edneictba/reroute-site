@@ -109,12 +109,12 @@ const renderAdminAnalytics = () => renderAdminLayout({
       <div class="card-heading">
         <div><span class="admin-kicker">APP</span><h2 id="appAnalyticsTitle">Uso</h2></div>
       </div>
-      <div id="appAnalyticsStatus" class="table-status" role="status" aria-live="polite">Carregando dados do App…</div>
+      <div id="appAnalyticsStatus" class="table-status" role="status" aria-live="polite">Carregando comportamento do App no período selecionado…</div>
       <div class="metric-grid">
-        <article class="metric-card"><span>Usuários ativos</span><strong id="appActiveUsers">—</strong></article>
-        <article class="metric-card"><span>Acessaram o App</span><strong id="appUsers">—</strong></article>
-        <article class="metric-card"><span>Logins concluídos</span><strong id="appLogins">—</strong></article>
-        <article class="metric-card"><span>Onboardings concluídos</span><strong id="appOnboardings">—</strong></article>
+        <article class="metric-card"><span>Identidades ativas</span><strong id="appActiveUsers">—</strong></article>
+        <article class="metric-card"><span>Identidades que acessaram o App</span><strong id="appUsers">—</strong></article>
+        <article class="metric-card"><span>Eventos de login concluído</span><strong id="appLogins">—</strong></article>
+        <article class="metric-card"><span>Eventos de onboarding concluído</span><strong id="appOnboardings">—</strong></article>
       </div>
       <div class="analytics-grid" style="margin-top:24px">
         <article class="admin-card"><div class="card-heading"><div><span class="admin-kicker">APP</span><h2>Telas mais acessadas</h2></div></div><div class="analytics-list" id="appScreens"></div></article>

@@ -63,9 +63,9 @@
         byId('appUsers').textContent = number(posthog.metrics.appUsers);
         byId('appLogins').textContent = number(posthog.metrics.completedLogins);
         byId('appOnboardings').textContent = number(posthog.metrics.completedOnboardings);
-        list(byId('appScreens'), posthog.screens, (row) => item(row.screen, `${number(row.views)} visitas · ${number(row.users)} usuários`));
-        list(byId('appDaily'), posthog.daily, (row) => item(row.day, `${number(row.activeUsers)} usuários · ${number(row.screenViews)} telas`));
-        sourceStatus.push('PostHog OK');
+        list(byId('appScreens'), posthog.screens, (row) => item(row.screen, `${number(row.views)} visitas · ${number(row.users)} identidades únicas`));
+        list(byId('appDaily'), posthog.daily, (row) => item(row.day, `${number(row.activeUsers)} identidades únicas · ${number(row.screenViews)} telas`));
+        sourceStatus.push(`PostHog OK · últimos ${number(posthog.periodDays)} dias`);
       } else {
         sourceStatus.push('PostHog temporariamente indisponível');
       }
