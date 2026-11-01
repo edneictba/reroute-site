@@ -7,6 +7,7 @@
   const VALID_STATUSES = new Set(['accepted', 'rejected']);
   const META_SCRIPT_ID = 'reroute-meta-pixel';
   const META_SCRIPT_URL = 'https://connect.facebook.net/en_US/fbevents.js';
+  const METRICOOL_SCRIPT_ID = 'reroute-metricool-tracker';
   const INITIALIZED_PIXELS_KEY = '__rerouteInitializedPixels';
   const copy = {
     pt: {
@@ -39,6 +40,7 @@
   };
 
   let pixelEnabled = false;
+  let metricoolEnabled = false;
   let pageViewTracked = false;
   let leadTracked = false;
   let banner = null;
@@ -127,6 +129,15 @@
     expireMetaCookies();
   };
 
+  const enableMetricool = () => {
+    if (metricoolEnabled || readConsent()?.status !== 'accepted') return false;
+    metricoolEnabled = true;
+    if (document.getElementById(METRICOOL_SCRIPT_ID)) return true;
+
+    function loadScript(a){var b=document.getElementsByTagName("head")[0],c=document.createElement("script");c.id=METRICOOL_SCRIPT_ID,c.type="text/javascript",c.src="https://tracker.metricool.com/resources/be.js",c.onreadystatechange=a,c.onload=a,b.appendChild(c)}loadScript(function(){beTracker.t({hash:"605b4bbc57ea8f5b9f82446d5bbb823c"})});
+    return true;
+  };
+
   const renderBanner = () => {
     if (!banner) return;
     const language = getLanguage();
@@ -163,7 +174,10 @@
 
   const choose = (status) => {
     saveConsent(status);
-    if (status === 'accepted') enablePixel(); else disablePixel();
+    if (status === 'accepted') {
+      enablePixel();
+      enableMetricool();
+    } else disablePixel();
     hideBanner();
   };
 
@@ -203,7 +217,10 @@
   window.addEventListener('reroute:languagechange', renderBanner);
 
   const decision = readConsent();
-  if (decision?.status === 'accepted') enablePixel();
+  if (decision?.status === 'accepted') {
+    enablePixel();
+    enableMetricool();
+  }
   else if (!decision) showBanner();
 
   window.REROUTE_MARKETING = Object.freeze({
